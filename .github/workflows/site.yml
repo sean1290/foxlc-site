@@ -1,0 +1,71 @@
+# 폭스러닝센터 사이트: 매일 피드를 가져오고, 빌드해서 GitHub Pages에 올린다.
+# 이 파일은 foxlc-site 폴더가 저장소의 루트일 때 동작한다 (README 참고).
+name: Sync feeds and deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "40 11 * * *"   # 매일 20:40 KST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  issues: write
+
+concurrency:
+  group: site
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 피드 하나가 실패해도 사이트는 기존 데이터로 계속 배포하고, 마지막에 실패로 표시한다.
+      - name: Sync 폭스뉴스
+        id: news
+        continue-on-error: true
+        run: node scripts/sync-news.mjs
+      - name: Sync 유튜브 영상
+        id: videos
+        continue-on-error: true
+        run: node scripts/sync-videos.mjs
+
+      - name: Commit new data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data static/news-img
+          git diff --cached --quiet || { git commit -m "Sync feeds $(date -u +%F)"; git push; }
+
+      - name: Build
+        run: node scripts/build.mjs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+      # 조용히 실패하지 않도록: 이슈를 만들고(이메일 알림이 온다) 실행 자체도 실패로 끝낸다.
+      - name: Report sync failure
+        if: steps.news.outcome == 'failure' || steps.videos.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          body="폭스뉴스: ${{ steps.news.outcome }} / 유튜브: ${{ steps.videos.outcome }}
+          로그: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          open=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "피드 동기화 실패 in:title" --json number --jq '.[0].number')
+          if [ -n "$open" ]; then gh issue comment "$open" --repo "$GITHUB_REPOSITORY" --body "$body"
+          else gh issue create --repo "$GITHUB_REPOSITORY" --title "피드 동기화 실패" --body "$body"; fi
+          exit 1
