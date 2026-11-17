@@ -1,0 +1,71 @@
+{
+ "agreements": [
+  {
+   "institution": "목원대학교",
+   "date": "2025.04.02",
+   "pages": [{ "file": "mokwon-1.webp", "width": 1524, "height": 2200 }],
+   "topic": "지역 문화예술교육 협력",
+   "description": "지역 문화예술교육 프로그램과 음악 교육 콘텐츠 개발에 협력하고, 폭스커넥트는 교육 공간을 제공하기로 했습니다."
+  },
+  {
+   "institution": "대전관평초등학교",
+   "date": "2024.04.03",
+   "pages": [
+    { "file": "gwanpyeong-1.webp", "width": 1557, "height": 2200 },
+    { "file": "gwanpyeong-2.webp", "width": 1557, "height": 2200 }
+   ],
+   "topic": "정규·방과후 교육 지원",
+   "description": "정규·방과후 에듀테크 프로그램을 지원하고, 교직원 연수와 학부모 교육에 협력하기로 했습니다.",
+   "ended": true
+  },
+  {
+   "institution": "서울교육대학교",
+   "date": "2024.03.18",
+   "pages": [
+    { "file": "snue-1.webp", "width": 1557, "height": 2200 },
+    { "file": "snue-2.webp", "width": 1557, "height": 2200 }
+   ],
+   "topic": "디지털 자료 개발·예비 교원 연수",
+   "description": "국가 교육과정에 맞춘 콘텐츠와 AI 디지털교과서 개발, 예비 교원 에듀테크 연수에 협력하기로 했습니다.",
+   "ended": true
+  },
+  {
+   "institution": "백석문화대학교",
+   "date": "2024",
+   "pages": [{ "file": "baekseok-1.webp", "width": 1557, "height": 2200 }],
+   "caption": "가족회사 협약서",
+   "topic": "교육과정 개발과 현장실습 연계",
+   "description": "교육과정을 함께 만들고 운영하며, 대학생의 현장실습과 취업을 지원하기로 했습니다."
+  },
+  {
+   "institution": "미국 샌프란시스코 주립대학교",
+   "date": "2023.12",
+   "pages": [{ "file": "sfsu-1.webp", "width": 1654, "height": 2339 }],
+   "topic": "대학 교육·연구·문화 교류",
+   "description": "교육·문화 자료를 나누고, 학생과 교직원의 교육·연구 교류 기회를 함께 찾기로 했습니다."
+  },
+  {
+   "institution": "미국 스톤랜치 초등학교",
+   "date": "2023.01",
+   "pages": [{ "file": "stone-ranch-1.webp", "width": 1690, "height": 2200 }],
+   "topic": "한미 교육·문화 교류",
+   "description": "교육 자료와 지도 방법을 나누고, 학생과 교직원의 교육·문화 교류에 협력하기로 했습니다."
+  },
+  {
+   "institution": "유한대학교",
+   "date": "2022.06.13",
+   "pages": [{ "file": "yuhan-1.webp", "width": 1556, "height": 2200 }],
+   "topic": "교육과정·교재 개발과 현장실습",
+   "description": "교육과정과 교재를 함께 개발하고, 대학생의 현장실습과 취업에 협력하기로 했습니다."
+  }
+ ],
+ "partnership": {
+  "parties": "폭스커넥트 · 러닝업그레이드(Learning Upgrade LLC)",
+  "date": "2026.06.19",
+  "pages": [{ "file": "learning-upgrade-1.webp", "width": 2200, "height": 1650 }],
+  "caption": "양측 서명이 있는 국·영문 협약서 전체 촬영본",
+  "topic": "영어·디지털 학습 프로그램 협력",
+  "description": "러닝업그레이드는 프로그램과 교육·기술 지원을 제공하고, 폭스커넥트는 국내 학교·교육기관에 프로그램을 안내하고 운영을 지원하기로 했습니다.",
+  "photo": { "file": "signing.jpg", "width": 1280, "height": 573, "alt": "교육 프로그램 업무협약서에 서명하는 폭스커넥트와 러닝업그레이드 관계자", "caption": "폭스커넥트와 러닝업그레이드 업무협약식" }
+ }
+}
