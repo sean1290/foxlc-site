@@ -1,0 +1,10 @@
+{
+  "name": "foxlc-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "node scripts/sync-news.mjs && node scripts/sync-videos.mjs",
+    "build": "node scripts/build.mjs",
+    "serve": "node scripts/build.mjs && python3 -m http.server 8080 -d dist"
+  }
+}
