@@ -158,7 +158,7 @@ page({
 <section class="hero" style="background-image:url(${r}img/hero.jpg)">
   <div class="wrap">
     <p class="tag">LEARN TODAY, LEAD TOMORROW.</p>
-    <h1>상담 전문가와 교육 전문가가 함께하는<br><em>사회정서학습</em> 기반<br>폭스러닝센터</h1>
+    <h1><span class="l1">상담 전문가와 교육 전문가가 함께하는</span><span class="l2"><em>사회정서학습</em> 기반</span><span class="l3">폭스러닝센터</span></h1>
     <p>폭스러닝센터는 전문성과 따뜻함으로 아이의 성장을 지원합니다.</p>
     <div class="actions">
       <a class="btn mint" href="${r}about/institutes/">연구소 소개</a>
