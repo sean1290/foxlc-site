@@ -141,14 +141,28 @@ h1,h2,h3{color:var(--navy);letter-spacing:-.02em;line-height:1.35}
 .growth h2{font-size:32px;font-weight:800;margin-bottom:18px}
 .growth p{color:var(--ink2)}
 .growth p+p{margin-top:14px}
-.film{
-  position:relative;overflow:hidden;border-radius:22px;aspect-ratio:10/9;
-  background:linear-gradient(135deg,#e7f4ee 0%,#e9eff9 48%,#f3eee2 100%);
-  box-shadow:0 10px 24px rgba(22,34,63,.10),0 40px 90px rgba(22,34,63,.16);border:1px solid rgba(255,255,255,.7);
+/* 맥북 화면: 화면 안에서 실제 화면 캡처 6장이 차례로 바뀐다. 뒤에는 은은한 민트·노랑 도형. */
+.mac-scene{position:relative;padding:36px 0 0}
+.mac-scene::before,.mac-scene::after{content:"";position:absolute;z-index:0;pointer-events:none}
+.mac-scene::before{right:-4%;top:0;width:78%;height:78%;background:#dff2ea;border-radius:58% 42% 46% 54%/48% 56% 44% 52%}
+.mac-scene::after{left:2%;bottom:56px;width:42%;height:46%;background:#fdf6dc;border-radius:50% 50% 44% 56%/56% 44% 56% 44%}
+.laptop{position:relative;z-index:1;padding:0 6%}
+.lid{
+  position:relative;padding:3.4% 2.6% 2.6%;border-radius:20px 20px 6px 6px;
+  background:#16181d;border:1px solid #3b3f47;
+  box-shadow:inset 0 0 0 2px #0b0c0f,0 24px 50px rgba(22,34,63,.18);
 }
-.frame{position:absolute;inset:26px 18px 62px;display:flex;align-items:center;justify-content:center;opacity:0;animation:filmcycle 24s cubic-bezier(.3,.7,.3,1) infinite}
-.frame img{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:12px;border:1px solid rgba(255,255,255,.8);box-shadow:0 3px 10px rgba(22,34,63,.10),0 22px 52px rgba(22,34,63,.18)}
-.filmui{position:absolute;left:0;right:0;bottom:0;padding:0 20px 16px}
+.lid::before{content:"";position:absolute;left:50%;top:0;transform:translateX(-50%);width:15%;height:2.6%;min-height:8px;background:#0b0c0f;border-radius:0 0 8px 8px}
+.mac-screen{position:relative;aspect-ratio:16/10;overflow:hidden;border-radius:4px;background:linear-gradient(135deg,#eef7f3 0%,#edf1f9 55%,#f7f3e8 100%)}
+.base{
+  position:relative;height:0;padding-bottom:3%;margin:0 -7%;
+  background:linear-gradient(#d5d8dd 0%,#b9bdc4 45%,#8f939b 100%);border-radius:2px 2px 16px 16px/2px 2px 10px 10px;
+  box-shadow:0 18px 30px rgba(22,34,63,.18);
+}
+.base::before{content:"";position:absolute;left:50%;top:0;transform:translateX(-50%);width:16%;height:40%;background:#a3a7ae;border-radius:0 0 8px 8px}
+.frame{position:absolute;inset:4%;display:flex;align-items:center;justify-content:center;opacity:0;animation:filmcycle 24s cubic-bezier(.3,.7,.3,1) infinite}
+.frame img{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:6px;box-shadow:0 2px 8px rgba(22,34,63,.12),0 12px 30px rgba(22,34,63,.14)}
+.filmui{position:relative;z-index:1;margin-top:26px;padding:0 20px}
 .fcap{position:relative;height:22px;margin-bottom:10px}
 .fcap span{position:absolute;left:0;right:0;font-size:13px;font-weight:500;color:var(--navy);opacity:0;animation:capcycle 24s linear infinite;text-align:center;line-height:22px}
 .fbar{display:flex;gap:6px;max-width:320px;margin:0 auto}
@@ -418,7 +432,7 @@ body:has(.ag-viewer[open]){overflow:hidden}
   .post h1{font-size:24px}
   .post p{font-size:16px}
   .ec-steps{grid-template-columns:1fr}
-  .film{aspect-ratio:1/1}
+  .lid{border-radius:12px 12px 4px 4px}
   .steps3{--c:96px;gap:8px}
   .step{padding:0}
   .step .circle{margin-bottom:12px}
