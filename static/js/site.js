@@ -215,4 +215,30 @@
     var d0 = doc();
     if (d0 && d0.readyState === "complete" && d0.location.href !== "about:blank") ready();
   }
+  /* ── 스크롤 애니메이션 ──
+     아래 요소들이 화면에 들어오면 .in 을 붙여 살짝 떠오르게 한다.
+     같은 줄에 놓인 카드들은 0.08초씩 차례로 나타난다. */
+  var REVEAL = [
+    ".sec-head", ".page-head .wrap", ".about > *", ".step", ".grid3 > .card", ".grid3 > .quote",
+    ".growth > *", ".gallery button", ".contact > *", ".inst", ".dir > *", ".soon",
+    ".ec-intro > *", ".device", ".post > h1", ".post > .byline", ".post > p", ".post figure"
+  ].join(",");
+  var targets = $$(REVEAL);
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!("IntersectionObserver" in window) || reduce) {
+    targets.forEach(function (t) { t.classList.add("in"); });
+  } else {
+    targets.forEach(function (t) {
+      var sibs = Array.prototype.filter.call(t.parentNode.children, function (c) { return c.matches(REVEAL); });
+      var i = sibs.indexOf(t) % 3;
+      if (i > 0) t.style.setProperty("--d", i * 0.08 + "s");
+      t.classList.add("reveal");
+    });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    targets.forEach(function (t) { io.observe(t); });
+  }
 })();

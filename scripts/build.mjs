@@ -52,6 +52,7 @@ function layout({ file, key, title, description = DESC, body, image }) {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
 <link rel="stylesheet" href="${r}css/site.css">
+<script>document.documentElement.className+=" js"</script>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
