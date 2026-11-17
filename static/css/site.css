@@ -90,7 +90,7 @@ h1,h2,h3{color:var(--navy);letter-spacing:-.02em;line-height:1.35}
 .more{text-align:center;margin-top:32px}
 
 /* ── 홈: 히어로 ── */
-.hero{position:relative;color:#fff;background:var(--navy-d) center/cover no-repeat}
+.hero{position:relative;color:#fff;background:var(--navy-d) 70% 20%/cover no-repeat}  /* 70% 20%: 창문의 FOX LEARNING CENTER 글자가 보이도록 사진 윗부분을 보여 준다 */
 .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(22,34,63,.9) 0%,rgba(22,34,63,.72) 45%,rgba(22,34,63,.3) 100%)}
 .hero .wrap{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:540px;padding-top:64px;padding-bottom:64px}
 .hero .tag{font-weight:700;letter-spacing:.16em;font-size:13.5px;color:var(--mint);margin-bottom:18px}
