@@ -13,7 +13,7 @@ const news = await json("data/news.json");
 const videos = await json("data/videos.json");
 
 const CAMP_URL = "https://freddy1590.github.io/fox-global-camp-usa-page/camp-global/index.html";
-const INST_URL = "https://fox-institutions.vercel.app/";
+const INST_URL = "https://fox-institutions-v2.wnsals539.workers.dev/#/";
 const NAVER_MAP = "https://map.naver.com/p/search/" + encodeURIComponent("폭스러닝센터 대전");
 const ADDRESS = "대전 유성구 엑스포로97번길 40 2층 204호 폭스러닝센터";
 const YT_CHANNEL = "https://www.youtube.com/@future_x_foxconnect/videos";
