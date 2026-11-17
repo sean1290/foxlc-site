@@ -2,8 +2,7 @@
 
 Wix를 대신하는 정적 사이트입니다. 외부 패키지 없이 Node 20+ 만으로 빌드합니다.
 
-> 이 폴더는 임시로 `namseon-elementary/checkin` 저장소의 브랜치에 들어 있습니다.
-> **폴더 내용 전체를 새 저장소의 루트로 옮기면** (`.github/` 포함) 그대로 동작합니다.
+사이트 주소: https://sean1290.github.io/foxlc-site/
 
 ## 구조
 
