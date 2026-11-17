@@ -215,13 +215,30 @@
     var d0 = doc();
     if (d0 && d0.readyState === "complete" && d0.location.href !== "about:blank") ready();
   }
+  /* ── 교육 협약: 협약서 사본 크게 보기 ── */
+  var agViewer = $(".ag-viewer");
+  if (agViewer && agViewer.showModal) {
+    document.addEventListener("click", function (e) {
+      var link = e.target.closest && e.target.closest("[data-ag-doc]");
+      if (!link || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      $("h2", agViewer).textContent = link.getAttribute("data-ag-doc") + " 협약서";
+      var pages = $(".ag-viewer-pages", agViewer);
+      pages.innerHTML = "";
+      pages.appendChild(link.parentNode.querySelector("template").content.cloneNode(true));
+      agViewer.showModal();
+      agViewer.scrollTop = 0;
+    });
+    agViewer.addEventListener("click", function (e) { if (e.target === agViewer) agViewer.close(); });
+  }
+
   /* ── 스크롤 애니메이션 ──
      아래 요소들이 화면에 들어오면 .in 을 붙여 살짝 떠오르게 한다.
      같은 줄에 놓인 카드들은 0.08초씩 차례로 나타난다. */
   var REVEAL = [
     ".sec-head", ".page-head .wrap", ".about > *", ".step", ".grid3 > .card", ".grid3 > .quote",
     ".growth > *", ".gallery button", ".contact > *", ".inst", ".dir > *", ".soon",
-    ".ec-intro > *", ".device", ".post > h1", ".post > .byline", ".post > p", ".post figure"
+    ".ec-intro > *", ".device", ".ag-card", ".ag-partner", ".post > h1", ".post > .byline", ".post > p", ".post figure"
   ].join(",");
   var targets = $$(REVEAL);
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;

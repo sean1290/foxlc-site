@@ -11,6 +11,7 @@ const json = async (f) => JSON.parse(await readFile(path.join(ROOT, f), "utf8"))
 const config = await json("site.config.json");
 const news = await json("data/news.json");
 const videos = await json("data/videos.json");
+const agreementData = await json("data/agreements.json");
 
 const CAMP_URL = "https://freddy1590.github.io/fox-global-camp-usa-page/camp-global/index.html";
 const INST_URL = "https://fox-institutions-v2.wnsals539.workers.dev/#/";
@@ -67,6 +68,7 @@ function layout({ file, key, title, description = DESC, body, image }) {
         <ul class="sub">
           <li><a href="${r}about/institutes/"${cur("about/institutes")}>연구소 소개</a></li>
           <li><a href="${r}about/researchers/"${cur("about/researchers")}>연구원 소개<small>준비중</small></a></li>
+          <li><a href="${r}about/agreements/"${cur("about/agreements")}>교육 협약</a></li>
           <li><a href="${r}about/directions/"${cur("about/directions")}>오시는 길</a></li>
         </ul>
       </div>
@@ -345,6 +347,80 @@ page({
     <a class="btn ghost" href="${r}about/institutes/">연구소 소개 보기</a>
   </div>
 </div></div>`,
+});
+
+// ── 교육 협약 ───────────────────────────────────────────
+// 내용: data/agreements.json (기관 프로그램 사이트의 교육 협약 페이지에서 옮김)
+const dateLabel = (d) => {
+  const m = (d || "").match(/^(\d{4})(?:\.(\d{2})(?:\.(\d{2}))?)?$/);
+  if (!m) return d;
+  const [, y, mo, da] = m;
+  return mo ? `${y}년 ${Number(mo)}월${da ? ` ${Number(da)}일` : ""}` : `${y}년`;
+};
+const isoDate = (d) => d.replace(/\./g, "-");
+function agreementDoc(r, label, pages, caption) {
+  const first = pages[0];
+  const action = pages.length === 1 ? "협약서 전체 보기" : `협약서 전체 ${pages.length}쪽 보기`;
+  const img = (pg, alt, lazy = true) =>
+    `<img src="${r}img/agreements/${pg.file}" width="${pg.width}" height="${pg.height}" alt="${esc(alt)}"${lazy ? ' loading="lazy"' : ""} decoding="async">`;
+  return `<figure class="ag-doc">
+          <a class="ag-doc-link" href="${r}img/agreements/${first.file}" data-ag-doc="${esc(label)}" aria-label="${esc(label)} ${action}">
+            ${img(first, `${label} 협약서 사본${pages.length > 1 ? " 1쪽" : ""}`)}
+            <span>${action}</span>
+          </a>${caption ? `
+          <figcaption>${esc(caption)}</figcaption>` : ""}
+          <template>${pages.map((pg, i) => {
+            const pl = pages.length > 1 ? `${i + 1} / ${pages.length}쪽` : (caption || "협약서 전체");
+            return `<figure><figcaption><span>${esc(pl)}</span><a href="${r}img/agreements/${pg.file}" target="_blank" rel="noopener">이미지 새 탭에서 열기</a></figcaption>${img(pg, `${label} 협약서 · ${pl}`, false)}</figure>`;
+          }).join("")}</template>
+        </figure>`;
+}
+
+page({
+  file: "about/agreements/index.html", key: "about/agreements", title: "교육 협약",
+  description: "폭스커넥트가 학교·대학, 교육 기업과 맺은 교육 협약을 협약서 사본과 함께 소개합니다.",
+  body: (r) => {
+    const pt = agreementData.partnership;
+    return `
+<div class="page-head"><div class="wrap">
+  <div class="eyebrow">AGREEMENTS</div>
+  <h1>교육 협약</h1>
+  <p>폭스커넥트와 학교·대학의 협약</p>
+</div></div>
+<div class="page-body"><div class="wrap">
+  <ul class="ag-list" role="list">
+    ${agreementData.agreements.map((a) => `<li class="ag-card">
+      <h2>${esc(a.institution)}</h2>
+      <p class="ag-date"><time datetime="${isoDate(a.date)}">${dateLabel(a.date)}</time> 체결${a.ended ? ' <span class="ag-status">협약 종료</span>' : ""}</p>
+      ${agreementDoc(r, a.institution, a.pages, a.caption)}
+      <p class="ag-topic">${esc(a.topic)}</p>
+      <p>${esc(a.description)}</p>
+    </li>`).join("\n    ")}
+  </ul>
+  <section class="ag-partner" aria-labelledby="ag-partner-title">
+    <div class="ag-partner-head">
+      <h2 id="ag-partner-title">${esc(pt.parties)}</h2>
+      <p class="ag-date"><time datetime="${isoDate(pt.date)}">${dateLabel(pt.date)}</time> · 협약서 날짜</p>
+    </div>
+    ${agreementDoc(r, pt.parties, pt.pages, pt.caption)}
+    <div class="ag-partner-body">
+      <p class="ag-topic">${esc(pt.topic)}</p>
+      <p>${esc(pt.description)}</p>
+    </div>
+    <figure class="ag-signing">
+      <img src="${r}img/agreements/${pt.photo.file}" width="${pt.photo.width}" height="${pt.photo.height}" alt="${esc(pt.photo.alt)}" loading="lazy">
+      <figcaption>${esc(pt.photo.caption)}</figcaption>
+    </figure>
+  </section>
+</div></div>
+<dialog class="ag-viewer" aria-labelledby="ag-viewer-title">
+  <div class="ag-viewer-head">
+    <h2 id="ag-viewer-title">협약서 사본</h2>
+    <form method="dialog"><button class="btn line sm">닫기 ✕</button></form>
+  </div>
+  <div class="ag-viewer-pages"></div>
+</dialog>`;
+  },
 });
 
 // ── 오시는 길 ───────────────────────────────────────────
