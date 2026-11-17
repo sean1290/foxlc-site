@@ -210,9 +210,14 @@ page({
         <p>폭스러닝센터는 이러한 관찰 데이터와 성장의 흐름을 바탕으로 아이에게 필요한 교육적 지원과 다음 단계의 지도 방향을 구체화하며, 성장 리포트를 통해 그 과정과 결과를 학부모님께 공유합니다.</p>
       </div>
       <div>
-        <div class="film">
-          <div class="stage">
-            ${FILM.map(([alt], i) => `<div class="frame"><img src="${r}img/film/${i + 1}.jpg" alt="${esc(alt)}" loading="lazy"></div>`).join("\n            ")}
+        <div class="mac-scene">
+          <div class="laptop">
+            <div class="lid">
+              <div class="mac-screen">
+                ${FILM.map(([alt], i) => `<div class="frame"><img src="${r}img/film/${i + 1}.jpg" alt="${esc(alt)}" loading="lazy"></div>`).join("\n                ")}
+              </div>
+            </div>
+            <div class="base" aria-hidden="true"></div>
           </div>
           <div class="filmui" aria-hidden="true">
             <div class="fcap">${FILM.map(([, cap]) => `<span>${esc(cap)}</span>`).join("")}</div>
