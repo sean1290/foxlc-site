@@ -2,6 +2,7 @@
 // 외부 패키지 없이 Node 20+ 만으로 돈다.  실행: node scripts/build.mjs
 // 모든 링크는 상대 경로라서, 도메인 루트든 하위 폴더(GitHub Pages 프로젝트 주소)든 그대로 동작한다.
 import { readFile, writeFile, mkdir, rm, cp } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,6 +13,7 @@ const config = await json("site.config.json");
 const news = await json("data/news.json");
 const videos = await json("data/videos.json");
 const agreementData = await json("data/agreements.json");
+const notices = existsSync(path.join(ROOT, "data/naver.json")) ? await json("data/naver.json") : [];
 
 const CAMP_URL = "https://freddy1590.github.io/fox-global-camp-usa-page/camp-global/index.html";
 const INST_URL = "https://fox-institutions-v2.wnsals539.workers.dev/#/";
@@ -533,24 +535,79 @@ news.forEach((p, i) => {
   });
 });
 
-// ── 폭스 소식 (영상 목록) ────────────────────────────────
+// ── 폭스 소식 (센터 소식 + 영상) ──────────────────────────
+// 센터 소식: 네이버 스마트플레이스 '소식' (scripts/sync-naver.mjs → data/naver.json)
+const NAVER_FEED = "https://map.naver.com/p/entry/place/1874946138?placePath=%2Ffeed";
+const ymd = (d) => `${d.slice(0, 4)}.${d.slice(4, 6)}.${d.slice(6, 8)}`;
+const noticeExcerpt = (t) => { const one = t.replace(/\s+/g, " ").trim(); return one.length > 70 ? one.slice(0, 70) + "…" : one; };
+
 page({
   file: "videos/index.html", key: "news/videos", title: "폭스 소식",
-  description: "폭스러닝센터의 활동과 행사를 영상으로 만나 보세요.",
-  body: () => `
+  description: "폭스러닝센터의 프로그램·행사 소식과 활동 영상을 만나 보세요.",
+  body: (r) => `
 <div class="page-head"><div class="wrap">
   <div class="eyebrow">FOX NEWS</div>
   <h1>폭스 소식</h1>
-  <p>폭스러닝센터의 활동과 행사를 영상으로 만나 보세요</p>
+  <p>폭스러닝센터의 프로그램·행사 소식과 활동 영상을 만나 보세요</p>
+  <nav class="jump" aria-label="폭스 소식 구역">${notices.length ? `<a href="#notices">센터 소식</a>` : ""}<a href="#videos">영상</a></nav>
 </div></div>
-<div class="page-body"><div class="wrap">
-  <div class="grid3" id="videoGrid">
-    <noscript>${videos.slice(0, 9).map((v) => videoCard(v, "h2")).join("")}</noscript>
-  </div>
-  <nav class="pager" id="videoPager" aria-label="페이지"></nav>
-  <p class="subtle"><a href="${YT_CHANNEL}" ${ext}>유튜브 채널 바로가기</a></p>
-  <script type="application/json" id="videoData">${JSON.stringify(videos).replace(/</g, "\\u003c")}</script>
+<div class="page-body"><div class="wrap">${notices.length ? `
+  <section id="notices" aria-labelledby="notices-title">
+    <h2 class="sub-head" id="notices-title">센터 소식</h2>
+    <div class="notice-grid" id="noticeGrid">
+      ${notices.map((n, i) => `<a class="card notice-card" href="${r}notice/${n.feedId}/"${i >= 8 ? " hidden" : ""}>
+        <div class="poster">${n.photos ? `<img src="${r}naver-img/${n.feedId}/0.jpg" alt="" loading="lazy">` : ""}</div>
+        <div class="card-body">
+          <div class="date">${ymd(n.date)}</div>
+          <h3 class="card-title">${esc(n.title)}</h3>
+        </div>
+      </a>`).join("\n      ")}
+    </div>
+    <nav class="pager" id="noticePager" aria-label="센터 소식 페이지"></nav>
+    <p class="subtle"><a href="${NAVER_FEED}" ${ext}>네이버 플레이스 소식 바로가기</a></p>
+  </section>` : ""}
+  <section id="videos" aria-labelledby="videos-title"${notices.length ? ' class="videos-sec"' : ""}>
+    <h2 class="sub-head" id="videos-title">영상</h2>
+    <div class="grid3" id="videoGrid">
+      <noscript>${videos.slice(0, 9).map((v) => videoCard(v, "h3")).join("")}</noscript>
+    </div>
+    <nav class="pager" id="videoPager" aria-label="영상 페이지"></nav>
+    <p class="subtle"><a href="${YT_CHANNEL}" ${ext}>유튜브 채널 바로가기</a></p>
+    <script type="application/json" id="videoData">${JSON.stringify(videos).replace(/</g, "\\u003c")}</script>
+  </section>
 </div></div>`,
+});
+
+notices.forEach((n, i) => {
+  const newer = notices[i - 1], older = notices[i + 1];
+  page({
+    file: `notice/${n.feedId}/index.html`, key: "news/videos", title: n.title,
+    description: noticeExcerpt(n.text), image: n.photos ? `naver-img/${n.feedId}/0.jpg` : undefined,
+    body: (r) => `
+<div class="page-body" style="padding-top:56px"><div class="wrap">
+  <article class="notice">
+    <div class="notice-posters">
+      ${Array.from({ length: n.photos }, (_, k) => `<a href="${r}naver-img/${n.feedId}/${k}.jpg" ${ext}><img src="${r}naver-img/${n.feedId}/${k}.jpg" alt="${esc(n.title)} 포스터${n.photos > 1 ? ` ${k + 1}` : ""}"${k ? ' loading="lazy"' : ""}></a>`).join("\n      ")}
+    </div>
+    <div class="notice-body">
+      <p class="date">${ymd(n.date)}${n.period ? ` · 기간 ${esc(n.period)}` : ""}</p>
+      <h1>${esc(n.title)}</h1>
+      <div class="notice-text">${esc(n.text)}</div>
+      <div class="notice-actions">
+        <a class="btn navy sm" href="tel:14332700">전화 문의 1433-2700</a>
+        <button class="btn kakao sm" type="button" data-copy="FOX_LC" data-msg="카카오톡 아이디 FOX_LC를 복사했습니다">카카오톡 FOX_LC</button>
+      </div>
+      <div class="toast" id="toast" aria-live="polite"></div>
+      <p class="src">원문: <a href="${NAVER_FEED}" ${ext}>네이버 플레이스 소식</a></p>
+    </div>
+  </article>
+  <div class="post-nav">
+    ${older ? `<a class="btn line sm" href="${r}notice/${older.feedId}/">← 이전 소식</a>` : "<span></span>"}
+    <a class="btn ghost sm" href="${r}videos/#notices">목록으로</a>
+    ${newer ? `<a class="btn line sm" href="${r}notice/${newer.feedId}/">다음 소식 →</a>` : "<span></span>"}
+  </div>
+</div></div>`,
+  });
 });
 
 // ── 감정체크 체험 ───────────────────────────────────────

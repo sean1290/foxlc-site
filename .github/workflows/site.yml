@@ -41,11 +41,19 @@ jobs:
         continue-on-error: true
         run: node scripts/sync-videos.mjs
 
+      - name: Sync 네이버 소식
+        id: naver
+        continue-on-error: true
+        run: |
+          node scripts/sync-naver.mjs
+          python3 -m pip install --quiet pillow
+          python3 scripts/shrink-images.py static/naver-img
+
       - name: Commit new data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data static/news-img
+          git add data static/news-img static/naver-img
           git diff --cached --quiet || { git commit -m "Sync feeds $(date -u +%F)"; git push; }
 
       - name: Build
@@ -59,11 +67,11 @@ jobs:
 
       # 조용히 실패하지 않도록: 이슈를 만들고(이메일 알림이 온다) 실행 자체도 실패로 끝낸다.
       - name: Report sync failure
-        if: steps.news.outcome == 'failure' || steps.videos.outcome == 'failure'
+        if: steps.news.outcome == 'failure' || steps.videos.outcome == 'failure' || steps.naver.outcome == 'failure'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="폭스뉴스: ${{ steps.news.outcome }} / 유튜브: ${{ steps.videos.outcome }}
+          body="폭스뉴스: ${{ steps.news.outcome }} / 유튜브: ${{ steps.videos.outcome }} / 네이버 소식: ${{ steps.naver.outcome }}
           로그: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           open=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "피드 동기화 실패 in:title" --json number --jq '.[0].number')
           if [ -n "$open" ]; then gh issue comment "$open" --repo "$GITHUB_REPOSITORY" --body "$body"
