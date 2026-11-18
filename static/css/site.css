@@ -523,12 +523,18 @@ body:has(.ag-viewer[open]){overflow:hidden}
 .im-head h2{font-size:28px;font-weight:800}
 .im-close{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:#fff;font-size:18px;cursor:pointer;color:var(--navy)}
 .im-close:hover{border-color:var(--navy)}
-.im-body{display:grid;grid-template-columns:1.25fr 1fr;gap:32px;padding:28px 32px 34px}
-.im-main{margin:0}
-.im-main img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px;background:var(--mintbg)}
-.im-main figcaption{margin-top:8px;font-size:13px;color:var(--ink3);min-height:18px}
-.im-thumbs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
-.im-thumb{padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;cursor:pointer;background:none;aspect-ratio:1}
+.im-gallery,.im-text{min-width:0}
+.im-body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:32px;padding:28px 32px 34px}
+.im-main{position:relative;margin:0}
+.im-main img{width:100%;aspect-ratio:4/3;object-fit:contain;border-radius:16px;background:#eef2f1}
+.im-main figcaption{margin-top:8px;font-size:13px;color:var(--ink3);min-height:4px}
+.im-nav{position:absolute;top:calc(50% - 26px);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--navy);font-size:26px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(15,22,42,.18);display:grid;place-items:center;padding-bottom:3px}
+.im-nav:hover{background:#fff}
+.im-nav.prev{left:12px}.im-nav.next{right:12px}
+.im-count{position:absolute;right:12px;top:12px;padding:3px 10px;border-radius:999px;background:rgba(15,22,42,.6);color:#fff;font-size:12.5px;font-weight:700}
+/* 사진이 많으면 가로로 넘기는 띠 */
+.im-thumbs{display:flex;gap:8px;margin-top:6px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity}
+.im-thumb{flex:0 0 76px;height:76px;padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;cursor:pointer;background:none;scroll-snap-align:start}
 .im-thumb img{width:100%;height:100%;object-fit:cover}
 .im-thumb[aria-current="true"]{border-color:var(--green)}
 .im-text p{font-size:15.5px;line-height:1.85;color:var(--ink2)}
@@ -545,7 +551,8 @@ body:has(.inst-modal[open]){overflow:hidden}
   .im-head{padding:20px 20px 14px}
   .im-head h2{font-size:23px}
   .im-body{grid-template-columns:1fr;gap:22px;padding:20px 20px 26px}
-  .im-thumbs{grid-template-columns:repeat(4,1fr)}
+  .im-thumb{flex-basis:64px;height:64px}
+  .im-nav{width:38px;height:38px;font-size:22px}
 }
 
 /* ── 바닥글 ── */

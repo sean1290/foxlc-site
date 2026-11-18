@@ -1,10 +1,104 @@
 {
  "_안내": "연구소 '자세히 보기' 창에 들어갈 추가 사진과 설명. 사진은 static/img/institutes/<id>/ 폴더에 넣고 photos 에 파일 이름과 설명(caption)을 적는다. text 는 문단 목록. id: sel, ai, english, art, math, health, id(SEL 센터).",
- "sel": { "photos": [], "text": [] },
- "ai": { "photos": [], "text": [] },
- "english": { "photos": [], "text": [] },
- "art": { "photos": [], "text": [] },
- "math": { "photos": [], "text": [] },
- "health": { "photos": [], "text": [] },
- "id": { "photos": [], "text": [] }
+ "sel": {
+  "photos": [
+   {
+    "file": "15.jpg",
+    "caption": ""
+   },
+   {
+    "file": "16.jpg",
+    "caption": ""
+   },
+   {
+    "file": "17.jpg",
+    "caption": ""
+   },
+   {
+    "file": "13.jpg",
+    "caption": ""
+   },
+   {
+    "file": "14.jpg",
+    "caption": ""
+   },
+   {
+    "file": "1.jpg",
+    "caption": ""
+   },
+   {
+    "file": "2.jpg",
+    "caption": ""
+   },
+   {
+    "file": "3.jpg",
+    "caption": ""
+   },
+   {
+    "file": "4.jpg",
+    "caption": ""
+   },
+   {
+    "file": "5.jpg",
+    "caption": ""
+   },
+   {
+    "file": "6.jpg",
+    "caption": ""
+   },
+   {
+    "file": "7.jpg",
+    "caption": ""
+   },
+   {
+    "file": "18.jpg",
+    "caption": ""
+   },
+   {
+    "file": "8.jpg",
+    "caption": ""
+   },
+   {
+    "file": "9.jpg",
+    "caption": ""
+   },
+   {
+    "file": "10.jpg",
+    "caption": ""
+   },
+   {
+    "file": "11.jpg",
+    "caption": ""
+   },
+   {
+    "file": "12.jpg",
+    "caption": ""
+   }
+  ],
+  "text": []
+ },
+ "ai": {
+  "photos": [],
+  "text": []
+ },
+ "english": {
+  "photos": [],
+  "text": []
+ },
+ "art": {
+  "photos": [],
+  "text": []
+ },
+ "math": {
+  "photos": [],
+  "text": []
+ },
+ "health": {
+  "photos": [],
+  "text": []
+ },
+ "id": {
+  "photos": [],
+  "text": []
+ }
 }

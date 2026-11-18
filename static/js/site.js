@@ -290,14 +290,36 @@
     dlg.addEventListener("close", function () {
       try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
     });
-    var main = $(".im-main img", dlg), cap = $(".im-main figcaption", dlg);
-    $$(".im-thumb", dlg).forEach(function (t) {
-      t.addEventListener("click", function () {
-        main.src = t.getAttribute("data-src"); main.alt = t.getAttribute("data-caption") || "";
-        cap.textContent = t.getAttribute("data-caption") || "";
-        $$(".im-thumb", dlg).forEach(function (o) { o.removeAttribute("aria-current"); });
-        t.setAttribute("aria-current", "true");
-      });
+    var main = $(".im-main img", dlg), cap = $(".im-main figcaption", dlg), count = $(".im-count", dlg);
+    var thumbs = $$(".im-thumb", dlg), cur = 0;
+    var show = function (i) {
+      if (!thumbs.length) return;
+      cur = (i + thumbs.length) % thumbs.length;
+      var t = thumbs[cur];
+      main.src = t.getAttribute("data-src"); main.alt = t.getAttribute("data-alt") || "";
+      cap.textContent = t.getAttribute("data-caption") || "";
+      if (count) count.textContent = (cur + 1) + " / " + thumbs.length;
+      thumbs.forEach(function (o) { o.removeAttribute("aria-current"); });
+      t.setAttribute("aria-current", "true");
+      var strip = t.parentNode;
+      strip.scrollTo({ left: t.offsetLeft - strip.offsetLeft - strip.clientWidth / 2 + t.clientWidth / 2, behavior: "smooth" });
+    };
+    thumbs.forEach(function (t, i) { t.addEventListener("click", function () { show(i); }); });
+    var prev = $(".im-nav.prev", dlg), next = $(".im-nav.next", dlg);
+    if (prev) prev.addEventListener("click", function () { show(cur - 1); });
+    if (next) next.addEventListener("click", function () { show(cur + 1); });
+    dlg.addEventListener("keydown", function (e) {
+      if (!thumbs.length) return;
+      if (e.key === "ArrowLeft") { show(cur - 1); e.preventDefault(); }
+      if (e.key === "ArrowRight") { show(cur + 1); e.preventDefault(); }
+    });
+    /* 휴대폰: 큰 사진을 옆으로 밀어서 넘기기 */
+    var x0 = null;
+    main.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    main.addEventListener("touchend", function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1));
     });
   });
   if (location.hash && $(".inst-modal")) openInst(location.hash.slice(1));
