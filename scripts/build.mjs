@@ -53,7 +53,7 @@ function layout({ file, key, title, description = DESC, body, image }) {
 <link rel="apple-touch-icon" href="${r}img/mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Oswald:wght@600;700&display=swap">
 <link rel="stylesheet" href="${r}css/site.css">
 <script>document.documentElement.className+=" js"</script>
 </head>
@@ -159,12 +159,12 @@ page({
   body: (r) => `
 <section class="hero" style="background-image:url(${r}img/hero.jpg)">
   <div class="wrap">
-    <p class="tag">LEARN TODAY, LEAD TOMORROW.</p>
+    <p class="tag" lang="en"><span>LEARN TODAY,</span><span>LEAD TOMORROW.</span></p>
     <h1><span class="l1">상담 전문가와 교육 전문가가 함께하는</span><span class="l2"><em>사회정서학습</em> 기반</span><span class="l3">폭스러닝센터</span></h1>
     <p>폭스러닝센터는 전문성과 따뜻함으로 아이의 성장을 지원합니다.</p>
     <div class="actions">
       <a class="btn mint" href="${r}about/institutes/">연구소 소개</a>
-      <a class="btn white" href="#contact">문의하기</a>
+      <a class="btn ghost" href="#contact">문의하기</a>
     </div>
   </div>
 </section>
