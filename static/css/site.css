@@ -90,9 +90,14 @@ h1,h2,h3{color:var(--navy);letter-spacing:-.02em;line-height:1.35}
 .more{text-align:center;margin-top:32px}
 
 /* ── 홈: 히어로 ── */
-.hero{position:relative;overflow:hidden;color:var(--ink);background:var(--navy-d) 70% 38%/cover no-repeat}  /* 70% 38%: 창문의 FOX LEARNING CENTER 글자와 건물이 함께 보이는 위치 */
-.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.86) 0%,rgba(255,255,255,.66) 36%,rgba(255,255,255,.18) 66%,rgba(255,255,255,0) 100%)}
-.hero .wrap{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:660px;padding-top:64px;padding-bottom:64px}
+/* 사진이 오기 전에는 밝은 바탕만 보이고, 사진은 다 받은 뒤 부드럽게 나타난다 (site.js 가 .loaded 를 붙인다) */
+.hero{position:relative;overflow:hidden;color:var(--ink);background:#eef2f1}
+.hero-photo{position:absolute;inset:0;z-index:0;background:70% 38%/cover no-repeat}  /* 70% 38%: 창문의 FOX LEARNING CENTER 글자와 건물이 함께 보이는 위치 */
+.js .hero-photo{opacity:0;transition:opacity .6s ease;animation:photoFallback 0s 4s forwards}
+@keyframes photoFallback{to{opacity:1}}  /* 스크립트가 못 돌면 4초 뒤에라도 보이게 */
+.js .hero-photo.loaded{opacity:1}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(255,255,255,.86) 0%,rgba(255,255,255,.66) 36%,rgba(255,255,255,.18) 66%,rgba(255,255,255,0) 100%)}
+.hero .wrap{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;min-height:660px;padding-top:64px;padding-bottom:64px}
 /* LEARN TODAY, LEAD TOMORROW.: 크고 좁은 영문 서체로 강하게 */
 .hero .tag{font-family:'Oswald','Noto Sans KR',sans-serif;font-weight:700;font-size:112px;line-height:.98;letter-spacing:.005em;color:#1f2633;margin-bottom:30px}
 .hero .tag>span{display:block}
