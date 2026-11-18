@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "sync": "node scripts/sync-news.mjs && node scripts/sync-videos.mjs",
+    "sync": "node scripts/sync-news.mjs && node scripts/sync-videos.mjs && node scripts/sync-naver.mjs && python3 scripts/shrink-images.py static/naver-img",
     "build": "node scripts/build.mjs",
     "serve": "node scripts/build.mjs && python3 -m http.server 8080 -d dist"
   }

@@ -11,6 +11,7 @@ Wix를 대신하는 정적 사이트입니다. 외부 패키지 없이 Node 20+ 
 | `scripts/build.mjs` | 모든 페이지의 문구·템플릿. `data/` + `static/` → `dist/` |
 | `scripts/sync-news.mjs` | news.foxconnect.kr 글과 사진을 `data/news.json`, `static/news-img/` 로 가져옴 |
 | `scripts/sync-videos.mjs` | 유튜브 채널 최신 영상을 `data/videos.json` 으로 가져옴 |
+| `scripts/sync-naver.mjs` | 네이버 스마트플레이스 '소식'(포스터+문구)을 `data/naver.json`, `static/naver-img/` 로 가져옴 (포스터는 `scripts/shrink-images.py` 가 JPEG 으로 줄임) |
 | `static/` | CSS, JS, 이미지, 감정체크 체험판(`static/demo/`) |
 | `site.config.json` | `siteUrl`(도메인), `contactEndpoint`(문의 폼 접수 주소), `kakaoChannelUrl` |
 | `contact/contact.gs` | 문의 폼을 Google 시트 + 메일로 받는 Apps Script |

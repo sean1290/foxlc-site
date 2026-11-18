@@ -108,6 +108,19 @@
     showNews(pageFromUrl(), false);
   }
 
+  /* 폭스 소식 > 센터 소식: 8개씩 나눠 보여 준다 (주소의 ?page 는 영상 목록이 쓰므로 건드리지 않는다) */
+  var noticeGrid = $("#noticeGrid");
+  if (noticeGrid) {
+    var ncards = $$(".notice-card", noticeGrid), nper = 8, navNt = $("#noticePager");
+    var showNotices = function (p, scroll) {
+      var pages = Math.max(1, Math.ceil(ncards.length / nper));
+      ncards.forEach(function (c, i) { c.hidden = i < (p - 1) * nper || i >= p * nper; });
+      pager(navNt, pages, p, function (t) { showNotices(t, true); });
+      if (scroll) scrollToList(noticeGrid);
+    };
+    showNotices(1, false);
+  }
+
   /* 폭스 소식 영상 목록: 보이는 페이지의 플레이어만 만든다 */
   var videoGrid = $("#videoGrid");
   if (videoGrid) {
@@ -238,7 +251,7 @@
   var REVEAL = [
     ".sec-head", ".page-head .wrap", ".about > *", ".step", ".grid3 > .card", ".grid3 > .quote",
     ".growth > *", ".gallery button", ".contact > *", ".inst", ".dir > *", ".soon",
-    ".ec-intro > *", ".device", ".ag-card", ".ag-partner", ".post > h1", ".post > .byline", ".post > p", ".post figure"
+    ".ec-intro > *", ".device", ".ag-card", ".ag-partner", ".notice-card", ".notice-posters", ".notice-body", ".post > h1", ".post > .byline", ".post > p", ".post figure"
   ].join(",");
   var targets = $$(REVEAL);
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
