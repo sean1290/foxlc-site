@@ -341,14 +341,10 @@ page({
 <div class="page-body"><div class="wrap">
   <div class="inst-grid">
     ${INSTITUTES.map((x) => `<article class="inst${x.hl ? " hl" : ""}">
-      <img src="${r}img/institutes/${x.id}.jpg" alt="${esc(x.name)} 활동 공간" loading="lazy">
+      <button class="inst-photo" type="button" data-inst="${x.id}" aria-label="${esc(x.name)} 자세히 보기"><img src="${r}img/institutes/${x.id}.jpg" alt="${esc(x.name)} 활동 공간" loading="lazy"></button>
       <div class="inst-body">
-        <span class="label">${x.label}</span>
         <div class="tagline">${esc(x.tagline)}</div>
         <h2>${esc(x.name)}</h2>
-        <p>${esc(x.desc)}</p>
-        <ul>${x.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>${x.note ? `
-        <p class="note">${esc(x.note)}</p>` : ""}
         <button class="btn ${x.hl ? "mint" : "navy"} inst-more" type="button" data-inst="${x.id}" aria-haspopup="dialog">자세히 보기 <span aria-hidden="true">→</span></button>
       </div>
     </article>`).join("\n    ")}
