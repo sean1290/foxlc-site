@@ -389,6 +389,8 @@ body:has(.ag-viewer[open]){overflow:hidden}
 .notice .src{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--ink2)}
 .notice + .post-nav{max-width:1040px;margin:40px auto 0}
 @media (max-width:1000px){ .notice-grid{grid-template-columns:repeat(3,1fr)} }
+.notice-grid.home-notices{grid-template-columns:repeat(3,1fr);max-width:960px;margin:0 auto}
+@media (max-width:600px){ .notice-grid.home-notices{grid-template-columns:1fr;max-width:340px;gap:16px} }
 @media (max-width:760px){
   .notice-grid{grid-template-columns:1fr 1fr;gap:12px}
   .notice{grid-template-columns:1fr;gap:28px}

@@ -192,16 +192,30 @@ page({
     <div class="sec-head">
       <div class="eyebrow">FOX NEWS</div>
       <h2>폭스 소식</h2>
+      <p>폭스러닝센터의 새 프로그램과 행사 소식입니다</p>
+    </div>
+    <div class="notice-grid home-notices">
+      ${notices.slice(0, 3).map((n) => noticeCard(r, n)).join("\n      ")}
+    </div>
+    <div class="more"><a class="btn ghost" href="${r}videos/#notices">폭스 소식 더 보기 →</a></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">FOX YOUTUBE</div>
+      <h2>폭스 YouTube</h2>
       <p>폭스커넥트 유튜브 채널의 최신 영상입니다</p>
     </div>
     <div class="grid3 home-videos">
       ${videos.slice(0, 3).map((v) => videoCard(v)).join("\n      ")}
     </div>
-    <div class="more"><a class="btn ghost" href="${r}videos/">폭스 소식 더 보기 →</a></div>
+    <div class="more"><a class="btn ghost" href="${r}videos/#videos">영상 더 보기 →</a></div>
   </div>
 </section>
 
-<section class="sec">
+<section class="sec tint">
   <div class="wrap">
     <div class="growth">
       <div>
@@ -232,7 +246,7 @@ page({
   </div>
 </section>
 
-<section class="sec tint">
+<section class="sec">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">GALLERY</div>
@@ -248,7 +262,7 @@ page({
   </dialog>
 </section>
 
-<section class="sec">
+<section class="sec tint">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">TESTIMONIALS</div>
@@ -260,7 +274,7 @@ page({
   </div>
 </section>
 
-<section class="sec tint" id="contact">
+<section class="sec" id="contact">
   <div class="wrap">
     <div class="contact">
       <div>
@@ -539,6 +553,13 @@ news.forEach((p, i) => {
 // 센터 소식: 네이버 스마트플레이스 '소식' (scripts/sync-naver.mjs → data/naver.json)
 const NAVER_FEED = "https://map.naver.com/p/entry/place/1874946138?placePath=%2Ffeed";
 const ymd = (d) => `${d.slice(0, 4)}.${d.slice(4, 6)}.${d.slice(6, 8)}`;
+const noticeCard = (r, n, hidden = false) => `<a class="card notice-card" href="${r}notice/${n.feedId}/"${hidden ? " hidden" : ""}>
+        <div class="poster">${n.photos ? `<img src="${r}naver-img/${n.feedId}/0.jpg" alt="${esc(n.title)} 포스터" loading="lazy">` : ""}</div>
+        <div class="card-body">
+          <div class="date">${ymd(n.date)}</div>
+          <h3 class="card-title">${esc(n.title)}</h3>
+        </div>
+      </a>`;
 const noticeExcerpt = (t) => { const one = t.replace(/\s+/g, " ").trim(); return one.length > 70 ? one.slice(0, 70) + "…" : one; };
 
 page({
@@ -555,13 +576,7 @@ page({
   <section id="notices" aria-labelledby="notices-title">
     <h2 class="sub-head" id="notices-title">센터 소식</h2>
     <div class="notice-grid" id="noticeGrid">
-      ${notices.map((n, i) => `<a class="card notice-card" href="${r}notice/${n.feedId}/"${i >= 8 ? " hidden" : ""}>
-        <div class="poster">${n.photos ? `<img src="${r}naver-img/${n.feedId}/0.jpg" alt="" loading="lazy">` : ""}</div>
-        <div class="card-body">
-          <div class="date">${ymd(n.date)}</div>
-          <h3 class="card-title">${esc(n.title)}</h3>
-        </div>
-      </a>`).join("\n      ")}
+      ${notices.map((n, i) => noticeCard(r, n, i >= 8)).join("\n      ")}
     </div>
     <nav class="pager" id="noticePager" aria-label="센터 소식 페이지"></nav>
     <p class="subtle"><a href="${NAVER_FEED}" ${ext}>네이버 플레이스 소식 바로가기</a></p>
