@@ -86,14 +86,8 @@ ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg
           <li><a href="${r}videos/"${cur("news/videos")}>폭스 소식</a></li>
         </ul>
       </div>
-      <div class="nav-item">
-        <a class="nav-top" href="${CAMP_URL}" ${ext}>글로벌캠프</a>
-        <button class="sub-toggle" type="button" aria-label="글로벌캠프 하위 메뉴" aria-expanded="false"></button>
-        <ul class="sub">
-          <li><a class="ext" href="${CAMP_URL}" ${ext}>글로벌캠프</a></li>
-        </ul>
-      </div>
       <div class="nav-item"><a class="nav-top" href="${r}emotion-check/"${top("emotion")}>감정체크</a></div>
+      <div class="nav-item"><a class="nav-top ext" href="${CAMP_URL}" ${ext}>글로벌캠프</a></div>
       <div class="nav-item"><a class="nav-top ext" href="${INST_URL}" ${ext}>기관 체험</a></div>
       <a class="btn navy sm nav-cta" href="${r}#contact">문의하기</a>
     </nav>
