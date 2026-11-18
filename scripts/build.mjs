@@ -369,8 +369,11 @@ ${INSTITUTES.map((x) => {
   </div>
   <div class="im-body">
     <div class="im-gallery">
-      <figure class="im-main"><img src="${photos[0].src}" alt="${esc(photos[0].caption)}" loading="lazy"><figcaption>${esc(photos[0].caption)}</figcaption></figure>${photos.length > 1 ? `
-      <div class="im-thumbs" role="list">${photos.map((ph, i) => `<button type="button" role="listitem" class="im-thumb"${i ? "" : ' aria-current="true"'} data-src="${ph.src}" data-caption="${esc(ph.caption)}" aria-label="사진 ${i + 1} 보기"><img src="${ph.src}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
+      <figure class="im-main"><img src="${photos[0].src}" alt="${esc(photos[0].caption || `${x.name} 활동 사진 1`)}" loading="lazy">${photos.length > 1 ? `
+        <button type="button" class="im-nav prev" aria-label="이전 사진">‹</button><button type="button" class="im-nav next" aria-label="다음 사진">›</button>
+        <span class="im-count">1 / ${photos.length}</span>` : ""}
+        <figcaption>${esc(photos[0].caption)}</figcaption></figure>${photos.length > 1 ? `
+      <div class="im-thumbs" role="list">${photos.map((ph, i) => `<button type="button" role="listitem" class="im-thumb"${i ? "" : ' aria-current="true"'} data-src="${ph.src}" data-alt="${esc(ph.caption || `${x.name} 활동 사진 ${i + 1}`)}" data-caption="${esc(ph.caption)}" aria-label="사진 ${i + 1} 보기"><img src="${ph.src}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
     </div>
     <div class="im-text">
       <p class="im-desc">${esc(x.desc)}</p>
