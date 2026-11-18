@@ -2,18 +2,28 @@
  "_안내": "사진은 static/img/researchers/ 에 있다. photo 에 파일 이름을 적는다 (지금은 일러스트 아바타: 시트의 칸 이름, 예 a8.jpg). 비워 두면 실루엣이 보인다. 정사각형 사진이 가장 잘 맞는다.",
  "groups": [
   {
-   "title": "센터 운영",
+   "title": "대표",
    "people": [
     {
      "name": "이종탁",
      "role": "FOX CONNECT 대표",
      "photo": "a8.jpg"
-    },
+    }
+   ]
+  },
+  {
+   "title": "이사",
+   "people": [
     {
      "name": "임은희",
      "role": "폭스러닝센터 이사",
      "photo": "c11.jpg"
-    },
+    }
+   ]
+  },
+  {
+   "title": "센터장",
+   "people": [
     {
      "name": "양준모",
      "role": "폭스러닝센터 센터장",
