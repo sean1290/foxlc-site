@@ -423,15 +423,6 @@ page({
   <p>폭스커넥트와 학교·대학의 협약</p>
 </div></div>
 <div class="page-body"><div class="wrap">
-  <ul class="ag-list" role="list">
-    ${agreementData.agreements.map((a) => `<li class="ag-card">
-      <h2>${esc(a.institution)}</h2>
-      <p class="ag-date"><time datetime="${isoDate(a.date)}">${dateLabel(a.date)}</time> 체결${a.ended ? ' <span class="ag-status">협약 종료</span>' : ""}</p>
-      ${agreementDoc(r, a.institution, a.pages, a.caption)}
-      <p class="ag-topic">${esc(a.topic)}</p>
-      <p>${esc(a.description)}</p>
-    </li>`).join("\n    ")}
-  </ul>
   <section class="ag-partner" aria-labelledby="ag-partner-title">
     <div class="ag-partner-head">
       <h2 id="ag-partner-title">${esc(pt.parties)}</h2>
@@ -447,6 +438,15 @@ page({
       <figcaption>${esc(pt.photo.caption)}</figcaption>
     </figure>
   </section>
+  <ul class="ag-list" role="list">
+    ${agreementData.agreements.map((a) => `<li class="ag-card">
+      <h2>${esc(a.institution)}</h2>
+      <p class="ag-date"><time datetime="${isoDate(a.date)}">${dateLabel(a.date)}</time> 체결${a.ended ? ' <span class="ag-status">협약 종료</span>' : ""}</p>
+      ${agreementDoc(r, a.institution, a.pages, a.caption)}
+      <p class="ag-topic">${esc(a.topic)}</p>
+      <p>${esc(a.description)}</p>
+    </li>`).join("\n    ")}
+  </ul>
 </div></div>
 <dialog class="ag-viewer" aria-labelledby="ag-viewer-title">
   <div class="ag-viewer-head">
