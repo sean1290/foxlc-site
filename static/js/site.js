@@ -4,6 +4,15 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
+  /* ── 첫 화면 사진: 다 받은 뒤 나타나게 한다 ── */
+  var heroPhoto = $(".hero-photo");
+  if (heroPhoto) {
+    var m = /url\(["']?([^"')]+)/.exec(heroPhoto.style.backgroundImage);
+    var show = function () { heroPhoto.classList.add("loaded"); };
+    if (m) { var im = new Image(); im.onload = show; im.onerror = show; im.src = m[1]; if (im.complete) show(); }
+    else show();
+  }
+
   /* ── 메뉴: 데스크톱은 CSS hover, 휴대폰은 탭해서 펼친다 ── */
   var head = $(".site-head"), menuBtn = $(".menu-btn");
   if (menuBtn) {

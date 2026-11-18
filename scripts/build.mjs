@@ -51,7 +51,8 @@ function layout({ file, key, title, description = DESC, body, image }) {
 <link rel="canonical" href="${esc(url)}">` : ""}
 <link rel="icon" href="${r}img/favicon.png">
 <link rel="apple-touch-icon" href="${r}img/mark.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg" fetchpriority="high">
+` : ""}<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Oswald:wght@600;700&display=swap">
 <link rel="stylesheet" href="${r}css/site.css">
@@ -157,7 +158,8 @@ const QUOTES = [
 page({
   file: "index.html", key: "home", title: "",
   body: (r) => `
-<section class="hero" style="background-image:url(${r}img/hero.jpg)">
+<section class="hero">
+  <div class="hero-photo" style="background-image:url(${r}img/hero.jpg)"></div>
   <div class="wrap">
     <p class="tag" lang="en"><span>LEARN TODAY,</span><span>LEAD TOMORROW.</span></p>
     <h1><span class="l1">상담 전문가와 교육 전문가가 함께하는</span><span class="l2"><em>사회정서학습</em> 기반</span><span class="l3">폭스러닝센터</span></h1>
