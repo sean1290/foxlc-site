@@ -1,0 +1,50 @@
+{
+ "_안내": "사진을 넣으려면 static/img/researchers/ 에 사진을 올리고 그 사람의 photo 에 파일 이름(예: \"lee-jongtak.jpg\")을 적는다. 비워 두면 실루엣이 보인다. 정사각형 사진이 가장 잘 맞는다.",
+ "groups": [
+  {
+   "title": "센터 운영",
+   "people": [
+    { "name": "이종탁", "role": "FOX CONNECT 대표", "photo": "" },
+    { "name": "임은희", "role": "폭스러닝센터 이사", "photo": "" },
+    { "name": "양준모", "role": "폭스러닝센터 센터장", "photo": "" },
+    { "name": "오하림", "role": "운영실 팀장", "photo": "" }
+   ]
+  },
+  {
+   "title": "SEL 센터",
+   "people": [
+    { "name": "송지영", "role": "SEL센터 센터장", "photo": "" }
+   ]
+  },
+  {
+   "title": "SEL 연구소",
+   "people": [
+    { "name": "박미현", "role": "SEL 연구소 팀장", "photo": "" },
+    { "name": "최명민", "role": "SEL 연구소 연구원", "photo": "" },
+    { "name": "전은소", "role": "SEL 연구소 연구원", "photo": "" }
+   ]
+  },
+  {
+   "title": "AI 연구소",
+   "people": [
+    { "name": "이준민", "role": "AI 연구소 팀장", "photo": "" },
+    { "name": "박성주", "role": "AI 연구소 연구원", "photo": "" },
+    { "name": "김기환", "role": "AI 연구소 연구원", "photo": "" }
+   ]
+  },
+  {
+   "title": "튼튼 연구소",
+   "people": [
+    { "name": "전우열", "role": "튼튼 연구소 팀장", "photo": "" },
+    { "name": "김지은", "role": "튼튼 연구소 연구원", "photo": "" }
+   ]
+  },
+  {
+   "title": "언어 연구소",
+   "people": [
+    { "name": "Priscilla", "role": "언어 연구소 연구원", "photo": "" },
+    { "name": "한은비", "role": "언어 연구소 연구원", "photo": "" }
+   ]
+  }
+ ]
+}
