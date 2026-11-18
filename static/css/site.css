@@ -1,6 +1,8 @@
 /* 폭스러닝센터 사이트 공통 스타일.
    원칙: 내용은 최대 1200px 칸 안에 두고 글자 크기는 고정한다.
    화면이 넓어지면 내용이 커지는 대신 양옆 여백이 늘어난다. */
+/* 영문 제목 서체 (Oswald 700, 라틴 글자만) — 사이트에서 직접 서빙 */
+@font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:block;src:url(../fonts/oswald-700.woff2) format('woff2')}
 :root{
   --navy:#203462; --navy-d:#16223f; --mint:#72c0a1; --green:#2e7d59;
   --mintbg:#f2f8f5; --ink:#2b2f36; --ink2:#5b6270; --ink3:#7b8799; --line:#e3e8e5;
@@ -93,8 +95,10 @@ h1,h2,h3{color:var(--navy);letter-spacing:-.02em;line-height:1.35}
 /* 사진이 오기 전에는 밝은 바탕만 보이고, 사진은 다 받은 뒤 부드럽게 나타난다 (site.js 가 .loaded 를 붙인다) */
 .hero{position:relative;overflow:hidden;color:var(--ink);background:#eef2f1}
 .hero-photo{position:absolute;inset:0;z-index:0;background:70% 38%/cover no-repeat}  /* 70% 38%: 창문의 FOX LEARNING CENTER 글자와 건물이 함께 보이는 위치 */
-.js .hero-photo{opacity:0;transition:opacity .6s ease;animation:photoFallback 0s 4s forwards}
-@keyframes photoFallback{to{opacity:1}}  /* 스크립트가 못 돌면 4초 뒤에라도 보이게 */
+.js .hero-photo{opacity:0;transition:opacity .7s ease}
+/* 첫 화면은 서체와 사진이 모두 준비될 때까지(최대 약 2.5초) 멈춰 있다가, .ready 가 붙으면 한꺼번에 시작한다.
+   그래서 대체 서체로 먼저 그려졌다가 바뀌는 깜빡임이 없다. */
+.js .hero:not(.ready) *{animation-play-state:paused!important}
 .js .hero-photo.loaded{opacity:1}
 .hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(255,255,255,.86) 0%,rgba(255,255,255,.66) 36%,rgba(255,255,255,.18) 66%,rgba(255,255,255,0) 100%)}
 .hero .wrap{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;min-height:660px;padding-top:64px;padding-bottom:64px}
@@ -190,7 +194,7 @@ h1,h2,h3{color:var(--navy);letter-spacing:-.02em;line-height:1.35}
 .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
 .js .reveal.in{opacity:1;transform:none}
 /* 히어로 문구: 첫 줄은 오른쪽에서, 둘째 줄은 왼쪽에서 밀려 들어오고, '폭스러닝센터'와 나머지는 아래에서 올라온다 */
-.js .hero .wrap>:not(h1):not(.tag),.js .hero h1>span,.js .hero .tag>span{opacity:0;animation:heroIn .9s cubic-bezier(.2,.7,.2,1) forwards}
+.js .hero .wrap>p:not(.tag),.js .hero .actions,.js .hero h1>span,.js .hero .tag>span{opacity:0;animation:heroIn .9s cubic-bezier(.2,.7,.2,1) forwards}
 .js .hero .tag>span:nth-child(2){animation-delay:.15s}
 .js .hero h1 .l1{animation:heroFromRight 1s cubic-bezier(.2,.7,.2,1) .45s forwards}
 .js .hero h1 .l2{animation:heroFromLeft 1s cubic-bezier(.2,.7,.2,1) .65s forwards}

@@ -52,11 +52,12 @@ function layout({ file, key, title, description = DESC, body, image }) {
 <link rel="icon" href="${r}img/favicon.png">
 <link rel="apple-touch-icon" href="${r}img/mark.png">
 ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg" fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="${r}fonts/oswald-700.woff2" crossorigin>
 ` : ""}<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Oswald:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
 <link rel="stylesheet" href="${r}css/site.css">
-<script>document.documentElement.className+=" js"</script>
+<script>document.documentElement.className+=" js";setTimeout(function(){var h=document.querySelector(".hero");if(h){h.classList.add("ready");var p=h.querySelector(".hero-photo");if(p)p.classList.add("loaded")}},3000)</script>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>

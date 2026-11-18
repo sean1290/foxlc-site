@@ -4,13 +4,34 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
-  /* ── 첫 화면 사진: 다 받은 뒤 나타나게 한다 ── */
-  var heroPhoto = $(".hero-photo");
-  if (heroPhoto) {
-    var m = /url\(["']?([^"')]+)/.exec(heroPhoto.style.backgroundImage);
-    var show = function () { heroPhoto.classList.add("loaded"); };
-    if (m) { var im = new Image(); im.onload = show; im.onerror = show; im.src = m[1]; if (im.complete) show(); }
-    else show();
+  /* ── 첫 화면: 서체와 사진이 준비되면 한꺼번에 시작한다 ── */
+  var hero = $(".hero"), heroPhoto = $(".hero-photo");
+  if (hero) {
+    var started = false;
+    var start = function () {
+      if (started) return; started = true;
+      hero.classList.add("ready");
+      if (heroPhoto) heroPhoto.classList.add("loaded");
+    };
+    var waits = [];
+    if (document.fonts && document.fonts.load) {
+      waits.push(Promise.all([
+        document.fonts.load("700 112px Oswald", "LEARN TODAY, LEAD TOMORROW."),
+        document.fonts.load('700 28px "Noto Sans KR"', "상담 전문가와 교육 전문가가 함께하는 사회정서학습 기반"),
+        document.fonts.load('800 64px "Noto Sans KR"', "폭스러닝센터"),
+        document.fonts.load('400 17px "Noto Sans KR"', "폭스러닝센터는 전문성과 따뜻함으로 아이의 성장을 지원합니다."),
+        document.fonts.load('700 15px "Noto Sans KR"', "연구소 소개 문의하기")
+      ]).catch(function () {}));
+    }
+    if (heroPhoto) {
+      var m = /url\(["']?([^"')]+)/.exec(heroPhoto.style.backgroundImage);
+      if (m) waits.push(new Promise(function (res) {
+        var im = new Image(); im.onload = res; im.onerror = res; im.src = m[1];
+        if (im.complete) res();
+      }));
+    }
+    Promise.all(waits).then(start, start);
+    setTimeout(start, 2500);   /* 너무 오래 걸리면 기다리지 않는다 */
   }
 
   /* ── 메뉴: 데스크톱은 CSS hover, 휴대폰은 탭해서 펼친다 ── */
