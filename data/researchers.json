@@ -1,49 +1,119 @@
 {
- "_안내": "사진을 넣으려면 static/img/researchers/ 에 사진을 올리고 그 사람의 photo 에 파일 이름(예: \"lee-jongtak.jpg\")을 적는다. 비워 두면 실루엣이 보인다. 정사각형 사진이 가장 잘 맞는다.",
+ "_안내": "사진은 static/img/researchers/ 에 있다. photo 에 파일 이름을 적는다 (지금은 일러스트 아바타: 시트의 칸 이름, 예 a8.jpg). 비워 두면 실루엣이 보인다. 정사각형 사진이 가장 잘 맞는다.",
  "groups": [
   {
    "title": "센터 운영",
    "people": [
-    { "name": "이종탁", "role": "FOX CONNECT 대표", "photo": "" },
-    { "name": "임은희", "role": "폭스러닝센터 이사", "photo": "" },
-    { "name": "양준모", "role": "폭스러닝센터 센터장", "photo": "" },
-    { "name": "오하림", "role": "운영실 팀장", "photo": "" }
+    {
+     "name": "이종탁",
+     "role": "FOX CONNECT 대표",
+     "photo": "a8.jpg"
+    },
+    {
+     "name": "임은희",
+     "role": "폭스러닝센터 이사",
+     "photo": "c11.jpg"
+    },
+    {
+     "name": "양준모",
+     "role": "폭스러닝센터 센터장",
+     "photo": "d9.jpg"
+    }
+   ]
+  },
+  {
+   "title": "운영실",
+   "people": [
+    {
+     "name": "권세연",
+     "role": "운영실 실장",
+     "photo": "a13.jpg"
+    },
+    {
+     "name": "오하림",
+     "role": "운영실 팀장",
+     "photo": "b9.jpg"
+    }
    ]
   },
   {
    "title": "SEL 센터",
    "people": [
-    { "name": "송지영", "role": "SEL센터 센터장", "photo": "" }
+    {
+     "name": "송지영",
+     "role": "SEL센터 센터장",
+     "photo": "b15.jpg"
+    }
    ]
   },
   {
    "title": "SEL 연구소",
    "people": [
-    { "name": "박미현", "role": "SEL 연구소 팀장", "photo": "" },
-    { "name": "최명민", "role": "SEL 연구소 연구원", "photo": "" },
-    { "name": "전은소", "role": "SEL 연구소 연구원", "photo": "" }
+    {
+     "name": "박미현",
+     "role": "SEL 연구소 팀장",
+     "photo": "b14.jpg"
+    },
+    {
+     "name": "최명민",
+     "role": "SEL 연구소 연구원",
+     "photo": "a16.jpg"
+    },
+    {
+     "name": "전은소",
+     "role": "SEL 연구소 연구원",
+     "photo": "a15.jpg"
+    }
    ]
   },
   {
    "title": "AI 연구소",
    "people": [
-    { "name": "이준민", "role": "AI 연구소 팀장", "photo": "" },
-    { "name": "박성주", "role": "AI 연구소 연구원", "photo": "" },
-    { "name": "김기환", "role": "AI 연구소 연구원", "photo": "" }
+    {
+     "name": "이준민",
+     "role": "AI 연구소 팀장",
+     "photo": "c6.jpg"
+    },
+    {
+     "name": "박성주",
+     "role": "AI 연구소 연구원",
+     "photo": "b7.jpg"
+    },
+    {
+     "name": "김기환",
+     "role": "AI 연구소 연구원",
+     "photo": "d10.jpg"
+    }
    ]
   },
   {
    "title": "튼튼 연구소",
    "people": [
-    { "name": "전우열", "role": "튼튼 연구소 팀장", "photo": "" },
-    { "name": "김지은", "role": "튼튼 연구소 연구원", "photo": "" }
+    {
+     "name": "전우열",
+     "role": "튼튼 연구소 팀장",
+     "photo": "d1.jpg"
+    },
+    {
+     "name": "김지은",
+     "role": "튼튼 연구소 연구원",
+     "photo": "a11.jpg"
+    }
    ]
   },
   {
    "title": "언어 연구소",
    "people": [
-    { "name": "Priscilla", "role": "언어 연구소 연구원", "photo": "" },
-    { "name": "한은비", "role": "언어 연구소 연구원", "photo": "" }
+    {
+     "name": "Priscilla",
+     "role": "언어 연구소 연구원",
+     "photo": "a16.jpg"
+    },
+    {
+     "name": "한은비",
+     "role": "언어 연구소 연구원",
+     "photo": "c12.jpg"
+    }
    ]
   }
  ]
