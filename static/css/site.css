@@ -353,7 +353,7 @@ h1,h2,h3{color:var(--navy);letter-spacing:-.02em;line-height:1.35}
 .ag-doc>figcaption{margin-top:6px;font-size:13px;color:var(--ink3)}
 .ag-partner{
   display:grid;grid-template-areas:"head head" "doc body" "doc sign";grid-template-columns:1fr 1fr;grid-template-rows:auto auto 1fr;
-  gap:18px 44px;align-items:start;margin-top:32px;padding:32px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);
+  gap:18px 44px;align-items:start;margin-bottom:32px;padding:32px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);
 }
 .ag-partner h2{font-size:26px}
 .ag-partner-head{grid-area:head}
