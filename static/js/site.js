@@ -282,7 +282,7 @@
     dlg.showModal(); dlg.scrollTop = 0;
     try { history.replaceState(null, "", "#" + id); } catch (e) {}
   };
-  $$(".inst-more").forEach(function (b) {
+  $$(".inst-more, .inst-photo").forEach(function (b) {
     b.addEventListener("click", function () { openInst(b.getAttribute("data-inst")); });
   });
   $$(".inst-modal").forEach(function (dlg) {

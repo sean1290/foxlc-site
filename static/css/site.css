@@ -507,6 +507,24 @@ body:has(.ag-viewer[open]){overflow:hidden}
   .au-facts a{padding:4px 14px}
 }
 
+/* 카드는 사진 · 한 줄 소개 · 이름 · 자세히 보기만 (내용은 창에서) */
+.inst-photo{display:block;padding:0;border:0;background:none;cursor:pointer;overflow:hidden}
+.inst-photo img{transition:transform .4s ease}
+.inst:hover .inst-photo img{transform:scale(1.04)}
+.inst-body{padding:22px 24px 24px}
+.inst h2{margin-bottom:18px}
+.inst-more{margin-top:auto}
+.inst.hl .inst-photo{width:42%;flex:none}
+.inst.hl .inst-photo img{width:100%;height:100%;aspect-ratio:auto;min-height:280px}
+.inst.hl .inst-body{padding:40px 48px}
+.inst.hl h2{font-size:32px;margin-bottom:24px}
+.inst.hl .inst-more{margin-top:0}
+@media (max-width:760px){
+  .inst.hl .inst-photo{width:100%}
+  .inst.hl .inst-photo img{aspect-ratio:4/3;min-height:0}
+  .inst.hl .inst-body{padding:22px 24px 24px}
+  .inst.hl h2{font-size:23px}
+}
 /* ── 연구소 '자세히 보기' 버튼과 창 ── */
 .inst-more{align-self:stretch;margin-top:auto;justify-content:space-between;padding:12px 20px}
 .inst-body>ul,.inst-body>.note{margin-bottom:22px}
