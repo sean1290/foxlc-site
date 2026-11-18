@@ -272,6 +272,19 @@ h1,h2,h3{color:var(--navy);letter-spacing:-.02em;line-height:1.35}
 .inst.hl .tagline{color:var(--mint)}
 .inst.hl .label{background:rgba(114,192,161,.18);color:var(--mint)}
 .inst.hl ul{border-color:rgba(255,255,255,.18)}
+/* SEL 센터: 맨 아래에 가로로 넓게 (왼쪽 사진, 오른쪽 내용, 프로그램은 두 열) */
+.inst.hl{grid-column:1/-1;flex-direction:row}
+.inst.hl>img{width:42%;aspect-ratio:auto;min-height:100%;flex:none}
+.inst.hl .inst-body{padding:36px 40px 38px;justify-content:center}
+.inst.hl h2{font-size:28px}
+.inst.hl p{font-size:16px}
+.inst.hl ul{grid-template-columns:1fr 1fr;gap:10px 28px}
+@media (max-width:760px){
+  .inst.hl{flex-direction:column}
+  .inst.hl>img{width:100%;aspect-ratio:4/3;min-height:0}
+  .inst.hl .inst-body{padding:22px 24px 26px}
+  .inst.hl ul{grid-template-columns:1fr}
+}
 
 /* ── 준비 중 ── */
 .soon{text-align:center;padding:80px 20px;background:var(--mintbg);border-radius:20px}
