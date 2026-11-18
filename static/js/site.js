@@ -275,6 +275,34 @@
     agViewer.addEventListener("click", function (e) { if (e.target === agViewer) agViewer.close(); });
   }
 
+  /* ── 연구소 '자세히 보기': 창 열기, 사진 넘기기, 주소(#sel 등)로 바로 열기 ── */
+  var openInst = function (id) {
+    var dlg = document.getElementById("inst-" + id);
+    if (!dlg || !dlg.showModal || dlg.open) return;
+    dlg.showModal(); dlg.scrollTop = 0;
+    try { history.replaceState(null, "", "#" + id); } catch (e) {}
+  };
+  $$(".inst-more").forEach(function (b) {
+    b.addEventListener("click", function () { openInst(b.getAttribute("data-inst")); });
+  });
+  $$(".inst-modal").forEach(function (dlg) {
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener("close", function () {
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+    });
+    var main = $(".im-main img", dlg), cap = $(".im-main figcaption", dlg);
+    $$(".im-thumb", dlg).forEach(function (t) {
+      t.addEventListener("click", function () {
+        main.src = t.getAttribute("data-src"); main.alt = t.getAttribute("data-caption") || "";
+        cap.textContent = t.getAttribute("data-caption") || "";
+        $$(".im-thumb", dlg).forEach(function (o) { o.removeAttribute("aria-current"); });
+        t.setAttribute("aria-current", "true");
+      });
+    });
+  });
+  if (location.hash && $(".inst-modal")) openInst(location.hash.slice(1));
+  window.addEventListener("hashchange", function () { if ($(".inst-modal") && location.hash) openInst(location.hash.slice(1)); });
+
   /* ── 스크롤 애니메이션 ──
      아래 요소들이 화면에 들어오면 .in 을 붙여 살짝 떠오르게 한다.
      같은 줄에 놓인 카드들은 0.08초씩 차례로 나타난다. */

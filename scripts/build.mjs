@@ -14,6 +14,7 @@ const news = await json("data/news.json");
 const videos = await json("data/videos.json");
 const agreementData = await json("data/agreements.json");
 const researchers = await json("data/researchers.json");
+const instDetails = await json("data/institute-details.json");
 const notices = existsSync(path.join(ROOT, "data/naver.json")) ? await json("data/naver.json") : [];
 
 const CAMP_URL = "https://freddy1590.github.io/fox-global-camp-usa-page/camp-global/index.html";
@@ -348,10 +349,40 @@ page({
         <p>${esc(x.desc)}</p>
         <ul>${x.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>${x.note ? `
         <p class="note">${esc(x.note)}</p>` : ""}
+        <button class="btn ${x.hl ? "mint" : "navy"} inst-more" type="button" data-inst="${x.id}" aria-haspopup="dialog">자세히 보기 <span aria-hidden="true">→</span></button>
       </div>
     </article>`).join("\n    ")}
   </div>
-</div></div>`,
+</div></div>
+${INSTITUTES.map((x) => {
+  const d = instDetails[x.id] || {};
+  const photos = [{ src: `${r}img/institutes/${x.id}.jpg`, caption: `${x.name} 활동 공간` },
+    ...(d.photos || []).map((ph) => ({ src: `${r}img/institutes/${x.id}/${ph.file}`, caption: ph.caption || "" }))];
+  return `<dialog class="inst-modal" id="inst-${x.id}" aria-labelledby="inst-${x.id}-title">
+  <div class="im-head">
+    <div>
+      <span class="label">${x.label}</span>
+      <div class="tagline">${esc(x.tagline)}</div>
+      <h2 id="inst-${x.id}-title">${esc(x.name)}</h2>
+    </div>
+    <form method="dialog"><button class="im-close" aria-label="닫기">✕</button></form>
+  </div>
+  <div class="im-body">
+    <div class="im-gallery">
+      <figure class="im-main"><img src="${photos[0].src}" alt="${esc(photos[0].caption)}" loading="lazy"><figcaption>${esc(photos[0].caption)}</figcaption></figure>${photos.length > 1 ? `
+      <div class="im-thumbs" role="list">${photos.map((ph, i) => `<button type="button" role="listitem" class="im-thumb"${i ? "" : ' aria-current="true"'} data-src="${ph.src}" data-caption="${esc(ph.caption)}" aria-label="사진 ${i + 1} 보기"><img src="${ph.src}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
+    </div>
+    <div class="im-text">
+      <p class="im-desc">${esc(x.desc)}</p>
+      ${(d.text || []).map((t) => `<p>${esc(t)}</p>`).join("")}
+      <h3>프로그램</h3>
+      <ul>${x.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>${x.note ? `
+      <p class="note">${esc(x.note)}</p>` : ""}
+      <div class="im-actions"><a class="btn navy sm" href="tel:14332700">전화 문의 1433-2700</a><a class="btn line sm" href="${r}#contact">문의 남기기</a></div>
+    </div>
+  </div>
+</dialog>`;
+}).join("\n")}`,
 });
 
 // ── About Us ───────────────────────────────────────────

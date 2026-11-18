@@ -1,0 +1,10 @@
+{
+ "_안내": "연구소 '자세히 보기' 창에 들어갈 추가 사진과 설명. 사진은 static/img/institutes/<id>/ 폴더에 넣고 photos 에 파일 이름과 설명(caption)을 적는다. text 는 문단 목록. id: sel, ai, english, art, math, health, id(SEL 센터).",
+ "sel": { "photos": [], "text": [] },
+ "ai": { "photos": [], "text": [] },
+ "english": { "photos": [], "text": [] },
+ "art": { "photos": [], "text": [] },
+ "math": { "photos": [], "text": [] },
+ "health": { "photos": [], "text": [] },
+ "id": { "photos": [], "text": [] }
+}
