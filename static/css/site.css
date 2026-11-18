@@ -412,7 +412,8 @@ body:has(.ag-viewer[open]){overflow:hidden}
 }
 
 /* ── 연구원 소개: 팀(그룹)이 옆으로 이어서 놓이고, 자리가 모자라면 다음 줄로 ── */
-.teams{display:flex;flex-wrap:wrap;gap:56px 64px}
+.teams{display:flex;flex-direction:column;gap:56px}
+.team-row{display:flex;flex-wrap:wrap;gap:56px 64px}
 .team{flex:0 0 auto;max-width:100%}
 .people{list-style:none;display:flex;flex-wrap:wrap;gap:28px 16px}
 .person{width:168px;text-align:center}
@@ -424,7 +425,7 @@ body:has(.ag-viewer[open]){overflow:hidden}
 .person h3{font-size:19px;font-weight:800;color:var(--navy)}
 .person p{margin-top:2px;font-size:14px;color:var(--ink2)}
 @media (max-width:600px){
-  .teams{gap:44px}
+  .teams,.team-row{gap:44px}
   .team{flex:1 1 100%}
   .people{display:grid;grid-template-columns:1fr 1fr;gap:24px 12px}
   .person{width:auto}

@@ -369,7 +369,8 @@ page({
   <p>아이의 성장을 함께 살피는 폭스러닝센터 사람들입니다</p>
 </div></div>
 <div class="page-body"><div class="wrap teams">
-  ${researchers.groups.map((g) => `<section class="team" aria-labelledby="team-${esc(g.title)}">
+  ${[...new Set(researchers.groups.map((g) => g.row || 0))].map((row) => `<div class="team-row">
+  ${researchers.groups.filter((g) => (g.row || 0) === row).map((g) => `<section class="team" aria-labelledby="team-${esc(g.title)}">
     <h2 class="sub-head" id="team-${esc(g.title)}">${esc(g.title)}</h2>
     <ul class="people" role="list">
       ${g.people.map((m) => `<li class="person">
@@ -381,6 +382,7 @@ page({
       </li>`).join("\n      ")}
     </ul>
   </section>`).join("\n  ")}
+  </div>`).join("\n  ")}
 </div></div>`,
 });
 
