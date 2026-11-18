@@ -254,7 +254,7 @@ page({
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">GALLERY</div>
-      <h2>폭스러닝센터의 순간들</h2>
+      <h2>풍성한 배움의 현장</h2>
     </div>
     <div class="gallery">
       ${[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => `<button type="button" aria-label="활동 사진 ${n} 크게 보기"><img src="${r}img/gallery/${n}.jpg" alt="폭스러닝센터 활동 사진 ${n}" loading="lazy"></button>`).join("\n      ")}
