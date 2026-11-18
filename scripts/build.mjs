@@ -319,6 +319,9 @@ const INSTITUTES = [
   { id: "math", label: "FOX MATH", tagline: "생각의 힘을 키우는", name: "수리 연구소",
     desc: "PLAYFACTO부터 교과수학, AI 수학까지 성장 과정에 따라 연결하여 수학적 사고력과 역량을 함께 키우는 연구소",
     items: ["흥미를 발견하고 생각하는 힘을 키우는 놀이 수학", "개념을 이해하고 문제해결력을 완성하는 교과수학", "알고리즘과 코딩으로 사고를 확장하는 논리적 사고 수학"] },
+  { id: "health", label: "FOX HEALTH", tagline: "바른 성장을 돕는", name: "튼튼 연구소",
+    desc: "스스로 건강한 생활 습관을 익히고, 올바른 성장을 통해 몸과 마음이 조화롭게 자라나도록 이끄는 연구소",
+    items: ["매일 바르게 움직이는 건강한 습관 형성", "집에서도 실천하는 홈 운동 프로그램", "오감을 깨우는 즐거운 신체 활동"] },
   { id: "id", label: "FOX ID", tagline: "검사, 상담 및 마음성장 프로그램", name: "SEL 센터", hl: true,
     desc: "아이의 특성과 발달을 더 깊이 이해할 수 있도록 아이 상담 및 마음 성장 프로그램, 검사와 부모 상담을 진행하고 있습니다.",
     items: ["종합심리검사 - 웩슬러, TCI/JTCI, 정서행동검사", "개별 상담 - 아동 청소년 심리상담", "부모 상담 - 부모 양육 상담", "SEL 프로그램 - 그림책, 놀이, 미술 등을 활용한 사회정서 역량 활동"],
@@ -327,17 +330,17 @@ const INSTITUTES = [
 
 page({
   file: "about/institutes/index.html", key: "about/institutes", title: "연구소 소개",
-  description: "SEL·AI·언어·미술·수리 다섯 연구소와 SEL 센터를 소개합니다.",
+  description: "SEL·AI·언어·미술·수리·튼튼 여섯 연구소와 SEL 센터를 소개합니다.",
   body: (r) => `
 <div class="page-head"><div class="wrap">
   <div class="eyebrow">INSTITUTES</div>
   <h1>연구소 소개</h1>
-  <p>다섯 연구소와 SEL 센터가 아이의 배움과 성장을 함께 살핍니다</p>
+  <p>여섯 연구소와 SEL 센터가 아이의 배움과 성장을 함께 살핍니다</p>
 </div></div>
 <div class="page-body"><div class="wrap">
   <div class="inst-grid">
     ${INSTITUTES.map((x) => `<article class="inst${x.hl ? " hl" : ""}">
-      <img src="${r}img/institutes/${x.id}.jpg" alt="${esc(x.name)} 활동 공간" loading="lazy" width="900" height="675">
+      <img src="${r}img/institutes/${x.id}.jpg" alt="${esc(x.name)} 활동 공간" loading="lazy">
       <div class="inst-body">
         <span class="label">${x.label}</span>
         <div class="tagline">${esc(x.tagline)}</div>
@@ -407,7 +410,7 @@ page({
 
 <section class="au-facts" aria-label="폭스러닝센터 한눈에 보기">
   <div class="wrap au-facts-grid">
-    <a href="${r}about/institutes/"><strong>${labs}</strong><span>개 연구소</span><small>SEL · AI · 언어 · 미술 · 수리</small></a>
+    <a href="${r}about/institutes/"><strong>${labs}</strong><span>개 연구소</span><small>SEL · AI · 언어 · 미술 · 수리 · 튼튼</small></a>
     <a href="${r}about/institutes/"><strong>SEL</strong><span>센터</span><small>검사 · 상담 · 마음성장 프로그램</small></a>
     <a href="${r}about/researchers/"><strong>${people}</strong><span>명</span><small>함께하는 연구원과 운영진</small></a>
     <a href="${r}about/agreements/"><strong>${agreementsCount}</strong><span>건</span><small>학교 · 대학 · 기관 교육 협약</small></a>
