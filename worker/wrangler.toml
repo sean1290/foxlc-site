@@ -6,7 +6,7 @@ compatibility_date = "2024-11-01"
 
 [vars]
 # 이 주소에서 온 요청만 받는다 (쉼표로 구분)
-ALLOWED_ORIGINS = "https://sean1290.github.io,http://localhost:8081"
+ALLOWED_ORIGINS = "https://foxlc.foxconnect.kr,https://sean1290.github.io,http://localhost:8081"
 
 [[d1_databases]]
 binding = "DB"
