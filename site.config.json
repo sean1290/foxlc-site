@@ -2,5 +2,5 @@
   "siteUrl": "",
   "contactEndpoint": "",
   "kakaoChannelUrl": "",
-  "apiBase": ""
+  "apiBase": "https://foxlc-api.seanyang92.workers.dev"
 }
