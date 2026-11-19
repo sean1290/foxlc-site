@@ -400,7 +400,7 @@ page({
   // 본문은 원장님이 주신 네 문단을 그대로 쓴다 (줄바꿈 포함, 굵게 표시만 더함). 문구를 바꾸지 말 것.
   body: (r) => `
 <section class="au-hero au-hero-big">
-  <div class="au-hero-bg" role="img" aria-label="연구원과 아이들이 함께 활동하는 모습" style="background-image:url(${r}img/about.jpg)"></div>
+  <div class="au-hero-bg" role="img" aria-label="폭스러닝센터 내부 안내 데스크와 라운지" style="background-image:url(${r}img/about-hero.jpg)"></div>
   <div class="wrap">
     <div class="au-hero-text">
       <h1 class="au-title" lang="en">About Us</h1>
