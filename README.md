@@ -46,3 +46,14 @@ http://localhost:8080 에서 확인합니다. 피드를 직접 가져오려면 `
 - 문의 폼: `contact/contact.gs` 맨 위 안내대로 설치하고 `contactEndpoint` 를 채웁니다.
   비어 있는 동안에는 폼이 전송 대신 전화·카카오톡 안내를 보여 줍니다.
 - 감정체크 체험판(`static/demo/index.html`)에는 실제 학생 명단과 Apps Script 주소를 **넣지 않습니다**.
+
+## API 서버 (채용공고 · 관리자 로그인)
+
+`worker/` 폴더는 Cloudflare Worker + D1 데이터베이스입니다. 채용공고 글과 관리자 계정이 여기에 저장됩니다.
+
+- 사이트는 `site.config.json` 의 `apiBase` 주소로 API 를 부릅니다. 비어 있으면 채용공고 화면에 "준비 중" 이 나옵니다.
+- 로컬 테스트: `cd worker && npm install && npx wrangler d1 migrations apply foxlc --local && npm run dev` 후
+  `FOXLC_API=http://localhost:8787 npm run serve`
+- 관리자 추가: 사이트의 `/admin/` 화면(로그인 후) 또는 `node worker/add-admin.mjs <아이디> "<이름>"` 로 SQL 을 만들어 `npx wrangler d1 execute foxlc --remote --file=add-admin.sql`
+- 비밀번호는 PBKDF2 로 해시해서 저장하고, 로그인 토큰은 `SESSION_SECRET`(Worker 비밀값)으로 서명합니다.
+- 나중에 회원가입을 열 때는 `users.role` 의 `member` 를 쓰면 됩니다. 쓰기·수정·삭제는 `admin` 만 됩니다.

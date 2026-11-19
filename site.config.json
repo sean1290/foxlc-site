@@ -1,5 +1,6 @@
 {
   "siteUrl": "",
   "contactEndpoint": "",
-  "kakaoChannelUrl": ""
+  "kakaoChannelUrl": "",
+  "apiBase": ""
 }
