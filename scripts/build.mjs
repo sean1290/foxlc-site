@@ -91,7 +91,14 @@ ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg
           <li><a href="${r}videos/"${cur("news/videos")}>폭스 소식</a></li>
         </ul>
       </div>
-      <div class="nav-item"><a class="nav-top" href="${r}emotion-check/"${top("emotion")}>감정체크</a></div>
+      <div class="nav-item">
+        <a class="nav-top" href="${r}emotion-check/"${top("emotion")}>감정체크</a>
+        <button class="sub-toggle" type="button" aria-label="감정체크 하위 메뉴" aria-expanded="false"></button>
+        <ul class="sub">
+          <li><a href="${r}emotion-check/"${cur("emotion")}>감정체크 체험</a></li>
+          <li><a href="${r}growth/"${cur("emotion/growth")}>성장관리 시스템</a></li>
+        </ul>
+      </div>
       <div class="nav-item"><a class="nav-top ext" href="${CAMP_URL}" ${ext}>글로벌캠프</a></div>
       <div class="nav-item"><a class="nav-top ext" href="${INST_URL}" ${ext}>기관 체험</a></div>
       <a class="btn navy sm nav-cta" href="${r}#contact">문의하기</a>
@@ -220,38 +227,8 @@ page({
   </div>
 </section>
 
-<section class="sec tint">
-  <div class="wrap">
-    <div class="growth">
-      <div>
-        <div class="eyebrow left">GROWTH MANAGEMENT</div>
-        <h2>학생 성장관리 시스템</h2>
-        <p>폭스러닝센터는 다섯 연구소의 교육 활동을 통해 교육 전문가와 심리 전문가가 아이들의 배움과 성장을 다각도로 살펴봅니다.</p>
-        <p>학생 성장관리 시스템은 각 연구소에서 관찰한 아이들의 활동과 반응, 변화의 모습을 학생별로 통합하고 체계적으로 기록하는 관리 체계입니다. 개별 활동에서 포착한 다양한 관찰 기록을 하나로 연결함으로써, 단편적인 모습만으로는 파악하기 어려운 아이의 성장 과정과 변화의 흐름을 종합적으로 이해할 수 있습니다.</p>
-        <p>폭스러닝센터는 이러한 관찰 데이터와 성장의 흐름을 바탕으로 아이에게 필요한 교육적 지원과 다음 단계의 지도 방향을 구체화하며, 성장 리포트를 통해 그 과정과 결과를 학부모님께 공유합니다.</p>
-      </div>
-      <div>
-        <div class="mac-scene">
-          <div class="laptop">
-            <div class="lid">
-              <div class="mac-screen">
-                ${FILM.map(([alt], i) => `<div class="frame"><img src="${r}img/film/${i + 1}.jpg" alt="${esc(alt)}" loading="lazy"></div>`).join("\n                ")}
-              </div>
-            </div>
-            <div class="base" aria-hidden="true"></div>
-          </div>
-          <div class="filmui" aria-hidden="true">
-            <div class="fcap">${FILM.map(([, cap]) => `<span>${esc(cap)}</span>`).join("")}</div>
-            <div class="fbar">${FILM.map(() => "<span></span>").join("")}</div>
-          </div>
-        </div>
-        <p class="filmnote">실제 화면입니다. 학생 이름·학교는 예시로 바꾸고, 서술 문단은 가상의 문장으로 대체했습니다.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section class="sec">
+<section class="sec tint">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">GALLERY</div>
@@ -267,7 +244,7 @@ page({
   </dialog>
 </section>
 
-<section class="sec tint">
+<section class="sec">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">TESTIMONIALS</div>
@@ -279,7 +256,7 @@ page({
   </div>
 </section>
 
-<section class="sec" id="contact">
+<section class="sec tint" id="contact">
   <div class="wrap">
     <div class="contact">
       <div>
@@ -732,6 +709,41 @@ notices.forEach((n, i) => {
   </div>
 </div></div>`,
   });
+});
+
+// ── 성장관리 시스템 (감정체크 하위) ───────────────────────
+page({
+  file: "growth/index.html", key: "emotion/growth", title: "학생 성장관리 시스템",
+  description: "각 연구소에서 관찰한 아이들의 활동과 반응, 변화의 모습을 학생별로 통합하고 체계적으로 기록하는 폭스러닝센터의 관리 체계입니다.",
+  body: (r) => `
+<div class="page-head"><div class="wrap">
+  <div class="eyebrow">GROWTH MANAGEMENT</div>
+  <h1>학생 성장관리 시스템</h1>
+</div></div>
+<div class="page-body growth-page"><div class="wrap">
+  <div class="gp-screen">
+        <div class="mac-scene">
+      <div class="laptop">
+        <div class="lid">
+          <div class="mac-screen">
+            ${FILM.map(([alt], i) => `<div class="frame"><img src="${r}img/film/${i + 1}.jpg" alt="${esc(alt)}" loading="lazy"></div>`).join("\n                ")}
+          </div>
+        </div>
+        <div class="base" aria-hidden="true"></div>
+      </div>
+      <div class="filmui" aria-hidden="true">
+        <div class="fcap">${FILM.map(([, cap]) => `<span>${esc(cap)}</span>`).join("")}</div>
+        <div class="fbar">${FILM.map(() => "<span></span>").join("")}</div>
+      </div>
+    </div>
+    <p class="filmnote">실제 화면입니다. 학생 이름·학교는 예시로 바꾸고, 서술 문단은 가상의 문장으로 대체했습니다.</p>
+  </div>
+  <div class="gp-text">
+    <p>폭스러닝센터는 다섯 연구소의 교육 활동을 통해 교육 전문가와 심리 전문가가 아이들의 배움과 성장을 다각도로 살펴봅니다.</p>
+    <p>학생 성장관리 시스템은 각 연구소에서 관찰한 아이들의 활동과 반응, 변화의 모습을 학생별로 통합하고 체계적으로 기록하는 관리 체계입니다. 개별 활동에서 포착한 다양한 관찰 기록을 하나로 연결함으로써, 단편적인 모습만으로는 파악하기 어려운 아이의 성장 과정과 변화의 흐름을 종합적으로 이해할 수 있습니다.</p>
+    <p>폭스러닝센터는 이러한 관찰 데이터와 성장의 흐름을 바탕으로 아이에게 필요한 교육적 지원과 다음 단계의 지도 방향을 구체화하며, 성장 리포트를 통해 그 과정과 결과를 학부모님께 공유합니다.</p>
+  </div>
+</div></div>`,
 });
 
 // ── 감정체크 체험 ───────────────────────────────────────
