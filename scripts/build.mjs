@@ -417,6 +417,7 @@ page({
   <div class="wrap">
     <div class="au-cards">
       <article class="au-card">
+        <figure class="au-card-photo"><img src="${r}img/institutes/sel/16.jpg" alt="연구원과 아이들이 함께 활동하는 SEL 연구소" loading="lazy"></figure>
         <div class="au-icon"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.6-4.6M8 10.5h5M10.5 8v5"/></svg></div>
         <p>폭스러닝센터는 이런 역량을 <b>어떻게 진단하고</b><br class="br-lg">
         <b>신장시킬 것인가</b>를 끊임없이 연구하며<br class="br-lg">
@@ -424,6 +425,7 @@ page({
         적절한 교육을 개발하고 있습니다.</p>
       </article>
       <article class="au-card">
+        <figure class="au-card-photo"><img src="${r}img/institutes/id.jpg" alt="SEL 센터 상담실" loading="lazy"></figure>
         <div class="au-icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3.2"/><circle cx="16.5" cy="8" r="3.2"/><path d="M2.5 19.5c.6-3.4 2.8-5.5 5.5-5.5s4.9 2.1 5.5 5.5M11 19.5c.6-3.4 2.8-5.5 5.5-5.5s4.9 2.1 5.5 5.5"/></svg></div>
         <p>그러기 위해 폭스러닝센터는 <b>상담 전문가와</b><br class="br-lg">
         <b>교육 전문가가 협업</b>하여 어린이를 이해하고,<br class="br-lg">
