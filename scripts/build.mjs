@@ -15,6 +15,7 @@ const videos = await json("data/videos.json");
 const agreementData = await json("data/agreements.json");
 const researchers = await json("data/researchers.json");
 const instDetails = await json("data/institute-details.json");
+const history = await json("data/history.json");
 const notices = existsSync(path.join(ROOT, "data/naver.json")) ? await json("data/naver.json") : [];
 
 const CAMP_URL = "https://freddy1590.github.io/fox-global-camp-usa-page/camp-global/index.html";
@@ -408,6 +409,29 @@ page({
         되겠습니다.</p>
       </article>
     </div>
+  </div>
+</section>
+
+<section class="sec tl-sec" id="history" aria-labelledby="tl-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">2022 — 2026</div>
+      <h2 id="tl-title">${esc(history.title)}</h2>
+      <p>${history.intro.map(esc).join("<br>")}</p>
+    </div>
+    <nav class="tl-years" aria-label="연도 바로가기">${history.years.map((y) => `<a href="#y${y.year}">${y.year}</a>`).join("")}</nav>
+    <div class="tl">
+      ${history.years.map((y) => `<section class="tl-year" id="y${y.year}">
+        <div class="tl-side">
+          <h3>${y.year}</h3>${y.photo ? `
+          <figure><img src="${r}img/history/${y.photo.file}" alt="${esc(y.photo.caption)}" loading="lazy"><figcaption>${esc(y.photo.caption)}</figcaption></figure>` : ""}
+        </div>
+        <ol class="tl-list">
+          ${y.items.map(([when, title, desc]) => `<li><span class="tl-when">${esc(when)}</span><div><b>${esc(title)}</b><p>${esc(desc)}</p></div></li>`).join("\n          ")}
+        </ol>
+      </section>`).join("\n      ")}
+    </div>
+    <p class="tl-note">${history.note.map(esc).join("<br>")}</p>
   </div>
 </section>
 
