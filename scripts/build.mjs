@@ -29,7 +29,8 @@ const ext = 'target="_blank" rel="noopener"';
 
 // ── 공통 틀 ─────────────────────────────────────────────
 // file: dist 기준 경로 (예: "about/institutes/index.html"), key: 메뉴에서 현재 위치 표시용
-function layout({ file, key, title, description = DESC, body, image }) {
+const API_BASE = (process.env.FOXLC_API ?? config.apiBase ?? "").replace(/\/$/, "");
+function layout({ file, key, title, description = DESC, body, image, board, noindex }) {
   const depth = file.split("/").length - 1;
   const r = "../".repeat(depth);              // 사이트 루트로 가는 상대 경로
   const cur = (k) => (k === key ? ' aria-current="page"' : "");
@@ -58,7 +59,10 @@ ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg
 ` : ""}<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
-<link rel="stylesheet" href="${r}css/site.css">
+<link rel="stylesheet" href="${r}css/site.css">${board ? `
+<meta name="foxlc-api" content="${esc(API_BASE)}">
+<meta name="foxlc-root" content="${r || "./"}">` : ""}${noindex ? `
+<meta name="robots" content="noindex">` : ""}
 <script>document.documentElement.className+=" js";setTimeout(function(){var h=document.querySelector(".hero");if(h){h.classList.add("ready");var p=h.querySelector(".hero-photo");if(p)p.classList.add("loaded")}},3000)</script>
 </head>
 <body>
@@ -117,10 +121,11 @@ ${body(r)}
         <p><a href="${r}about/directions/">골프존 조이마루 2층,<br>폭스러닝센터</a></p>
       </div>
     </div>
-    <div class="copy"><span>© 2026 폭스러닝센터</span><a class="privacy-link" href="${r}privacy/">개인정보처리방침</a></div>
+    <div class="copy"><span>© 2026 폭스러닝센터</span><span class="foot-links"><a class="privacy-link" href="${r}recruit/">채용공고</a><a class="privacy-link" href="${r}privacy/">개인정보처리방침</a></span></div>
   </div>
 </footer>
-<script src="${r}js/site.js" defer></script>
+<script src="${r}js/site.js" defer></script>${board ? `
+<script src="${r}js/board.js" defer></script>` : ""}
 </body>
 </html>
 `;
@@ -762,6 +767,87 @@ page({
 </div></div>`,
 });
 
+// ── 채용공고 (목록 · 보기 · 쓰기) · 관리자 ─────────────────
+// 글은 Cloudflare Worker(worker/)의 D1 데이터베이스에 있고, 화면은 static/js/board.js 가 그린다.
+const recruitHead = (title, sub) => `
+<div class="page-head"><div class="wrap">
+  <div class="eyebrow">RECRUIT</div>
+  <h1>${title}</h1>${sub ? `
+  <p>${sub}</p>` : ""}
+</div></div>`;
+page({
+  file: "recruit/index.html", key: "recruit", title: "채용공고", board: true,
+  description: "폭스러닝센터와 함께 아이들의 성장을 도울 선생님을 찾습니다.",
+  body: (r) => `${recruitHead("채용공고", "폭스러닝센터와 함께 아이들의 성장을 도울 선생님을 찾습니다")}
+<div class="page-body"><div class="wrap">
+  <div class="rc-bar" id="rcAdminBar" hidden>
+    <a class="btn navy sm" href="${r}recruit/write/">글쓰기</a>
+    <a class="btn line sm" href="${r}admin/">관리자</a>
+  </div>
+  <div id="rcList"><p class="rc-empty">채용공고를 불러오는 중입니다…</p></div>
+  <nav class="pager" id="rcPager" aria-label="페이지"></nav>
+  <p class="rc-foot"><a href="${r}recruit/write/">관리자 글쓰기</a></p>
+  <noscript><p class="rc-empty">채용공고를 보려면 브라우저의 JavaScript 를 켜 주세요.</p></noscript>
+</div></div>`,
+});
+page({
+  file: "recruit/view/index.html", key: "recruit", title: "채용공고", board: true,
+  body: () => `<div class="page-body" style="padding-top:56px"><div class="wrap">
+  <article class="rc-post" id="rcView"><p class="rc-empty">불러오는 중입니다…</p></article>
+</div></div>`,
+});
+page({
+  file: "recruit/write/index.html", key: "recruit", title: "채용공고 쓰기", board: true, noindex: true,
+  body: () => `${recruitHead("채용공고 쓰기")}
+<div class="page-body"><div class="wrap">
+  <div class="rc-write" id="rcWrite"><p class="rc-empty">확인 중입니다…</p></div>
+  <template id="rcForm">
+    <form class="rc-form">
+      <label class="full"><span>제목 <i>*</i></span><input name="title" maxlength="120" required placeholder="예: SEL 연구소 연구원 채용"></label>
+      <label>구분 (모집 분야)<input name="category" maxlength="60" placeholder="예: SEL 연구소"></label>
+      <label>근무 형태<select name="employment"><option value="">선택 안 함</option><option>정규직</option><option>계약직</option><option>파트타임</option><option>프리랜서</option><option>인턴</option></select></label>
+      <label>마감일<input name="deadline" type="date"></label>
+      <label class="check"><input name="always" type="checkbox"> 상시 채용 (마감일 없음)</label>
+      <label>상태<select name="status"><option value="open">모집중</option><option value="closed">마감</option></select></label>
+      <label class="full"><span>내용 <i>*</i></span><textarea name="body" maxlength="20000" required rows="16" placeholder="담당 업무, 자격 요건, 우대 사항, 근무 조건, 지원 방법 등을 적어 주세요."></textarea></label>
+      <div class="full rc-form-actions"><button class="btn navy" type="submit">저장</button><a class="btn line" href="../">취소</a></div>
+      <div class="full rc-msg" role="status"></div>
+    </form>
+  </template>
+</div></div>`,
+});
+page({
+  file: "admin/index.html", key: "admin", title: "관리자", board: true, noindex: true,
+  body: () => `<div class="page-head"><div class="wrap"><div class="eyebrow">ADMIN</div><h1>관리자</h1></div></div>
+<div class="page-body"><div class="wrap">
+  <div class="rc-admin" id="rcAdmin"><p class="rc-empty">확인 중입니다…</p></div>
+  <template id="rcAdminTpl">
+    <p class="rc-who">로그인: <b id="rcWho"></b> <button class="btn line sm" id="rcLogout" type="button">로그아웃</button></p>
+    <p class="rc-first" id="rcFirst" hidden>처음 로그인하셨습니다. 아래에서 <b>비밀번호를 먼저 바꿔 주세요.</b></p>
+    <div class="rc-panels">
+      <form class="rc-panel" id="rcPw">
+        <h2>비밀번호 변경</h2>
+        <label>현재 비밀번호<input name="current" type="password" autocomplete="current-password" required></label>
+        <label>새 비밀번호 (8자 이상)<input name="next" type="password" autocomplete="new-password" minlength="8" required></label>
+        <label>새 비밀번호 확인<input name="next2" type="password" autocomplete="new-password" minlength="8" required></label>
+        <button class="btn navy sm" type="submit">변경</button>
+        <div class="rc-msg" role="status"></div>
+      </form>
+      <form class="rc-panel" id="rcAdd">
+        <h2>관리자 추가</h2>
+        <label>아이디 (영문 소문자·숫자)<input name="username" pattern="[a-z0-9._-]{3,40}" required></label>
+        <label>이름<input name="name" maxlength="40"></label>
+        <label>임시 비밀번호 (8자 이상)<input name="password" type="text" minlength="8" required></label>
+        <button class="btn navy sm" type="submit">추가</button>
+        <div class="rc-msg" role="status"></div>
+        <h3>계정 목록</h3>
+        <ul id="rcUsers" class="rc-users"></ul>
+      </form>
+    </div>
+  </template>
+</div></div>`,
+});
+
 // ── 개인정보처리방침 ────────────────────────────────────
 // 시행일·보호책임자·보유 기간을 바꾸면 여기서 고친다.
 const PRIVACY_EFFECTIVE = "2026년 11월 19일";
@@ -841,7 +927,7 @@ for (const p of pages) {
 }
 if (config.siteUrl) {
   const base = config.siteUrl.replace(/\/$/, "") + "/";
-  const urls = pages.filter((p) => p.file !== "404.html").map((p) => base + p.file.replace(/index\.html$/, ""));
+  const urls = pages.filter((p) => p.file !== "404.html" && !p.noindex).map((p) => base + p.file.replace(/index\.html$/, ""));
   await writeFile(path.join(DIST, "sitemap.xml"),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `<url><loc>${esc(u)}</loc></url>`).join("\n")}\n</urlset>\n`);
   await writeFile(path.join(DIST, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${base}sitemap.xml\n`);
