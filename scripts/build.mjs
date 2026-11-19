@@ -388,34 +388,20 @@ ${INSTITUTES.map((x) => {
 // 숫자는 사이트 데이터에서 센다 (연구소 소개 · 연구원 소개 · 교육 협약)
 page({
   file: "about/index.html", key: "about/us", title: "About Us",
-  description: "폭스러닝센터는 상담 전문가와 교육 전문가가 협업하여 어린이의 사회정서역량을 진단하고 키우는 교육을 연구·개발합니다.",
-  body: (r) => {
-    const people = researchers.groups.reduce((n, g) => n + g.people.length, 0);
-    const labs = INSTITUTES.filter((x) => !x.hl).length;
-    const agreementsCount = agreementData.agreements.length + 1;
-    return `
+  description: "어린이는 자신의 정서와 행동을 인식하고 조절하며 적절한 사회적 관계를 맺을 능력으로서의 사회정서역량을 갖추어야 합니다.",
+  // 본문은 원장님이 주신 네 문단을 그대로 쓴다 (줄바꿈 포함, 굵게 표시만 더함). 문구를 바꾸지 말 것.
+  body: (r) => `
 <section class="au-hero">
   <div class="wrap au-hero-grid">
     <div class="au-hero-text">
-      <div class="eyebrow left">ABOUT US</div>
-      <h1>어린이를 깊이 이해하는 일에서<br>배움이 시작됩니다</h1>
-      <p>폭스러닝센터는 <b>사회정서학습(SEL)</b>을 기반으로 어린이의 성장을 연구하고 지원하는 교육기관입니다.</p>
-    </div>
-    <figure class="au-hero-photo">
-      <img src="${r}img/about.jpg" width="1000" height="667" alt="연구원과 아이들이 함께 활동하는 모습">
-      <figcaption><img src="${r}img/mark.png" alt="" width="34" height="34"><span><b>FOX LEARNING CENTER</b>SEL 기반의 아동 발달 연구실</span></figcaption>
-    </figure>
-  </div>
-</section>
-
-<section class="sec au-statement">
-  <div class="wrap">
-    <div class="au-quote">
-      <span class="au-num">01 · SOCIAL-EMOTIONAL COMPETENCE</span>
-      <p>어린이는 <b>자신의 정서와 행동을 인식하고 조절하며</b><br class="br-lg">
+      <h1 class="au-title" lang="en">About Us</h1>
+      <p class="au-lead">어린이는 <b>자신의 정서와 행동을 인식하고 조절하며</b><br class="br-lg">
       <b>적절한 사회적 관계를 맺을 능력</b>으로서의<br class="br-lg">
       <em>사회정서역량</em>을 갖추어야 합니다.</p>
     </div>
+    <figure class="au-hero-photo">
+      <img src="${r}img/about.jpg" width="1000" height="667" alt="연구원과 아이들이 함께 활동하는 모습">
+    </figure>
   </div>
 </section>
 
@@ -424,44 +410,35 @@ page({
     <div class="au-cards">
       <article class="au-card">
         <div class="au-icon"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.6-4.6M8 10.5h5M10.5 8v5"/></svg></div>
-        <span class="au-num">02 · RESEARCH &amp; DEVELOPMENT</span>
-        <h2>진단하고, 키우고, 개발합니다</h2>
-        <p>폭스러닝센터는 이런 역량을 <b>어떻게 진단하고 신장시킬 것인가</b>를 끊임없이 연구하며 <b>어린이에 대한 깊은 이해</b>를 기반으로 적절한 교육을 개발하고 있습니다.</p>
+        <p>폭스러닝센터는 이런 역량을 <b>어떻게 진단하고</b><br class="br-lg">
+        <b>신장시킬 것인가</b>를 끊임없이 연구하며<br class="br-lg">
+        <b>어린이에 대한 깊은 이해</b>를 기반으로<br class="br-lg">
+        적절한 교육을 개발하고 있습니다.</p>
       </article>
       <article class="au-card">
         <div class="au-icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3.2"/><circle cx="16.5" cy="8" r="3.2"/><path d="M2.5 19.5c.6-3.4 2.8-5.5 5.5-5.5s4.9 2.1 5.5 5.5M11 19.5c.6-3.4 2.8-5.5 5.5-5.5s4.9 2.1 5.5 5.5"/></svg></div>
-        <span class="au-num">03 · COLLABORATION</span>
-        <h2>상담 × 교육, 함께 이해합니다</h2>
-        <p>그러기 위해 폭스러닝센터는 <b>상담 전문가와 교육 전문가가 협업</b>하여 어린이를 이해하고, 폭 넓고 심층적인 이해에 이르는 <b>중요한 디딤돌</b>이 되겠습니다.</p>
+        <p>그러기 위해 폭스러닝센터는 <b>상담 전문가와</b><br class="br-lg">
+        <b>교육 전문가가 협업</b>하여 어린이를 이해하고,<br class="br-lg">
+        폭 넓고 심층적인 이해에 이르는 <b>중요한 디딤돌</b>이<br class="br-lg">
+        되겠습니다.</p>
       </article>
     </div>
-  </div>
-</section>
-
-<section class="au-facts" aria-label="폭스러닝센터 한눈에 보기">
-  <div class="wrap au-facts-grid">
-    <a href="${r}about/institutes/"><strong>${labs}</strong><span>개 연구소</span><small>SEL · AI · 언어 · 미술 · 수리 · 튼튼</small></a>
-    <a href="${r}about/institutes/"><strong>SEL</strong><span>센터</span><small>검사 · 상담 · 마음성장 프로그램</small></a>
-    <a href="${r}about/researchers/"><strong>${people}</strong><span>명</span><small>함께하는 연구원과 운영진</small></a>
-    <a href="${r}about/agreements/"><strong>${agreementsCount}</strong><span>건</span><small>학교 · 대학 · 기관 교육 협약</small></a>
   </div>
 </section>
 
 <section class="sec au-invite">
   <div class="wrap">
     <div class="au-invite-box">
-      <span class="au-num">04 · PARTNERSHIP</span>
       <p>미래 사회를 이끌어갈 어린이의 성장을 위해<br class="br-lg">
       함께 고민하고, 배움의 경험을 넓혀갈<br class="br-lg">
       <b>협력 교육기관을 초대합니다.</b></p>
       <div class="au-actions">
-        <a class="btn mint" href="${INST_URL}" ${ext}>기관 체험 프로그램 보기</a>
-        <a class="btn white" href="${r}#contact">협력 문의하기</a>
+        <a class="btn mint" href="${INST_URL}" ${ext}>기관 체험</a>
+        <a class="btn white" href="${r}#contact">문의하기</a>
       </div>
     </div>
   </div>
-</section>`;
-  },
+</section>`,
 });
 
 // ── 연구원 소개 ─────────────────────────────────────────

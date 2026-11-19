@@ -331,7 +331,7 @@
   var REVEAL = [
     ".sec-head", ".page-head .wrap", ".about > *", ".step", ".grid3 > .card", ".grid3 > .quote",
     ".growth > *", ".gallery button", ".contact > *", ".inst", ".dir > *", ".soon",
-    ".ec-intro > *", ".device", ".ag-card", ".ag-partner", ".notice-card", ".notice-posters", ".notice-body", ".person", ".au-hero-text", ".au-hero-photo", ".au-quote", ".au-card", ".au-facts a", ".au-invite-box", ".post > h1", ".post > .byline", ".post > p", ".post figure"
+    ".ec-intro > *", ".device", ".ag-card", ".ag-partner", ".notice-card", ".notice-posters", ".notice-body", ".person", ".au-hero-text", ".au-hero-photo", ".au-card", ".au-invite-box", ".post > h1", ".post > .byline", ".post > p", ".post figure"
   ].join(",");
   var targets = $$(REVEAL);
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
