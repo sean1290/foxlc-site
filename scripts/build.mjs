@@ -102,7 +102,7 @@ ${body(r)}
     <div class="foot-grid">
       <div>
         <h2>FOX LEARNING CENTER</h2>
-        <p>SEL 기반의 아동 발달 연구실</p>
+        <p>사회정서학습 기반 러닝센터</p>
       </div>
       <div>
         <h3>연락처</h3>
