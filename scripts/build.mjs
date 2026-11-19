@@ -117,7 +117,7 @@ ${body(r)}
         <p><a href="${r}about/directions/">골프존 조이마루 2층,<br>폭스러닝센터</a></p>
       </div>
     </div>
-    <p class="copy">© 2026 폭스러닝센터</p>
+    <div class="copy"><span>© 2026 폭스러닝센터</span><a class="privacy-link" href="${r}privacy/">개인정보처리방침</a></div>
   </div>
 </footer>
 <script src="${r}js/site.js" defer></script>
@@ -294,9 +294,12 @@ page({
         <div class="field"><label for="f-phone">연락처 <i>*</i></label><input id="f-phone" name="phone" type="tel" required autocomplete="tel" placeholder="010-0000-0000"></div>
         <div class="field"><label for="f-msg">문의 내용 <i>*</i></label><textarea id="f-msg" name="message" required></textarea></div>
         <div class="hp" aria-hidden="true"><label>비워 두세요<input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <div class="consent">
+          <label><input type="checkbox" name="agree" required> <span><b>개인정보 수집·이용에 동의합니다. (필수)</b></span></label>
+          <p>수집 항목: 이름, 연락처, 문의 내용 · 목적: 문의 답변 및 상담 안내 · 보유 기간: 문의 처리 후 1년. 동의하지 않으실 수 있으며, 이 경우 온라인 문의 대신 전화(1433-2700)나 카카오톡(FOX_LC)으로 문의하실 수 있습니다. <a href="${r}privacy/">개인정보처리방침 보기</a></p>
+        </div>
         <button class="btn navy" type="submit">문의 보내기</button>
         <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
-        <small>남겨 주신 이름과 연락처는 문의 답변을 위해서만 사용합니다.</small>
       </form>
     </div>
   </div>
@@ -757,6 +760,55 @@ page({
   </div>
   <p class="note">체험판 · 입력한 내용은 저장되지 않아요</p>
 </div></div>`,
+});
+
+// ── 개인정보처리방침 ────────────────────────────────────
+// 시행일·보호책임자·보유 기간을 바꾸면 여기서 고친다.
+const PRIVACY_EFFECTIVE = "2026년 11월 19일";
+page({
+  file: "privacy/index.html", key: "privacy", title: "개인정보처리방침",
+  description: "폭스러닝센터 홈페이지의 개인정보처리방침입니다.",
+  body: () => {
+    const sec = (n, title, html) => `<section class="pv-sec" id="pv-${n}"><h2>제${n}조 (${title})</h2>${html}</section>`;
+    const sections = [
+      ["처리 목적", `<p>폭스러닝센터(이하 '센터')는 다음의 목적을 위하여 개인정보를 처리합니다. 처리한 개인정보는 다음 목적 이외의 용도로 이용하지 않으며, 목적이 바뀌는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 하겠습니다.</p>
+        <ul><li><b>홈페이지 문의 처리:</b> 문의 내용 확인, 답변 및 상담 안내를 위한 연락</li></ul>`],
+      ["처리하는 개인정보 항목", `<table class="pv-table"><thead><tr><th>구분</th><th>항목</th><th>수집 방법</th></tr></thead>
+        <tbody><tr><td>홈페이지 문의</td><td>이름, 연락처(전화번호), 문의 내용</td><td>홈페이지 '문의하기' 양식에 이용자가 직접 입력</td></tr></tbody></table>
+        <p>센터 홈페이지는 회원가입 기능이 없으며, 위 항목 외의 개인정보를 수집하지 않습니다. '감정체크 체험' 화면에 입력한 내용은 어디에도 전송·저장되지 않습니다.</p>`],
+      ["처리 및 보유 기간", `<p>센터는 이용자의 동의를 받은 기간 동안 개인정보를 처리·보유합니다.</p>
+        <ul><li><b>홈페이지 문의:</b> 문의 처리 완료 후 <b>1년</b>까지 보관 후 파기합니다. 다만 이용자가 삭제를 요청하면 지체 없이 파기합니다.</li></ul>`],
+      ["제3자 제공", `<p>센터는 이용자의 개인정보를 제1조의 목적 범위 안에서만 처리하며, 이용자의 동의나 법률의 특별한 규정 등 「개인정보 보호법」 제17조 및 제18조에 해당하는 경우를 제외하고는 제3자에게 제공하지 않습니다.</p>`],
+      ["처리 위탁 및 국외 이전", `<p>센터는 홈페이지 문의 내용을 안전하게 보관하기 위하여 다음과 같이 개인정보 처리 업무를 위탁하고 있습니다.</p>
+        <table class="pv-table"><thead><tr><th>수탁자</th><th>위탁 업무</th><th>이전 국가</th></tr></thead>
+        <tbody><tr><td>Google LLC</td><td>문의 내용 저장(Google 스프레드시트) 및 알림 메일 발송</td><td>미국 등 Google 데이터센터 소재 국가 (문의 접수 시 네트워크를 통해 전송)</td></tr></tbody></table>
+        <p>이전되는 항목은 이름, 연락처, 문의 내용이며, 보유 기간은 제3조와 같습니다. 국외 이전을 원하지 않으시면 온라인 문의 대신 전화(1433-2700)나 카카오톡(FOX_LC)으로 문의하실 수 있습니다.</p>`],
+      ["파기 절차 및 방법", `<p>센터는 보유 기간이 지나거나 처리 목적이 달성된 개인정보를 지체 없이 파기합니다. 전자적 파일 형태의 정보는 복구할 수 없는 방법으로 삭제하고, 종이에 출력된 정보는 분쇄하거나 소각합니다.</p>`],
+      ["정보주체의 권리와 행사 방법", `<p>이용자는 언제든지 센터에 대해 개인정보 열람, 정정, 삭제, 처리 정지를 요구할 수 있습니다. 권리 행사는 전화(1433-2700) 또는 카카오톡(FOX_LC)으로 하실 수 있으며, 센터는 지체 없이 조치하겠습니다. 법정대리인이나 위임을 받은 사람을 통해서도 하실 수 있습니다.</p>`],
+      ["만 14세 미만 아동의 개인정보", `<p>센터 홈페이지의 문의 양식은 보호자(학부모) 또는 기관 담당자를 대상으로 합니다. 만 14세 미만 아동이 문의하려는 경우에는 보호자가 대신 문의해 주시기 바랍니다.</p>`],
+      ["안전성 확보 조치", `<p>센터는 개인정보의 안전성 확보를 위해 다음과 같은 조치를 하고 있습니다.</p>
+        <ul><li>문의 내용에 접근할 수 있는 담당자를 최소한으로 지정</li><li>접근 권한이 있는 계정의 비밀번호 관리</li><li>홈페이지와 문의 전송 구간의 암호화 통신(HTTPS) 적용</li></ul>`],
+      ["쿠키 등 자동 수집 장치", `<p>센터 홈페이지는 이용자를 식별하는 쿠키를 직접 설치·운영하지 않습니다. 다만 홈페이지에 포함된 외부 서비스(YouTube 영상, Google 지도, Google 글꼴)는 해당 서비스 제공자의 정책에 따라 쿠키 등을 사용할 수 있습니다. 이용자는 웹 브라우저 설정에서 쿠키 저장을 거부할 수 있습니다.</p>`],
+      ["개인정보 보호책임자", `<p>센터는 개인정보 처리에 관한 업무를 총괄하고, 관련 불만 처리와 피해 구제를 위하여 아래와 같이 개인정보 보호책임자를 지정하고 있습니다.</p>
+        <table class="pv-table"><tbody><tr><th>담당</th><td>폭스러닝센터 운영실</td></tr><tr><th>연락처</th><td>1433-2700 · 카카오톡 FOX_LC</td></tr><tr><th>주소</th><td>${ADDRESS}</td></tr></tbody></table>`],
+      ["권익 침해 구제 방법", `<p>개인정보 침해에 대한 신고나 상담이 필요하신 경우 아래 기관에 문의하실 수 있습니다.</p>
+        <ul><li>개인정보침해신고센터: (국번 없이) 118 · privacy.kisa.or.kr</li><li>개인정보분쟁조정위원회: 1833-6972 · www.kopico.go.kr</li><li>대검찰청: (국번 없이) 1301 · www.spo.go.kr</li><li>경찰청: (국번 없이) 182 · ecrm.police.go.kr</li></ul>`],
+      ["처리방침의 변경", `<p>이 개인정보처리방침은 ${PRIVACY_EFFECTIVE}부터 적용됩니다. 내용이 추가·삭제·수정되는 경우 시행 7일 전부터 홈페이지를 통해 알리겠습니다.</p>`],
+    ];
+    return `
+<div class="page-head"><div class="wrap">
+  <div class="eyebrow">PRIVACY POLICY</div>
+  <h1>개인정보처리방침</h1>
+  <p>시행일: ${PRIVACY_EFFECTIVE}</p>
+</div></div>
+<div class="page-body"><div class="wrap">
+  <div class="pv">
+    <p class="pv-intro">폭스러닝센터는 「개인정보 보호법」 제30조에 따라 이용자의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 다음과 같이 개인정보처리방침을 수립·공개합니다.</p>
+    <nav class="pv-toc" aria-label="목차"><ol>${sections.map(([t], i) => `<li><a href="#pv-${i + 1}">${t}</a></li>`).join("")}</ol></nav>
+    ${sections.map(([t, h], i) => sec(i + 1, t, h)).join("\n    ")}
+  </div>
+</div></div>`;
+  },
 });
 
 // ── 404 ─────────────────────────────────────────────────

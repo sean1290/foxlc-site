@@ -195,6 +195,7 @@
       e.preventDefault();
       var endpoint = form.getAttribute("data-endpoint");
       if (form.website.value) return; /* 스팸 봇 */
+      if (form.agree && !form.agree.checked) { say("개인정보 수집·이용에 동의해 주세요.", true); return; }
       if (!endpoint) {
         say("온라인 문의 접수는 준비 중입니다. 전화 1433-2700 또는 카카오톡 FOX_LC로 문의해 주세요.", true);
         return;
@@ -205,6 +206,7 @@
       body.set("phone", form.phone.value.trim());
       body.set("message", form.message.value.trim());
       body.set("page", location.href);
+      body.set("agree", "yes");
       fetch(endpoint, { method: "POST", mode: "no-cors", body: body }).then(function () {
         form.reset();
         say("문의가 접수되었습니다. 확인 후 연락드리겠습니다. 감사합니다.");
