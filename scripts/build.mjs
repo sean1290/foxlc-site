@@ -499,59 +499,53 @@ page({
   <div class="eyebrow">EXPERTS</div>
   <h1>전문가 소개</h1>
 </div></div>
-<div class="page-body"><div class="wrap">
+<section class="ex-sec" aria-labelledby="global-team-title"><div class="wrap">
   <div class="sec-intro"><h2 class="sub-head" id="global-team-title">글로벌 연구진</h2><p>미국 연구진과의 글로벌 협력을 통해 SEL 연구를 확장하고, 교육 현장에 적용할 프로그램을 개발합니다.</p></div>
   <ul class="experts" role="list">
-    ${EXPERTS.map(([id, name, school, l1, l2]) => `<li class="expert">
+    ${EXPERTS.map(([id, name, school, l1, l2]) => `<li class="ex-card expert">
       <img src="${r}img/experts/${id}.jpg" alt="${esc(name)}" loading="lazy">
-      <div class="expert-body">
+      <div class="ex-body">
         <span class="expert-school">${esc(school)}</span>
-        <h2 lang="en">${esc(name)}</h2>
+        <h3 lang="en">${esc(name)}</h3>
         <p>${esc(l1)}<br>${esc(l2)}</p>
       </div>
     </li>`).join("\n    ")}
   </ul>
-  <section class="research" aria-labelledby="research-title">
-    <h2 class="sub-head" id="research-title">연구 성과 소개</h2>
-    <ul class="research-list">
-      <li><span class="research-date">2024. 9.</span><p>FOX 글로벌 캠프의 글로벌 커뮤니티 기반 접근 방식에 대한 SEL 연구가 국제 학술지 <b>ELSEVIER</b>에 출판됨</p></li>
-      <li><span class="research-date">2025. 3.</span><p>미국 사회정서학습 연구·실행기관 <b>‘CASEL’</b> 공식 홈페이지에 폭스에듀 SEL 프로그램이 소개됨</p></li>
-    </ul>
-    <blockquote class="citation" lang="en">Paik, J.H., Duh, S., Rodriguez, R., Sung, W.K., Ha, J.Y., Wilken, L., Lee, J.T. (2024). A Global Community-Based Approach to Supporting Social and Emotional Learning. <i>Social and Emotional Learning: Research, Practice, and Policy</i>, 4, 100063-8.
-      <a href="https://doi.org/10.1016/j.sel.2024.100063" ${ext}>https://doi.org/10.1016/j.sel.2024.100063</a></blockquote>
-  </section>
-  <section class="team-sec" id="researchers" aria-labelledby="researchers-title">
-    <div class="sec-intro"><h2 class="sub-head" id="researchers-title">연구원 소개</h2><p>융합교육 전문성을 바탕으로 교육과정을 설계하고, 학생의 성장 데이터를 체계적으로 기록·분석합니다.</p></div>
-    <div class="teams">
-      ${[...new Set(researchers.groups.map((g) => g.row || 0))].map((row) => `<div class="team-row">
-      ${researchers.groups.filter((g) => (g.row || 0) === row).map((g) => `<section class="team" aria-labelledby="team-${esc(g.title)}">
-        <h2 class="sub-head" id="team-${esc(g.title)}">${esc(g.title)}</h2>
-        <ul class="people" role="list">
-          ${g.people.map((m) => `<li class="person">
-            <div class="avatar">${m.photo
-              ? `<img src="${r}img/researchers/${esc(m.photo)}" alt="${esc(m.name)} ${esc(m.role)}" loading="lazy">`
-              : SILHOUETTE}</div>
-            <h3>${esc(m.name)}</h3>
-            <p>${esc(m.role)}</p>
-          </li>`).join("\n      ")}
-        </ul>
-      </section>`).join("\n  ")}
-      </div>`).join("\n  ")}
-    </div>
-  </section>
-  <section class="global" aria-labelledby="global-title">
-    <h2 class="sub-head" id="global-title">해외 연구·교류</h2>
-    <p class="global-lead">해외 학교·대학과<br>연구와 학생 교류를 이어가고 있습니다.</p>
-    <div class="global-pair">
-      <figure><img src="${r}img/global/stoneranch-camp.jpg" alt="스톤랜치 초등학교 학생들과 함께한 글로벌캠프 활동" loading="lazy"><figcaption><b>스톤랜치 초등학교 · 글로벌캠프</b>학생들이 만나 함께 활동하는 교류</figcaption></figure>
-      <figure><img class="doc" src="${r}img/global/mou.jpg" alt="SFSU, 스톤랜치 초등학교와 맺은 협약서" loading="lazy"><figcaption><b>SFSU · 스톤랜치 초등학교 협약</b>왼쪽: SFSU | 오른쪽: 스톤랜치 초등학교</figcaption></figure>
-    </div>
-    <div class="global-events">
-      <article><img src="${r}img/global/meducation.jpg" alt="mEducation Alliance Symposium 2025 현장 사진" loading="lazy"><div><h3 lang="en">mEducation Alliance Symposium</h3><p>SEL을 연구 수준에서 실제 현장 적용까지 연결하는 글로벌 혁신 모델로서의 Grow X SEL 플랫폼 홍보</p></div></article>
-      <article><img src="${r}img/global/edtech-week.jpg" alt="EdTech Week 2025 현장 사진" loading="lazy"><div><h3 lang="en">EdTech Week</h3><p>Grow X SEL 플랫폼 및 레슨키트홍보글로벌 네트워킹을 통해 시장 인사이트 확보와 해외 확산 전략 기반 마련</p></div></article>
-    </div>
-  </section>
-</div></div>`,
+</div></section>
+
+<section class="ex-sec tint" aria-labelledby="research-title"><div class="wrap">
+  <div class="sec-intro"><h2 class="sub-head" id="research-title">연구 성과 소개</h2></div>
+  <ul class="research-list">
+    <li class="ex-card"><span class="research-date">2024. 9.</span><p>FOX 글로벌 캠프의 글로벌 커뮤니티 기반 접근 방식에 대한 SEL 연구가 국제 학술지 <b>ELSEVIER</b>에 출판됨</p></li>
+    <li class="ex-card"><span class="research-date">2025. 3.</span><p>미국 사회정서학습 연구·실행기관 <b>‘CASEL’</b> 공식 홈페이지에 폭스에듀 SEL 프로그램이 소개됨</p></li>
+  </ul>
+  <blockquote class="ex-card citation" lang="en">Paik, J.H., Duh, S., Rodriguez, R., Sung, W.K., Ha, J.Y., Wilken, L., Lee, J.T. (2024). A Global Community-Based Approach to Supporting Social and Emotional Learning. <i>Social and Emotional Learning: Research, Practice, and Policy</i>, 4, 100063-8.
+    <a href="https://doi.org/10.1016/j.sel.2024.100063" ${ext}>https://doi.org/10.1016/j.sel.2024.100063</a></blockquote>
+</div></section>
+
+<section class="ex-sec" id="researchers" aria-labelledby="researchers-title"><div class="wrap">
+  <div class="sec-intro"><h2 class="sub-head" id="researchers-title">연구원 소개</h2><p>융합교육 전문성을 바탕으로 교육과정을 설계하고, 학생의 성장 데이터를 체계적으로 기록·분석합니다.</p></div>
+  <ul class="staff" role="list">
+    ${researchers.groups.flatMap((g) => g.people.map((m) => `<li class="ex-card staff-card">
+      <div class="avatar">${m.photo
+        ? `<img src="${r}img/researchers/${esc(m.photo)}" alt="${esc(m.name)} ${esc(m.role)}" loading="lazy">`
+        : SILHOUETTE}</div>
+      <span class="staff-team">${esc(g.title)}</span>
+      <h3>${esc(m.name)}</h3>
+      <p>${esc(m.role)}</p>
+    </li>`)).join("\n    ")}
+  </ul>
+</div></section>
+
+<section class="ex-sec tint" aria-labelledby="global-title"><div class="wrap">
+  <div class="sec-intro"><h2 class="sub-head" id="global-title">해외 연구·교류</h2><p>해외 학교·대학과 연구와 학생 교류를 이어가고 있습니다.</p></div>
+  <div class="global-grid">
+    <article class="ex-card"><img src="${r}img/global/stoneranch-camp.jpg" alt="스톤랜치 초등학교 학생들과 함께한 글로벌캠프 활동" loading="lazy"><div class="ex-body"><h3>스톤랜치 초등학교 · 글로벌캠프</h3><p>학생들이 만나 함께 활동하는 교류</p></div></article>
+    <article class="ex-card"><img class="doc" src="${r}img/global/mou.jpg" alt="SFSU, 스톤랜치 초등학교와 맺은 협약서" loading="lazy"><div class="ex-body"><h3>SFSU · 스톤랜치 초등학교 협약</h3><p>왼쪽: SFSU | 오른쪽: 스톤랜치 초등학교</p></div></article>
+    <article class="ex-card"><img src="${r}img/global/meducation.jpg" alt="mEducation Alliance Symposium 2025 현장 사진" loading="lazy"><div class="ex-body"><h3 lang="en">mEducation Alliance Symposium</h3><p>SEL을 연구 수준에서 실제 현장 적용까지 연결하는 글로벌 혁신 모델로서의 Grow X SEL 플랫폼 홍보</p></div></article>
+    <article class="ex-card"><img src="${r}img/global/edtech-week.jpg" alt="EdTech Week 2025 현장 사진" loading="lazy"><div class="ex-body"><h3 lang="en">EdTech Week</h3><p>Grow X SEL 플랫폼 및 레슨키트홍보글로벌 네트워킹을 통해 시장 인사이트 확보와 해외 확산 전략 기반 마련</p></div></article>
+  </div>
+</div></section>`,
 });
 
 // ── 교육 협약 ───────────────────────────────────────────
