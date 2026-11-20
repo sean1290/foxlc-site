@@ -778,7 +778,8 @@ body:has(.inst-modal[open]){overflow:hidden}
 .role-list b{font-size:17px;color:var(--navy)}
 .role-list p{font-size:15px;color:var(--ink2);margin-top:2px}
 .role-note{margin-top:18px;font-size:16px;font-weight:700;color:var(--navy)}
-/* ── About Us: SEL 면담 5단계 ── */
+/* ── 성장관리 시스템: SEL 면담 5단계 ── */
+.gp-steps{margin-top:88px;padding-top:64px;border-top:1px solid var(--line)}
 .steps5{list-style:none;display:grid;grid-template-columns:repeat(5,1fr);gap:14px;counter-reset:s}
 .steps5 li{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 18px 24px;box-shadow:var(--shadow)}
 .steps5 li:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);z-index:1;color:var(--mint);font-weight:800}

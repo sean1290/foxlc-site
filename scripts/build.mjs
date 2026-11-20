@@ -437,20 +437,7 @@ page({
   </div>
 </section>
 
-<section class="sec au-steps" aria-labelledby="steps-title">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">PROCESS</div>
-      <h2 id="steps-title">SEL 면담을 통해 학생을 이해하고,<br>활동을 살피며 다음 교육 방향을 정합니다.</h2>
-    </div>
-    <ol class="steps5">
-      ${[["초기 상담<br>필요한 검사", "학생의 특성과<br>상황을 살펴봅니다."], ["학생 이해", "상담과 검사에서<br>알게 된 내용을 봅니다."], ["프로그램 제안", "학생에게 필요한<br>경험을 제안합니다."], ["활동·관찰·발견", "활동에서 보이는<br>모습을 기록합니다."], ["다음 단계 제안", "이해한 내용을 더해<br>다음 배움을 찾습니다."]].map(([t, d], i) => `<li><span class="no">0${i + 1}</span><b>${t}</b><p>${d}</p></li>`).join("")}
-    </ol>
-    <p class="steps5-note">SEL센터와 폭스러닝센터가 상담 내용과 활동 기록을 함께 봅니다.</p>
-  </div>
-</section>
-
-<section class="sec tint tl-sec" id="history" aria-labelledby="tl-title">
+<section class="sec tl-sec" id="history" aria-labelledby="tl-title">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">2022 — 2026</div>
@@ -872,6 +859,16 @@ page({
     <p>학생 성장관리 시스템은 각 연구소에서 관찰한 아이들의 활동과 반응, 변화의 모습을 학생별로 통합하고 체계적으로 기록하는 관리 체계입니다. 개별 활동에서 포착한 다양한 관찰 기록을 하나로 연결함으로써, 단편적인 모습만으로는 파악하기 어려운 아이의 성장 과정과 변화의 흐름을 종합적으로 이해할 수 있습니다.</p>
     <p>폭스러닝센터는 이러한 관찰 데이터와 성장의 흐름을 바탕으로 아이에게 필요한 교육적 지원과 다음 단계의 지도 방향을 구체화하며, 성장 리포트를 통해 그 과정과 결과를 학부모님께 공유합니다.</p>
   </div>
+  <section class="gp-steps" aria-labelledby="steps-title">
+    <div class="sec-head">
+      <div class="eyebrow">PROCESS</div>
+      <h2 id="steps-title">SEL 면담을 통해 학생을 이해하고,<br>활동을 살피며 다음 교육 방향을 정합니다.</h2>
+    </div>
+    <ol class="steps5">
+      ${[["초기 상담<br>필요한 검사", "학생의 특성과<br>상황을 살펴봅니다."], ["학생 이해", "상담과 검사에서<br>알게 된 내용을 봅니다."], ["프로그램 제안", "학생에게 필요한<br>경험을 제안합니다."], ["활동·관찰·발견", "활동에서 보이는<br>모습을 기록합니다."], ["다음 단계 제안", "이해한 내용을 더해<br>다음 배움을 찾습니다."]].map(([t, d], i) => `<li><span class="no">0${i + 1}</span><b>${t}</b><p>${d}</p></li>`).join("")}
+    </ol>
+    <p class="steps5-note">SEL센터와 폭스러닝센터가 상담 내용과 활동 기록을 함께 봅니다.</p>
+  </section>
 </div></div>`,
 });
 
