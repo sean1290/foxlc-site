@@ -80,6 +80,7 @@ ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg
           <li><a href="${r}about/"${cur("about/us")}>About Us</a></li>
           <li><a href="${r}about/institutes/"${cur("about/institutes")}>연구소 소개</a></li>
           <li><a href="${r}about/researchers/"${cur("about/researchers")}>연구원 소개</a></li>
+          <li><a href="${r}about/experts/"${cur("about/experts")}>전문가 소개</a></li>
           <li><a href="${r}about/agreements/"${cur("about/agreements")}>교육 협약</a></li>
           <li><a href="${r}about/directions/"${cur("about/directions")}>오시는 길</a></li>
         </ul>
@@ -160,6 +161,16 @@ const FILM = [
   ["감정체크 6번 문항 · 힘들 때 나의 약속", "마음이 어려워지면 무엇을 할지 미리 정해 둡니다"],
   ["감정체크 주간 정리 화면", "한 주가 지나면 아이가 남긴 기록을 아이에게 보여 줍니다"],
 ];
+const PARTNERS_PUBLIC = [
+  ["chungbuk", "충청북도교육청"], ["gyeongnam", "경상남도교육청"], ["chungnam", "충청남도교육청"], ["sejong", "세종특별자치시교육청"],
+  ["incheon", "인천광역시교육청"], ["gangwon", "강원도교육청"], ["jeonbuk", "전라북도교육청"], ["gyeonggi", "경기도교육청"],
+  ["keris", "한국교육학술정보원(KERIS)"], ["bnue", "부산교육대학교"],
+];
+const PARTNERS_ENTERPRISE = [
+  ["hancom", "한글과컴퓨터"], ["cj-olivenetworks", "CJ올리브네트웍스"], ["uniwide", "유니와이드"], ["eduwill", "에듀윌"],
+  ["acryl", "아크릴"], ["neoleap", "네오리프"], ["cnplus", "씨엔플러스"], ["kg-eduone", "KG에듀원"],
+  ["sungsan-cns", "(주)성산씨엔에스"], ["jinsung-lnl", "(주)진성엘엔엘"],
+];
 const QUOTES = [
   ["폭스러닝센터에서 사회정서학습에 대해 처음으로 접하게 되었고, 얼마나 중요한 교육인지 알게 되었습니다. 체계적인 관리 시스템도 인상적입니다.", "김O지 학부모", "14세 아동 학부모"],
   ["아이가 정서적으로 안정된 상태에서 더 열심히 배우는 모습을 보며 큰 기쁨을 느꼈습니다. 전문적인 교육과 연구원님들의 따뜻한 분위기가 정말 특별합니다.", "이O호 학부모", "11세 아동 학부모"],
@@ -173,10 +184,11 @@ page({
   <div class="hero-photo" style="background-image:url(${r}img/hero.jpg)"></div>
   <div class="wrap">
     <p class="tag" lang="en"><span>LEARN TODAY,</span><span>LEAD TOMORROW.</span></p>
-    <h1><span class="l1">상담 전문가와 교육 전문가가 함께하는</span><span class="l2"><em>사회정서학습</em> 기반</span><span class="l3">폭스러닝센터</span></h1>
+    <h1><span class="l1">전문가가 함께하는</span><span class="l2"><em>사회정서학습</em> 기반</span><span class="l3">폭스러닝센터</span></h1>
     <p>폭스러닝센터는 전문성과 따뜻함으로 아이의 성장을 지원합니다.</p>
     <div class="actions">
       <a class="btn mint" href="${r}about/institutes/">연구소 소개</a>
+      <a class="btn mint" href="${r}about/experts/">전문가 소개</a>
       <a class="btn ghost" href="#contact">문의하기</a>
     </div>
   </div>
@@ -257,7 +269,20 @@ page({
   </div>
 </section>
 
-<section class="sec tint" id="contact">
+<section class="sec tint partners-sec" aria-labelledby="partners-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">PARTNERSHIP</div>
+      <h2 id="partners-title">함께하는 기관과 기업</h2>
+      <p>전국 교육청과 기업 고객이 선택한 폭스커넥트의 교육 파트너들입니다</p>
+    </div>
+  </div>
+  ${[["교육청 · 공공기관", PARTNERS_PUBLIC, ""], ["주요 기업 파트너", PARTNERS_ENTERPRISE, " reverse"]].map(([label, list, dir]) => `<div class="marquee${dir}" aria-label="${label}">
+    <div class="marquee-track">${[0, 1].map((k) => list.map(([file, name]) => `<div class="logo-chip"${k ? ' aria-hidden="true"' : ""}><img src="${r}img/partners/${file}.png" alt="${k ? "" : esc(name)}" loading="lazy"></div>`).join("")).join("")}</div>
+  </div>`).join("\n  ")}
+</section>
+
+<section class="sec" id="contact">
   <div class="wrap">
     <div class="contact">
       <div>
@@ -477,6 +502,45 @@ page({
     </ul>
   </section>`).join("\n  ")}
   </div>`).join("\n  ")}
+</div></div>`,
+});
+
+// ── 전문가 소개 (자문 · 공동 연구 교수진) ─────────────────
+const EXPERTS = [
+  ["paik", "Jae H. Paik", "미국 샌프란시스코 주립대학교", "심리학과 교수"],
+  ["rodriguez", "Rita Rodriguez, Ph.D.", "미국 샌프란시스코 주립대학교", "심리학과 교수"],
+  ["himelfarb", "Igor Himelfarb", "미국 링컨대학교", "경영학과 부교수"],
+  ["duh", "Shinchieh (CJ) Duh", "미국 산호세 주립대학교", "심리학과 교수"],
+];
+page({
+  file: "about/experts/index.html", key: "about/experts", title: "전문가 소개",
+  description: "FOX 글로벌캠프 SEL 프로그램 연구에 함께한 미국 대학 교수진을 소개합니다.",
+  body: (r) => `
+<div class="page-head"><div class="wrap">
+  <div class="eyebrow">EXPERTS</div>
+  <h1>전문가 소개</h1>
+  <p>FOX 글로벌캠프는 아이들의 실제 교류 성장 경험을 SEL 연구와 실행 기반 위에서 운영하고 있습니다</p>
+</div></div>
+<div class="page-body"><div class="wrap">
+  <ul class="experts" role="list">
+    ${EXPERTS.map(([id, name, school, dept]) => `<li class="expert">
+      <img src="${r}img/experts/${id}.jpg" alt="${esc(name)}" loading="lazy">
+      <div class="expert-body">
+        <span class="expert-school">${esc(school)}</span>
+        <h2 lang="en">${esc(name)} <small>교수</small></h2>
+        <p>${esc(dept)}</p>
+      </div>
+    </li>`).join("\n    ")}
+  </ul>
+  <section class="research" aria-labelledby="research-title">
+    <h2 class="sub-head" id="research-title">연구 성과 소개</h2>
+    <ul class="research-list">
+      <li><span class="research-date">2024. 9.</span><p>FOX 글로벌 캠프의 글로벌 커뮤니티 기반 접근 방식에 대한 SEL 연구가 국제 학술지 <b>ELSEVIER</b>에 출판됨</p></li>
+      <li><span class="research-date">2025. 3.</span><p>미국 사회정서학습 연구·실행기관 <b>‘CASEL’</b> 공식 홈페이지에 폭스에듀 SEL 프로그램이 소개됨</p></li>
+    </ul>
+    <blockquote class="citation" lang="en">Paik, J.H., Duh, S., Rodriguez, R., Sung, W.K., Ha, J.Y., Wilken, L., Lee, J.T. (2024). A Global Community-Based Approach to Supporting Social and Emotional Learning. <i>Social and Emotional Learning: Research, Practice, and Policy</i>, 4, 100063-8.
+      <a href="https://doi.org/10.1016/j.sel.2024.100063" ${ext}>https://doi.org/10.1016/j.sel.2024.100063</a></blockquote>
+  </section>
 </div></div>`,
 });
 

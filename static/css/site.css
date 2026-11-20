@@ -721,6 +721,39 @@ body:has(.inst-modal[open]){overflow:hidden}
   .tl-list b{font-size:16px}
 }
 
+/* ── 홈: 파트너십 로고 흐름 ── */
+.partners-sec{overflow:hidden}
+.marquee{position:relative;overflow:hidden;padding:10px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marquee+.marquee{margin-top:16px}
+.marquee-track{display:flex;gap:18px;width:max-content;animation:marquee 46s linear infinite}
+.marquee.reverse .marquee-track{animation-direction:reverse;animation-duration:52s}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.logo-chip{flex:none;display:grid;place-items:center;width:220px;height:92px;padding:16px 22px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 4px 14px rgba(31,45,90,.05)}
+.logo-chip img{max-width:100%;max-height:52px;width:auto;height:auto;object-fit:contain}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){ .marquee-track{animation:none;flex-wrap:wrap;width:auto;justify-content:center} .marquee{mask-image:none;-webkit-mask-image:none} .logo-chip[aria-hidden]{display:none} }
+@media (max-width:600px){ .logo-chip{width:168px;height:76px;padding:12px 16px} .logo-chip img{max-height:42px} }
+
+/* ── 전문가 소개 ── */
+.experts{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.expert{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);text-align:center}
+.expert img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;background:var(--mintbg)}
+.expert-body{padding:20px 18px 24px}
+.expert-school{display:block;font-size:13.5px;font-weight:700;color:var(--green)}
+.expert h2{margin-top:6px;font-size:20px;font-weight:800;line-height:1.35}
+.expert h2 small{font-size:15px;font-weight:700;color:var(--ink2)}
+.expert p{margin-top:4px;font-size:14.5px;color:var(--ink2)}
+.research{margin-top:64px}
+.research-list{list-style:none;display:grid;gap:12px}
+.research-list li{display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:baseline;padding:18px 22px;background:var(--mintbg);border-radius:14px}
+.research-date{font-family:'Oswald','Noto Sans KR',sans-serif;font-size:18px;font-weight:700;color:var(--green)}
+.research-list p{font-size:16.5px;line-height:1.7}
+.research-list b{color:var(--navy)}
+.citation{margin-top:20px;padding:20px 24px;border-left:4px solid var(--mint);background:#fafcfb;font-size:15px;line-height:1.75;color:var(--ink2)}
+.citation a{display:inline-block;margin-top:6px;color:var(--green);font-weight:700;word-break:break-all}
+@media (max-width:1000px){ .experts{grid-template-columns:1fr 1fr} }
+@media (max-width:600px){ .experts{gap:14px} .expert h2{font-size:16.5px} .expert-body{padding:14px 10px 18px} .research-list li{grid-template-columns:1fr;gap:4px} }
+
 /* ── 바닥글 ── */
 .site-foot{background:var(--navy-d);color:rgba(255,255,255,.8);font-size:14.5px;padding:56px 0 28px}
 .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px}
