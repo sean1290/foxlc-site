@@ -139,7 +139,12 @@ ${body(r)}
 </footer>
 ${file === "index.html" && config.popup && config.popup.enabled ? `
 <dialog class="promo" id="promo" tabindex="-1" autofocus data-id="${esc(config.popup.id)}" data-end="${esc(config.popup.endDate || "")}" aria-label="안내">
-  ${config.popup.link ? `<a href="${esc(config.popup.link)}">` : ""}<img src="${r}${esc(config.popup.image)}" alt="${esc(config.popup.alt)}">${config.popup.link ? "</a>" : ""}
+  <div class="promo-stage">
+    ${config.popup.slides.map((sl, i) => `<img class="promo-slide"${i ? " hidden" : ""} src="${r}${esc(sl.image)}" alt="${esc(sl.alt)}"${i ? ' loading="lazy"' : ""}>`).join("")}${config.popup.slides.length > 1 ? `
+    <button type="button" class="promo-nav prev" aria-label="이전 장">‹</button><button type="button" class="promo-nav next" aria-label="다음 장">›</button>
+    <span class="promo-count">1 / ${config.popup.slides.length}</span>
+    <a class="promo-zoom" href="${r}${esc(config.popup.slides[0].image)}" target="_blank" rel="noopener">크게 보기</a>` : ""}
+  </div>
   <div class="promo-bar">
     <button type="button" class="promo-skip">24시간 동안 다시 열람하지 않습니다.</button>
     <button type="button" class="promo-close">닫기</button>

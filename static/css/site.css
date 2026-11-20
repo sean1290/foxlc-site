@@ -858,7 +858,14 @@ body:has(.inst-modal[open]){overflow:hidden}
 .promo:focus{outline:none}
 .promo-bar button:focus-visible{outline-offset:-3px}
 .promo::backdrop{background:rgba(15,22,42,.6)}
+.promo-stage{position:relative;background:#eef2f1}
 .promo img{display:block;width:auto;max-width:100%;max-height:calc(100dvh - 32px - 52px);height:auto;margin:0 auto}
+.promo img[hidden]{display:none}
+.promo-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.94);color:var(--navy);font-size:28px;line-height:1;padding-bottom:4px;cursor:pointer;box-shadow:0 4px 14px rgba(15,22,42,.25)}
+.promo-nav:hover{background:#fff}
+.promo-nav.prev{left:10px}.promo-nav.next{right:10px}
+.promo-count{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);padding:4px 12px;border-radius:999px;background:rgba(15,22,42,.65);color:#fff;font-size:13px;font-weight:700}
+.promo-zoom{position:absolute;right:10px;bottom:10px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.94);color:var(--navy);font-size:12.5px;font-weight:700;text-decoration:none;box-shadow:0 2px 8px rgba(15,22,42,.2)}
 .promo-bar{display:flex;align-items:stretch;height:52px;border-top:1px solid var(--line);background:#fff}
 .promo-bar button{flex:1;border:0;background:none;cursor:pointer;font-size:14px;color:var(--ink2);padding:0 12px}
 .promo-bar button:hover{background:var(--mintbg);color:var(--navy)}
