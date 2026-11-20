@@ -525,16 +525,22 @@ page({
 
 <section class="ex-sec" id="researchers" aria-labelledby="researchers-title"><div class="wrap">
   <div class="sec-intro"><h2 class="sub-head" id="researchers-title">연구원 소개</h2><p>융합교육 전문성을 바탕으로 교육과정을 설계하고, 학생의 성장 데이터를 체계적으로 기록·분석합니다.</p></div>
-  <ul class="staff" role="list">
-    ${researchers.groups.flatMap((g) => g.people.map((m) => `<li class="ex-card staff-card">
-      <div class="avatar">${m.photo
-        ? `<img src="${r}img/researchers/${esc(m.photo)}" alt="${esc(m.name)} ${esc(m.role)}" loading="lazy">`
-        : SILHOUETTE}</div>
-      <span class="staff-team">${esc(g.title)}</span>
-      <h3>${esc(m.name)}</h3>
-      <p>${esc(m.role)}</p>
-    </li>`)).join("\n    ")}
-  </ul>
+  <div class="org">
+    ${[...new Set(researchers.groups.map((g) => g.row || 0))].map((row, ri) => `<div class="org-row${ri === 0 ? " lead" : ""}">
+      ${researchers.groups.filter((g) => (g.row || 0) === row).map((g) => `<section class="ex-card org-team" style="--n:${g.people.length}" aria-label="${esc(g.title)}">
+        <h3 class="org-title">${esc(g.title)}</h3>
+        <ul class="org-people" role="list">
+          ${g.people.map((m) => `<li>
+            <div class="avatar">${m.photo
+              ? `<img src="${r}img/researchers/${esc(m.photo)}" alt="${esc(m.name)} ${esc(m.role)}" loading="lazy">`
+              : SILHOUETTE}</div>
+            <b>${esc(m.name)}</b>
+            <span>${esc(m.role)}</span>
+          </li>`).join("")}
+        </ul>
+      </section>`).join("\n      ")}
+    </div>`).join("\n    ")}
+  </div>
 </div></section>
 
 <section class="ex-sec tint" aria-labelledby="global-title"><div class="wrap">

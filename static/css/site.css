@@ -829,6 +829,27 @@ body:has(.inst-modal[open]){overflow:hidden}
 .global-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .global-grid img{width:100%;aspect-ratio:2/1;object-fit:cover;display:block}
 .global-grid img.doc{object-fit:contain;background:#f4f6f8;padding:12px}
+/* 연구원 소개: 줄(row)별로 팀 카드, 팀 안에 사람. 한 사람 = 한 칸이라 줄마다 세로가 맞는다 */
+.org{display:grid;gap:18px}
+.org-row{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.org-team{grid-column:span var(--n);padding:0 0 20px}
+.org-title{display:flex;align-items:center;gap:8px;padding:12px 18px;margin-bottom:18px;font-size:15px;font-weight:800;color:var(--navy);background:#f6f9f8;border-bottom:1px solid var(--line)}
+.org-title::before{content:"";width:4px;height:14px;border-radius:2px;background:var(--mint)}
+.org-row.lead .org-title{background:var(--navy);color:#fff;border-bottom-color:var(--navy)}
+.org-row.lead .org-title::before{background:var(--mint)}
+.org-people{list-style:none;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:8px;padding:0 8px}
+.org-people li{text-align:center}
+.org-people .avatar{width:92px;height:92px;margin:0 auto 10px;box-shadow:none}
+.org-people b{display:block;font-size:16px;font-weight:800;color:var(--navy)}
+.org-people span{display:block;margin-top:2px;font-size:12.5px;color:var(--ink2);line-height:1.45}
+@media (max-width:1000px){ .org-row{grid-template-columns:repeat(4,1fr)} .org-team{grid-column:span min(var(--n),4)} }
+@media (max-width:600px){
+  .org-row{grid-template-columns:1fr 1fr;gap:12px}
+  .org-team{grid-column:span min(var(--n),2)}
+  .org-title{padding:10px 14px;margin-bottom:14px}
+  .org-people{grid-template-columns:repeat(min(var(--n),3),1fr)}
+  .org-people .avatar{width:76px;height:76px}
+}
 @media (max-width:1000px){ .staff{grid-template-columns:repeat(4,1fr)} .ex-sec .experts{grid-template-columns:1fr 1fr} }
 @media (max-width:760px){ .global-grid{grid-template-columns:1fr} }
 @media (max-width:600px){ .ex-sec{padding:52px 0} .staff{grid-template-columns:repeat(2,1fr);gap:12px} .ex-sec .expert img{width:112px;height:136px} .ex-sec .research-list li{padding:16px 18px} }
