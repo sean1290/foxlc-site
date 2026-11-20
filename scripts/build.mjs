@@ -16,6 +16,7 @@ const agreementData = await json("data/agreements.json");
 const researchers = await json("data/researchers.json");
 const instDetails = await json("data/institute-details.json");
 const history = await json("data/history.json");
+const noticeFiles = existsSync(path.join(ROOT, "data/notice-attachments.json")) ? await json("data/notice-attachments.json") : {};
 const notices = existsSync(path.join(ROOT, "data/naver.json")) ? await json("data/naver.json") : [];
 
 const CAMP_URL = "https://freddy1590.github.io/fox-global-camp-usa-page/camp-global/index.html";
@@ -810,7 +811,11 @@ notices.forEach((n, i) => {
     <div class="notice-body">
       <p class="date">${ymd(n.date)}${n.period ? ` · 기간 ${esc(n.period)}` : ""}</p>
       <h1>${esc(n.title)}</h1>
-      <div class="notice-text">${esc(n.text)}</div>
+      <div class="notice-text">${esc(n.text).replace(/https?:\/\/[^\s<]+/g, (u) => `<a href="${u}" ${ext}>${u}</a>`)}</div>${(noticeFiles[n.feedId] || []).length ? `
+      <div class="notice-files">
+        <h2>첨부파일</h2>
+        ${noticeFiles[n.feedId].map((f) => `<a class="file-link" href="${r}files/${encodeURIComponent(f.file)}" ${ext}><span class="file-ico" aria-hidden="true">PDF</span><span>${esc(f.name)}</span><span class="file-dl">열기 · 저장</span></a>`).join("")}
+      </div>` : ""}
       <div class="notice-actions">
         <a class="btn navy sm" href="tel:14332700">전화 문의 1433-2700</a>
         <button class="btn kakao sm" type="button" data-copy="FOX_LC" data-msg="카카오톡 아이디 FOX_LC를 복사했습니다">카카오톡 FOX_LC</button>
