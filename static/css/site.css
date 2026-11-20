@@ -735,10 +735,10 @@ body:has(.inst-modal[open]){overflow:hidden}
 @media (max-width:600px){ .logo-chip{width:168px;height:76px;padding:12px 16px} .logo-chip img{max-height:42px} }
 
 /* ── 전문가 소개 ── */
-.experts{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.experts{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:22px;max-width:960px;margin:0 auto}
 .expert{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);text-align:center}
-.expert img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;background:var(--mintbg)}
-.expert-body{padding:20px 18px 24px}
+.expert img{width:150px;height:180px;margin:24px auto 0;border-radius:14px;object-fit:cover;object-position:top;background:var(--mintbg)}
+.expert-body{padding:16px 16px 22px}
 .expert-school{display:block;font-size:13.5px;font-weight:700;color:var(--green)}
 .expert h2{margin-top:6px;font-size:20px;font-weight:800;line-height:1.35}
 .expert h2 small{font-size:15px;font-weight:700;color:var(--ink2)}
@@ -752,7 +752,7 @@ body:has(.inst-modal[open]){overflow:hidden}
 .citation{margin-top:20px;padding:20px 24px;border-left:4px solid var(--mint);background:#fafcfb;font-size:15px;line-height:1.75;color:var(--ink2)}
 .citation a{display:inline-block;margin-top:6px;color:var(--green);font-weight:700;word-break:break-all}
 @media (max-width:1000px){ .experts{grid-template-columns:1fr 1fr} }
-@media (max-width:600px){ .experts{gap:14px} .expert h2{font-size:16.5px} .expert-body{padding:14px 10px 18px} .research-list li{grid-template-columns:1fr;gap:4px} }
+@media (max-width:600px){ .experts{gap:14px} .expert img{width:112px;height:136px;margin-top:16px} .expert h2{font-size:16.5px} .expert-body{padding:14px 10px 18px} .research-list li{grid-template-columns:1fr;gap:4px} }
 
 /* ── 전문가 소개: 해외 연구·교류 ── */
 .global{margin-top:64px}
