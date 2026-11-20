@@ -835,8 +835,6 @@ body:has(.inst-modal[open]){overflow:hidden}
 .org-team{grid-column:span var(--n);padding:0 0 20px}
 .org-title{display:flex;align-items:center;gap:8px;padding:12px 18px;margin-bottom:18px;font-size:15px;font-weight:800;color:var(--navy);background:#f6f9f8;border-bottom:1px solid var(--line)}
 .org-title::before{content:"";width:4px;height:14px;border-radius:2px;background:var(--mint)}
-.org-row.lead .org-title{background:var(--navy);color:#fff;border-bottom-color:var(--navy)}
-.org-row.lead .org-title::before{background:var(--mint)}
 .org-people{list-style:none;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:8px;padding:0 8px}
 .org-people li{text-align:center}
 .org-people .avatar{width:92px;height:92px;margin:0 auto 10px;box-shadow:none}
