@@ -126,7 +126,7 @@ ${body(r)}
       </div>
       <div>
         <h3>위치</h3>
-        <p><a href="${r}about/directions/">골프존 조이마루 2층,<br>폭스러닝센터</a></p>
+        <p><a href="${r}about/directions/">대전광역시 유성구 엑스포로97번길 40<br>2층 204호 폭스러닝센터</a></p>
       </div>
     </div>
     <nav class="family" aria-label="패밀리 사이트">
