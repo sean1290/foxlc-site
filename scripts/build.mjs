@@ -487,21 +487,6 @@ page({
   <h1>연구원 소개</h1>
   <p>아이의 성장을 함께 살피는 폭스러닝센터 사람들입니다</p>
 </div></div>
-<div class="page-body" style="padding-bottom:0"><div class="wrap">
-  <section class="role" aria-labelledby="role-title">
-    <img src="${r}img/researchers-role.jpg" alt="연구원과 학생들이 함께 활동하는 모습" loading="lazy">
-    <div>
-      <h2 id="role-title">폭스러닝센터의 연구원</h2>
-      <p class="role-lead">학생을 관찰하고, 필요한 도움을 함께 찾습니다.</p>
-      <ol class="role-list">
-        <li><span>01</span><div><b>관찰자</b><p>학생의 말과 행동을 살피고 기록합니다.</p></div></li>
-        <li><span>02</span><div><b>지원자</b><p>학생의 특성에 맞춰 활동과 도움 방식을 조정합니다.</p></div></li>
-        <li><span>03</span><div><b>행동 모델</b><p>경청하고 의견을 나누며 협력하는 모습을 보여줍니다.</p></div></li>
-      </ol>
-      <p class="role-note">학생은 자신을 알아가며 경험을 통해 성장하는 탐구자입니다.</p>
-    </div>
-  </section>
-</div></div>
 <div class="page-body"><div class="wrap teams">
   ${[...new Set(researchers.groups.map((g) => g.row || 0))].map((row) => `<div class="team-row">
   ${researchers.groups.filter((g) => (g.row || 0) === row).map((g) => `<section class="team" aria-labelledby="team-${esc(g.title)}">
