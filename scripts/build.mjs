@@ -179,7 +179,7 @@ const PARTNERS_PUBLIC = [
   ["keris", "한국교육학술정보원(KERIS)"], ["bnue", "부산교육대학교"],
 ];
 const PARTNERS_ENTERPRISE = [
-  ["starlink", "Starlink"], ["growx", "Grow X Education"], ["learning-upgrade", "Learning Upgrade"],
+  ["starlink", "Starlink"], ["growx", "Grow X Education"], ["learning-upgrade", "Learning Upgrade"], ["dx-edu-data", "DX교육데이터협회"],
   ["hancom", "한글과컴퓨터"], ["cj-olivenetworks", "CJ올리브네트웍스"], ["uniwide", "유니와이드"], ["eduwill", "에듀윌"],
   ["acryl", "아크릴"], ["neoleap", "네오리프"], ["cnplus", "씨엔플러스"], ["kg-eduone", "KG에듀원"],
   ["sungsan-cns", "(주)성산씨엔에스"], ["jinsung-lnl", "(주)진성엘엔엘"],
