@@ -212,7 +212,20 @@ page({
   </div>
 </section>
 
-<section class="sec tint">
+<section class="sec tint partners-sec" aria-labelledby="partners-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">PARTNERSHIP</div>
+      <h2 id="partners-title">함께하는 기관과 기업</h2>
+      <p>전국 교육청과 기업 고객이 선택한 폭스커넥트의 교육 파트너들입니다</p>
+    </div>
+  </div>
+  ${[["교육청 · 공공기관", PARTNERS_PUBLIC, ""], ["주요 기업 파트너", PARTNERS_ENTERPRISE, " reverse"]].map(([label, list, dir]) => `<div class="marquee${dir}" aria-label="${label}">
+    <div class="marquee-track">${[0, 1].map((k) => list.map(([file, name]) => `<div class="logo-chip"${k ? ' aria-hidden="true"' : ""}><img src="${r}img/partners/${file}.png" alt="${k ? "" : esc(name)}" loading="lazy"></div>`).join("")).join("")}</div>
+  </div>`).join("\n  ")}
+</section>
+
+<section class="sec">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">FOX NEWS</div>
@@ -226,7 +239,7 @@ page({
   </div>
 </section>
 
-<section class="sec">
+<section class="sec tint">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">FOX YOUTUBE</div>
@@ -241,7 +254,7 @@ page({
 </section>
 
 
-<section class="sec tint">
+<section class="sec">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">GALLERY</div>
@@ -257,7 +270,7 @@ page({
   </dialog>
 </section>
 
-<section class="sec">
+<section class="sec tint">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">TESTIMONIALS</div>
@@ -267,19 +280,6 @@ page({
       ${QUOTES.map(([q, who, role]) => `<figure class="quote"><blockquote>${esc(q)}</blockquote><footer><b>${esc(who)}</b>${esc(role)}</footer></figure>`).join("\n      ")}
     </div>
   </div>
-</section>
-
-<section class="sec tint partners-sec" aria-labelledby="partners-title">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">PARTNERSHIP</div>
-      <h2 id="partners-title">함께하는 기관과 기업</h2>
-      <p>전국 교육청과 기업 고객이 선택한 폭스커넥트의 교육 파트너들입니다</p>
-    </div>
-  </div>
-  ${[["교육청 · 공공기관", PARTNERS_PUBLIC, ""], ["주요 기업 파트너", PARTNERS_ENTERPRISE, " reverse"]].map(([label, list, dir]) => `<div class="marquee${dir}" aria-label="${label}">
-    <div class="marquee-track">${[0, 1].map((k) => list.map(([file, name]) => `<div class="logo-chip"${k ? ' aria-hidden="true"' : ""}><img src="${r}img/partners/${file}.png" alt="${k ? "" : esc(name)}" loading="lazy"></div>`).join("")).join("")}</div>
-  </div>`).join("\n  ")}
 </section>
 
 <section class="sec" id="contact">
