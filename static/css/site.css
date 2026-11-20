@@ -837,8 +837,8 @@ body:has(.inst-modal[open]){overflow:hidden}
 .org-title::before{content:"";width:4px;height:14px;border-radius:2px;background:var(--mint)}
 .org-people{list-style:none;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:8px;padding:0 8px}
 .org-people li{text-align:center}
-.org-people .avatar{width:92px;height:92px;margin:0 auto 10px;box-shadow:none}
-.org-people b{display:block;font-size:16px;font-weight:800;color:var(--navy)}
+.org-people .avatar{width:min(132px,100%);height:auto;aspect-ratio:1;margin:0 auto 12px;box-shadow:none}
+.org-people b{display:block;font-size:17px;font-weight:800;color:var(--navy)}
 .org-people span{display:block;margin-top:2px;font-size:12.5px;color:var(--ink2);line-height:1.45}
 @media (max-width:1000px){ .org-row{grid-template-columns:repeat(4,1fr)} .org-team{grid-column:span min(var(--n),4)} }
 @media (max-width:600px){
@@ -846,7 +846,7 @@ body:has(.inst-modal[open]){overflow:hidden}
   .org-team{grid-column:span min(var(--n),2)}
   .org-title{padding:10px 14px;margin-bottom:14px}
   .org-people{grid-template-columns:repeat(min(var(--n),3),1fr)}
-  .org-people .avatar{width:76px;height:76px}
+  .org-people .avatar{width:min(96px,100%)}
 }
 @media (max-width:1000px){ .staff{grid-template-columns:repeat(4,1fr)} .ex-sec .experts{grid-template-columns:1fr 1fr} }
 @media (max-width:760px){ .global-grid{grid-template-columns:1fr} }
