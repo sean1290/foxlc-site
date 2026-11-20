@@ -34,6 +34,27 @@
     setTimeout(start, 2500);   /* 너무 오래 걸리면 기다리지 않는다 */
   }
 
+  /* ── 메인 첫 화면 팝업: '24시간 동안 다시 열람하지 않습니다' 를 누르면 이 브라우저에서 하루 동안 안 뜬다 ── */
+  var promo = $("#promo");
+  if (promo && promo.showModal) {
+    var key = "foxlc_promo_" + promo.getAttribute("data-id");
+    var hiddenUntil = 0;
+    try { hiddenUntil = parseInt(localStorage.getItem(key) || "0", 10); } catch (e) {}
+    var end = promo.getAttribute("data-end");
+    var expired = end && new Date() > new Date(end + "T23:59:59+09:00");
+    if (!expired && Date.now() > hiddenUntil) {
+      var show = function () { if (!promo.open) { promo.showModal(); promo.focus(); } };
+      if (document.readyState === "complete") setTimeout(show, 300);
+      else window.addEventListener("load", function () { setTimeout(show, 300); });
+    }
+    $(".promo-close", promo).addEventListener("click", function () { promo.close(); });
+    $(".promo-skip", promo).addEventListener("click", function () {
+      try { localStorage.setItem(key, String(Date.now() + 24 * 3600 * 1000)); } catch (e) {}
+      promo.close();
+    });
+    promo.addEventListener("click", function (e) { if (e.target === promo) promo.close(); });
+  }
+
   /* ── 메뉴: 데스크톱은 CSS hover, 휴대폰은 탭해서 펼친다 ── */
   var head = $(".site-head"), menuBtn = $(".menu-btn");
   if (menuBtn) {
