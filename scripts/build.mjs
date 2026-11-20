@@ -79,7 +79,6 @@ ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg
         <ul class="sub">
           <li><a href="${r}about/"${cur("about/us")}>About Us</a></li>
           <li><a href="${r}about/institutes/"${cur("about/institutes")}>연구소 소개</a></li>
-          <li><a href="${r}about/researchers/"${cur("about/researchers")}>연구원 소개</a></li>
           <li><a href="${r}about/experts/"${cur("about/experts")}>전문가 소개</a></li>
           <li><a href="${r}about/agreements/"${cur("about/agreements")}>교육 협약</a></li>
           <li><a href="${r}about/directions/"${cur("about/directions")}>오시는 길</a></li>
@@ -479,30 +478,9 @@ page({
 // 명단: data/researchers.json — photo 가 비어 있으면 실루엣을 보여 준다.
 const SILHOUETTE = `<svg class="silhouette" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="46" r="22"/><path d="M18 120c2-26 20-42 42-42s40 16 42 42z"/></svg>`;
 page({
-  file: "about/researchers/index.html", key: "about/researchers", title: "연구원 소개",
-  description: "아이의 성장을 함께 살피는 폭스러닝센터 연구원들을 소개합니다.",
-  body: (r) => `
-<div class="page-head"><div class="wrap">
-  <div class="eyebrow">RESEARCHERS</div>
-  <h1>연구원 소개</h1>
-  <p>아이의 성장을 함께 살피는 폭스러닝센터 사람들입니다</p>
-</div></div>
-<div class="page-body"><div class="wrap teams">
-  ${[...new Set(researchers.groups.map((g) => g.row || 0))].map((row) => `<div class="team-row">
-  ${researchers.groups.filter((g) => (g.row || 0) === row).map((g) => `<section class="team" aria-labelledby="team-${esc(g.title)}">
-    <h2 class="sub-head" id="team-${esc(g.title)}">${esc(g.title)}</h2>
-    <ul class="people" role="list">
-      ${g.people.map((m) => `<li class="person">
-        <div class="avatar">${m.photo
-          ? `<img src="${r}img/researchers/${esc(m.photo)}" alt="${esc(m.name)} ${esc(m.role)}" loading="lazy">`
-          : SILHOUETTE}</div>
-        <h3>${esc(m.name)}</h3>
-        <p>${esc(m.role)}</p>
-      </li>`).join("\n      ")}
-    </ul>
-  </section>`).join("\n  ")}
-  </div>`).join("\n  ")}
-</div></div>`,
+  file: "about/researchers/index.html", key: "about/experts", title: "연구원 소개", noindex: true,
+  body: (r) => `<script>location.replace("${r}about/experts/#researchers")</script>
+<div class="page-body"><div class="wrap"><p class="rc-empty">연구원 소개는 <a href="${r}about/experts/#researchers">전문가 소개</a> 페이지로 옮겼습니다.</p></div></div>`,
 });
 
 // ── 전문가 소개 (자문 · 공동 연구 교수진) ─────────────────
@@ -541,6 +519,25 @@ page({
     </ul>
     <blockquote class="citation" lang="en">Paik, J.H., Duh, S., Rodriguez, R., Sung, W.K., Ha, J.Y., Wilken, L., Lee, J.T. (2024). A Global Community-Based Approach to Supporting Social and Emotional Learning. <i>Social and Emotional Learning: Research, Practice, and Policy</i>, 4, 100063-8.
       <a href="https://doi.org/10.1016/j.sel.2024.100063" ${ext}>https://doi.org/10.1016/j.sel.2024.100063</a></blockquote>
+  </section>
+  <section class="team-sec" id="researchers" aria-labelledby="researchers-title">
+    <h2 class="sub-head" id="researchers-title">연구원 소개</h2>
+    <div class="teams">
+      ${[...new Set(researchers.groups.map((g) => g.row || 0))].map((row) => `<div class="team-row">
+      ${researchers.groups.filter((g) => (g.row || 0) === row).map((g) => `<section class="team" aria-labelledby="team-${esc(g.title)}">
+        <h2 class="sub-head" id="team-${esc(g.title)}">${esc(g.title)}</h2>
+        <ul class="people" role="list">
+          ${g.people.map((m) => `<li class="person">
+            <div class="avatar">${m.photo
+              ? `<img src="${r}img/researchers/${esc(m.photo)}" alt="${esc(m.name)} ${esc(m.role)}" loading="lazy">`
+              : SILHOUETTE}</div>
+            <h3>${esc(m.name)}</h3>
+            <p>${esc(m.role)}</p>
+          </li>`).join("\n      ")}
+        </ul>
+      </section>`).join("\n  ")}
+      </div>`).join("\n  ")}
+    </div>
   </section>
   <section class="global" aria-labelledby="global-title">
     <h2 class="sub-head" id="global-title">해외 연구·교류</h2>

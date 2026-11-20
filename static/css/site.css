@@ -424,6 +424,10 @@ body:has(.ag-viewer[open]){overflow:hidden}
   .notice h1{font-size:23px}
 }
 
+.team-sec{margin-top:64px;scroll-margin-top:calc(var(--head) + 16px)}
+.team-sec .teams{margin-top:8px}
+.team-sec .team .sub-head{font-size:18px;margin-bottom:16px}
+.team-sec .team .sub-head::before{height:16px;width:4px}
 /* ── 연구원 소개: 팀(그룹)이 옆으로 이어서 놓이고, 자리가 모자라면 다음 줄로 ── */
 .teams{display:flex;flex-direction:column;gap:56px}
 .team-row{display:flex;flex-wrap:wrap;gap:56px 64px}
