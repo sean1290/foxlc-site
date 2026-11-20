@@ -132,6 +132,14 @@ ${body(r)}
     <div class="copy"><span>© 2026 폭스러닝센터</span><span class="foot-links"><a class="privacy-link" href="${r}recruit/">채용공고</a><a class="privacy-link" href="${r}privacy/">개인정보처리방침</a></span></div>
   </div>
 </footer>
+${file === "index.html" && config.popup && config.popup.enabled ? `
+<dialog class="promo" id="promo" tabindex="-1" autofocus data-id="${esc(config.popup.id)}" data-end="${esc(config.popup.endDate || "")}" aria-label="안내">
+  ${config.popup.link ? `<a href="${esc(config.popup.link)}">` : ""}<img src="${r}${esc(config.popup.image)}" alt="${esc(config.popup.alt)}">${config.popup.link ? "</a>" : ""}
+  <div class="promo-bar">
+    <button type="button" class="promo-skip">24시간 동안 다시 열람하지 않습니다.</button>
+    <button type="button" class="promo-close">닫기</button>
+  </div>
+</dialog>` : ""}
 <script src="${r}js/site.js" defer></script>${board ? `
 <script src="${r}js/board.js" defer></script>` : ""}
 </body>
