@@ -333,7 +333,7 @@
   var REVEAL = [
     ".sec-head", ".page-head .wrap", ".about > *", ".step", ".grid3 > .card", ".grid3 > .quote",
     ".growth > *", ".gallery button", ".contact > *", ".inst", ".dir > *", ".soon",
-    ".ec-intro > *", ".device", ".ag-card", ".ag-partner", ".notice-card", ".notice-posters", ".notice-body", ".person", ".expert", ".research-list li", ".gp-screen", ".gp-text p", ".tl-side", ".tl-list li", ".au-hero-text", ".au-card", ".au-invite-box", ".post > h1", ".post > .byline", ".post > p", ".post figure"
+    ".ec-intro > *", ".device", ".ag-card", ".ag-partner", ".notice-card", ".notice-posters", ".notice-body", ".person", ".expert", ".research-list li", ".global-pair figure", ".global-events article", ".role", ".steps5 li", ".gp-screen", ".gp-text p", ".tl-side", ".tl-list li", ".au-hero-text", ".au-card", ".au-invite-box", ".post > h1", ".post > .byline", ".post > p", ".post figure"
   ].join(",");
   var targets = $$(REVEAL);
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;

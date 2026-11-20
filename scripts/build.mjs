@@ -437,7 +437,20 @@ page({
   </div>
 </section>
 
-<section class="sec tl-sec" id="history" aria-labelledby="tl-title">
+<section class="sec au-steps" aria-labelledby="steps-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">PROCESS</div>
+      <h2 id="steps-title">SEL 면담을 통해 학생을 이해하고,<br>활동을 살피며 다음 교육 방향을 정합니다.</h2>
+    </div>
+    <ol class="steps5">
+      ${[["초기 상담<br>필요한 검사", "학생의 특성과<br>상황을 살펴봅니다."], ["학생 이해", "상담과 검사에서<br>알게 된 내용을 봅니다."], ["프로그램 제안", "학생에게 필요한<br>경험을 제안합니다."], ["활동·관찰·발견", "활동에서 보이는<br>모습을 기록합니다."], ["다음 단계 제안", "이해한 내용을 더해<br>다음 배움을 찾습니다."]].map(([t, d], i) => `<li><span class="no">0${i + 1}</span><b>${t}</b><p>${d}</p></li>`).join("")}
+    </ol>
+    <p class="steps5-note">SEL센터와 폭스러닝센터가 상담 내용과 활동 기록을 함께 봅니다.</p>
+  </div>
+</section>
+
+<section class="sec tint tl-sec" id="history" aria-labelledby="tl-title">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">2022 — 2026</div>
@@ -487,6 +500,21 @@ page({
   <h1>연구원 소개</h1>
   <p>아이의 성장을 함께 살피는 폭스러닝센터 사람들입니다</p>
 </div></div>
+<div class="page-body" style="padding-bottom:0"><div class="wrap">
+  <section class="role" aria-labelledby="role-title">
+    <img src="${r}img/researchers-role.jpg" alt="연구원과 학생들이 함께 활동하는 모습" loading="lazy">
+    <div>
+      <h2 id="role-title">폭스러닝센터의 연구원</h2>
+      <p class="role-lead">학생을 관찰하고, 필요한 도움을 함께 찾습니다.</p>
+      <ol class="role-list">
+        <li><span>01</span><div><b>관찰자</b><p>학생의 말과 행동을 살피고 기록합니다.</p></div></li>
+        <li><span>02</span><div><b>지원자</b><p>학생의 특성에 맞춰 활동과 도움 방식을 조정합니다.</p></div></li>
+        <li><span>03</span><div><b>행동 모델</b><p>경청하고 의견을 나누며 협력하는 모습을 보여줍니다.</p></div></li>
+      </ol>
+      <p class="role-note">학생은 자신을 알아가며 경험을 통해 성장하는 탐구자입니다.</p>
+    </div>
+  </section>
+</div></div>
 <div class="page-body"><div class="wrap teams">
   ${[...new Set(researchers.groups.map((g) => g.row || 0))].map((row) => `<div class="team-row">
   ${researchers.groups.filter((g) => (g.row || 0) === row).map((g) => `<section class="team" aria-labelledby="team-${esc(g.title)}">
@@ -507,10 +535,11 @@ page({
 
 // ── 전문가 소개 (자문 · 공동 연구 교수진) ─────────────────
 const EXPERTS = [
-  ["paik", "Jae H. Paik", "미국 샌프란시스코 주립대학교", "심리학과 교수"],
-  ["rodriguez", "Rita Rodriguez, Ph.D.", "미국 샌프란시스코 주립대학교", "심리학과 교수"],
-  ["himelfarb", "Igor Himelfarb", "미국 링컨대학교", "경영학과 부교수"],
-  ["duh", "Shinchieh (CJ) Duh", "미국 산호세 주립대학교", "심리학과 교수"],
+  // [사진, 이름, 소속(슬라이드), 소개서 11쪽 1줄, 소개서 11쪽 2줄]
+  ["paik", "Jae H. Paik", "미국 샌프란시스코 주립대학교", "샌프란시스코 주립대", "심리학 교수·SEL 연구"],
+  ["rodriguez", "Rita Rodriguez", "미국 샌프란시스코 주립대학교", "Grow X 프로그램 개발", "학교심리·SEL 교육"],
+  ["himelfarb", "Igor Himelfarb", "미국 링컨대학교", "Grow X 교육측정 총괄", "교육통계·데이터 분석"],
+  ["duh", "Shinchieh (CJ) Duh", "미국 산호세 주립대학교", "산호세 주립대 심리학", "프로그램 운영·평가"],
 ];
 page({
   file: "about/experts/index.html", key: "about/experts", title: "전문가 소개",
@@ -519,16 +548,16 @@ page({
 <div class="page-head"><div class="wrap">
   <div class="eyebrow">EXPERTS</div>
   <h1>전문가 소개</h1>
-  <p>FOX 글로벌캠프는 아이들의 실제 교류 성장 경험을 SEL 연구와 실행 기반 위에서 운영하고 있습니다</p>
+  <p>미국 연구진과 함께 SEL을 연구하고 프로그램을 개발합니다.</p>
 </div></div>
 <div class="page-body"><div class="wrap">
   <ul class="experts" role="list">
-    ${EXPERTS.map(([id, name, school, dept]) => `<li class="expert">
+    ${EXPERTS.map(([id, name, school, l1, l2]) => `<li class="expert">
       <img src="${r}img/experts/${id}.jpg" alt="${esc(name)}" loading="lazy">
       <div class="expert-body">
         <span class="expert-school">${esc(school)}</span>
-        <h2 lang="en">${esc(name)} <small>교수</small></h2>
-        <p>${esc(dept)}</p>
+        <h2 lang="en">${esc(name)}</h2>
+        <p>${esc(l1)}<br>${esc(l2)}</p>
       </div>
     </li>`).join("\n    ")}
   </ul>
@@ -540,6 +569,18 @@ page({
     </ul>
     <blockquote class="citation" lang="en">Paik, J.H., Duh, S., Rodriguez, R., Sung, W.K., Ha, J.Y., Wilken, L., Lee, J.T. (2024). A Global Community-Based Approach to Supporting Social and Emotional Learning. <i>Social and Emotional Learning: Research, Practice, and Policy</i>, 4, 100063-8.
       <a href="https://doi.org/10.1016/j.sel.2024.100063" ${ext}>https://doi.org/10.1016/j.sel.2024.100063</a></blockquote>
+  </section>
+  <section class="global" aria-labelledby="global-title">
+    <h2 class="sub-head" id="global-title">해외 연구·교류</h2>
+    <p class="global-lead">해외 학교·대학과<br>연구와 학생 교류를 이어가고 있습니다.</p>
+    <div class="global-pair">
+      <figure><img src="${r}img/global/stoneranch-camp.jpg" alt="스톤랜치 초등학교 학생들과 함께한 글로벌캠프 활동" loading="lazy"><figcaption><b>스톤랜치 초등학교 · 글로벌캠프</b>학생들이 만나 함께 활동하는 교류</figcaption></figure>
+      <figure><img class="doc" src="${r}img/global/mou.jpg" alt="SFSU, 스톤랜치 초등학교와 맺은 협약서" loading="lazy"><figcaption><b>SFSU · 스톤랜치 초등학교 협약</b>왼쪽: SFSU | 오른쪽: 스톤랜치 초등학교</figcaption></figure>
+    </div>
+    <div class="global-events">
+      <article><img src="${r}img/global/meducation.jpg" alt="mEducation Alliance Symposium 2025 현장 사진" loading="lazy"><div><h3 lang="en">mEducation Alliance Symposium</h3><p>SEL을 연구 수준에서 실제 현장 적용까지 연결하는 글로벌 혁신 모델로서의 Grow X SEL 플랫폼 홍보</p></div></article>
+      <article><img src="${r}img/global/edtech-week.jpg" alt="EdTech Week 2025 현장 사진" loading="lazy"><div><h3 lang="en">EdTech Week</h3><p>Grow X SEL 플랫폼 및 레슨키트홍보글로벌 네트워킹을 통해 시장 인사이트 확보와 해외 확산 전략 기반 마련</p></div></article>
+    </div>
   </section>
 </div></div>`,
 });
