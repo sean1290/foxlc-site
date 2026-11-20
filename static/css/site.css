@@ -399,6 +399,10 @@ body:has(.ag-viewer[open]){overflow:hidden}
 .jump a:hover{border-color:var(--navy)}
 .sub-head{font-size:24px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px}
 .sub-head::before{content:"";width:6px;height:22px;border-radius:3px;background:var(--mint)}
+.sec-intro{display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:24px}
+.sec-intro .sub-head{margin-bottom:0;flex:none}
+.sec-intro p{flex:1;min-width:260px;font-size:16px;color:var(--ink2);line-height:1.6}
+@media (max-width:600px){ .sec-intro{flex-direction:column;gap:8px} }
 .videos-sec{margin-top:80px}
 .notice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .notice-card{text-decoration:none}
@@ -740,6 +744,7 @@ body:has(.inst-modal[open]){overflow:hidden}
 
 /* ── 전문가 소개 ── */
 .experts{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:22px;max-width:960px;margin:0 auto}
+.page-body .sec-intro+.experts{margin-top:4px}
 .expert{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);text-align:center}
 .expert img{width:150px;height:180px;margin:24px auto 0;border-radius:14px;object-fit:cover;object-position:top;background:var(--mintbg)}
 .expert-body{padding:16px 16px 22px}

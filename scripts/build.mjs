@@ -498,9 +498,9 @@ page({
 <div class="page-head"><div class="wrap">
   <div class="eyebrow">EXPERTS</div>
   <h1>전문가 소개</h1>
-  <p>미국 연구진과 함께 SEL을 연구하고 프로그램을 개발합니다.</p>
 </div></div>
 <div class="page-body"><div class="wrap">
+  <div class="sec-intro"><h2 class="sub-head" id="global-team-title">글로벌 연구진</h2><p>미국 연구진과의 글로벌 협력을 통해 SEL 연구를 확장하고, 교육 현장에 적용할 프로그램을 개발합니다.</p></div>
   <ul class="experts" role="list">
     ${EXPERTS.map(([id, name, school, l1, l2]) => `<li class="expert">
       <img src="${r}img/experts/${id}.jpg" alt="${esc(name)}" loading="lazy">
@@ -521,7 +521,7 @@ page({
       <a href="https://doi.org/10.1016/j.sel.2024.100063" ${ext}>https://doi.org/10.1016/j.sel.2024.100063</a></blockquote>
   </section>
   <section class="team-sec" id="researchers" aria-labelledby="researchers-title">
-    <h2 class="sub-head" id="researchers-title">연구원 소개</h2>
+    <div class="sec-intro"><h2 class="sub-head" id="researchers-title">연구원 소개</h2><p>융합교육 전문성을 바탕으로 교육과정을 설계하고, 학생의 성장 데이터를 체계적으로 기록·분석합니다.</p></div>
     <div class="teams">
       ${[...new Set(researchers.groups.map((g) => g.row || 0))].map((row) => `<div class="team-row">
       ${researchers.groups.filter((g) => (g.row || 0) === row).map((g) => `<section class="team" aria-labelledby="team-${esc(g.title)}">
