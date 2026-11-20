@@ -2,7 +2,7 @@
 
 Wix를 대신하는 정적 사이트입니다. 외부 패키지 없이 Node 20+ 만으로 빌드합니다.
 
-사이트 주소: https://sean1290.github.io/foxlc-site/
+사이트 주소: https://foxlc.foxconnect.kr/ (DNS: 가비아 CNAME foxlc → sean1290.github.io, GitHub Pages 맞춤 도메인)
 
 ## 구조
 
