@@ -872,7 +872,12 @@ body:has(.inst-modal[open]){overflow:hidden}
 .site-foot h3{color:var(--mint);font-size:13px;font-weight:700;letter-spacing:.08em;margin-bottom:8px}
 .site-foot a{text-decoration:none}
 .site-foot a:hover{color:#fff;text-decoration:underline}
-.copy{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14);font-size:13px;color:rgba(255,255,255,.55)}
+.family{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.14)}
+.family h3{margin:0 8px 0 0;font-size:12.5px;letter-spacing:.14em}
+.site-foot .family a{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.88);font-size:13.5px;font-weight:600}
+.site-foot .family a::after{content:"↗";font-size:11px;color:var(--mint)}
+.site-foot .family a:hover{background:#fff;color:var(--navy);text-decoration:none}
+.copy{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14);font-size:13px;color:rgba(255,255,255,.55)}
 .foot-links{display:flex;gap:8px;flex-wrap:wrap}
 .site-foot .privacy-link{display:inline-flex;align-items:center;padding:7px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.3);color:#fff;font-weight:700;font-size:13px;text-decoration:none}
 .site-foot .privacy-link:hover{background:#fff;color:var(--navy);text-decoration:none}

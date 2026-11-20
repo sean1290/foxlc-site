@@ -129,6 +129,11 @@ ${body(r)}
         <p><a href="${r}about/directions/">골프존 조이마루 2층,<br>폭스러닝센터</a></p>
       </div>
     </div>
+    <nav class="family" aria-label="패밀리 사이트">
+      <h3>FAMILY SITE</h3>
+      <a href="https://foxconnect.kr/index.do" ${ext}>FOX CONNECT</a>
+      <a href="https://www.growxeducation.com/sel" ${ext}>Grow X Education</a>
+    </nav>
     <div class="copy"><span>© 2026 폭스러닝센터</span><span class="foot-links"><a class="privacy-link" href="${r}recruit/">채용공고</a><a class="privacy-link" href="${r}privacy/">개인정보처리방침</a></span></div>
   </div>
 </footer>
