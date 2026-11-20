@@ -184,11 +184,11 @@ page({
   <div class="hero-photo" style="background-image:url(${r}img/hero.jpg)"></div>
   <div class="wrap">
     <p class="tag" lang="en"><span>LEARN TODAY,</span><span>LEAD TOMORROW.</span></p>
-    <h1><span class="l1">전문가가 함께하는</span><span class="l2"><em>사회정서학습</em> 기반</span><span class="l3">폭스러닝센터</span></h1>
+    <h1><span class="l1">전문가와 함께하는</span><span class="l2"><em>사회정서학습</em> 기반</span><span class="l3">폭스러닝센터</span></h1>
     <p>폭스러닝센터는 전문성과 따뜻함으로 아이의 성장을 지원합니다.</p>
     <div class="actions">
-      <a class="btn mint" href="${r}about/institutes/">연구소 소개</a>
       <a class="btn mint" href="${r}about/experts/">전문가 소개</a>
+      <a class="btn mint" href="${r}about/institutes/">연구소 소개</a>
       <a class="btn ghost" href="#contact">문의하기</a>
     </div>
   </div>
