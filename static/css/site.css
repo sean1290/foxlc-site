@@ -754,6 +754,44 @@ body:has(.inst-modal[open]){overflow:hidden}
 @media (max-width:1000px){ .experts{grid-template-columns:1fr 1fr} }
 @media (max-width:600px){ .experts{gap:14px} .expert h2{font-size:16.5px} .expert-body{padding:14px 10px 18px} .research-list li{grid-template-columns:1fr;gap:4px} }
 
+/* ── 전문가 소개: 해외 연구·교류 ── */
+.global{margin-top:64px}
+.global-lead{font-size:20px;font-weight:700;color:var(--navy);line-height:1.6;margin-bottom:22px}
+.global-pair{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;align-items:start}
+.global-pair img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px;box-shadow:var(--shadow)}
+.global-pair img.doc{object-fit:contain;background:#f4f6f8;padding:14px}
+.global-pair figcaption,.global-events p{margin-top:10px;font-size:14.5px;color:var(--ink2);line-height:1.65}
+.global-pair figcaption b{display:block;font-size:16px;color:var(--navy)}
+.global-events{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:28px}
+.global-events article{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.global-events img{width:100%;aspect-ratio:2/1;object-fit:cover}
+.global-events article>div{padding:18px 22px 22px}
+.global-events h3{font-size:19px;font-weight:800}
+/* ── 연구원 소개: 연구원의 역할 ── */
+.role{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;align-items:center;padding:28px;border-radius:24px;background:var(--mintbg)}
+.role>img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:18px}
+.role h2{font-size:28px;font-weight:800}
+.role-lead{margin-top:6px;font-size:17px;color:var(--green);font-weight:700}
+.role-list{list-style:none;margin-top:22px;display:grid;gap:12px}
+.role-list li{display:flex;gap:16px;align-items:flex-start;padding:16px 18px;background:#fff;border-radius:14px}
+.role-list span{font-family:'Oswald','Noto Sans KR',sans-serif;font-size:22px;font-weight:700;color:var(--green);line-height:1.2}
+.role-list b{font-size:17px;color:var(--navy)}
+.role-list p{font-size:15px;color:var(--ink2);margin-top:2px}
+.role-note{margin-top:18px;font-size:16px;font-weight:700;color:var(--navy)}
+/* ── About Us: SEL 면담 5단계 ── */
+.steps5{list-style:none;display:grid;grid-template-columns:repeat(5,1fr);gap:14px;counter-reset:s}
+.steps5 li{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 18px 24px;box-shadow:var(--shadow)}
+.steps5 li:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);z-index:1;color:var(--mint);font-weight:800}
+.steps5 li:nth-child(4){background:var(--navy);border-color:var(--navy)}
+.steps5 li:nth-child(4) b{color:#fff}.steps5 li:nth-child(4) p{color:rgba(255,255,255,.8)}.steps5 li:nth-child(4) .no{color:var(--mint)}
+.steps5 .no{font-family:'Oswald','Noto Sans KR',sans-serif;font-size:26px;font-weight:700;color:var(--green)}
+.steps5 b{display:block;margin-top:8px;font-size:17px;font-weight:800;color:var(--navy);line-height:1.4;min-height:48px}
+.steps5 p{margin-top:8px;font-size:14.5px;color:var(--ink2);line-height:1.65}
+.steps5-note{margin-top:26px;text-align:center;font-size:16.5px;font-weight:700;color:var(--navy)}
+@media (max-width:1000px){ .steps5{grid-template-columns:1fr 1fr 1fr} .steps5 li::after{display:none} }
+@media (max-width:860px){ .global-pair,.global-events,.role{grid-template-columns:1fr} .role{gap:24px;padding:20px} }
+@media (max-width:600px){ .steps5{grid-template-columns:1fr 1fr} .steps5 b{min-height:0} }
+
 /* ── 바닥글 ── */
 .site-foot{background:var(--navy-d);color:rgba(255,255,255,.8);font-size:14.5px;padding:56px 0 28px}
 .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px}
