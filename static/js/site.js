@@ -53,6 +53,29 @@
       promo.close();
     });
     promo.addEventListener("click", function (e) { if (e.target === promo) promo.close(); });
+    var slides = $$(".promo-slide", promo), si = 0, pcount = $(".promo-count", promo), zoom = $(".promo-zoom", promo);
+    var go = function (i) {
+      if (slides.length < 2) return;
+      si = (i + slides.length) % slides.length;
+      slides.forEach(function (im, k) { im.hidden = k !== si; });
+      if (pcount) pcount.textContent = (si + 1) + " / " + slides.length;
+      if (zoom) zoom.href = slides[si].getAttribute("src");
+      var nx = slides[(si + 1) % slides.length]; if (nx.loading === "lazy") nx.loading = "eager";
+    };
+    var pv = $(".promo-nav.prev", promo), nv = $(".promo-nav.next", promo);
+    if (pv) pv.addEventListener("click", function () { go(si - 1); });
+    if (nv) nv.addEventListener("click", function () { go(si + 1); });
+    promo.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") { go(si - 1); e.preventDefault(); }
+      if (e.key === "ArrowRight") { go(si + 1); e.preventDefault(); }
+    });
+    var tx = null, stage = $(".promo-stage", promo);
+    stage.addEventListener("touchstart", function (e) { tx = e.touches[0].clientX; }, { passive: true });
+    stage.addEventListener("touchend", function (e) {
+      if (tx === null) return; var dx = e.changedTouches[0].clientX - tx; tx = null;
+      if (Math.abs(dx) > 40) go(si + (dx < 0 ? 1 : -1));
+    });
+    if (slides[1]) slides[1].loading = "eager";
   }
 
   /* ── 메뉴: 데스크톱은 CSS hover, 휴대폰은 탭해서 펼친다 ── */
