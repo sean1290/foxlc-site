@@ -302,21 +302,8 @@ page({
   </div>
 </section>
 
-<section class="sec tint">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">FOX YOUTUBE</div>
-      <h2>폭스 YouTube</h2>
-      <p>폭스커넥트 유튜브 채널의 최신 영상입니다</p>
-    </div>
-    <div class="grid3 home-videos">
-      ${videos.slice(0, 3).map((v) => videoCard(v)).join("\n      ")}
-    </div>
-    <div class="more"><a class="btn ghost" href="${r}videos/#videos">영상 더 보기 →</a></div>
-  </div>
-</section>
 ${columns.length ? `
-<section class="sec home-cols">
+<section class="sec tint home-cols">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">SEL COLUMN</div>
@@ -330,6 +317,21 @@ ${columns.length ? `
   </div>
 </section>
 ` : ""}
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">FOX YOUTUBE</div>
+      <h2>폭스 YouTube</h2>
+      <p>폭스커넥트 유튜브 채널의 최신 영상입니다</p>
+    </div>
+    <div class="grid3 home-videos">
+      ${videos.slice(0, 3).map((v) => videoCard(v)).join("\n      ")}
+    </div>
+    <div class="more"><a class="btn ghost" href="${r}videos/#videos">영상 더 보기 →</a></div>
+  </div>
+</section>
+
 
 <section class="sec">
   <div class="wrap">
