@@ -413,6 +413,9 @@ body:has(.ag-viewer[open]){overflow:hidden}
 .notice{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:48px;align-items:start;max-width:1040px;margin:0 auto}
 .notice-posters{display:grid;gap:14px;position:sticky;top:calc(var(--head) + 20px)}
 .notice-posters img{width:100%;border-radius:14px;border:1px solid var(--line);box-shadow:var(--shadow)}
+.np-stage{position:relative}
+.np-stage .promo-count{top:12px;right:12px;bottom:auto;left:auto;transform:none}
+.np-slide{display:block}.np-slide[hidden]{display:none}
 .notice h1{font-size:28px;font-weight:800;margin-bottom:20px}
 .notice-text{white-space:pre-line;font-size:16.5px;line-height:1.9;color:var(--ink)}
 .notice-text a{color:var(--green);font-weight:700;word-break:break-all}

@@ -78,6 +78,30 @@
     if (slides[1]) slides[1].loading = "eager";
   }
 
+  /* 소식 포스터 넘겨보기 */
+  $$(".np-slider").forEach(function (sl) {
+    var ss = $$(".np-slide", sl), i = 0, cnt = $(".promo-count", sl);
+    var go = function (k) {
+      i = (k + ss.length) % ss.length;
+      ss.forEach(function (a, j) { a.hidden = j !== i; });
+      cnt.textContent = (i + 1) + " / " + ss.length;
+      var nx = $("img", ss[(i + 1) % ss.length]); if (nx && nx.loading === "lazy") nx.loading = "eager";
+    };
+    $(".promo-nav.prev", sl).addEventListener("click", function () { go(i - 1); });
+    $(".promo-nav.next", sl).addEventListener("click", function () { go(i + 1); });
+    sl.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") go(i - 1);
+      if (e.key === "ArrowRight") go(i + 1);
+    });
+    var tx = null;
+    sl.addEventListener("touchstart", function (e) { tx = e.touches[0].clientX; }, { passive: true });
+    sl.addEventListener("touchend", function (e) {
+      if (tx === null) return; var dx = e.changedTouches[0].clientX - tx; tx = null;
+      if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1));
+    });
+    var n1 = $("img", ss[1]); if (n1) n1.loading = "eager";
+  });
+
   /* ── 메뉴: 데스크톱은 CSS hover, 휴대폰은 탭해서 펼친다 ── */
   var head = $(".site-head"), menuBtn = $(".menu-btn");
   if (menuBtn) {

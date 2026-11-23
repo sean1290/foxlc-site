@@ -28,6 +28,7 @@ const colCard = (r, c, tag = "h2") => `<a class="card col-card" href="${r}column
         <p class="card-desc">${esc(mdPlain(c.body, 90))}</p>
       </div>
     </a>`;
+const noticePosters = existsSync(path.join(ROOT, "data/notice-posters.json")) ? await json("data/notice-posters.json") : {};
 const noticeFiles = existsSync(path.join(ROOT, "data/notice-attachments.json")) ? await json("data/notice-attachments.json") : {};
 const notices = existsSync(path.join(ROOT, "data/naver.json")) ? await json("data/naver.json") : [];
 
@@ -865,9 +866,23 @@ notices.forEach((n, i) => {
     body: (r) => `
 <div class="page-body" style="padding-top:56px"><div class="wrap">
   <article class="notice">
-    <div class="notice-posters">
-      ${Array.from({ length: n.photos }, (_, k) => `<a href="${r}naver-img/${n.feedId}/${k}.jpg" ${ext}><img src="${r}naver-img/${n.feedId}/${k}.jpg" alt="${esc(n.title)} 포스터${n.photos > 1 ? ` ${k + 1}` : ""}"${k ? ' loading="lazy"' : ""}></a>`).join("\n      ")}
-    </div>
+    ${(() => {
+      const ps = [
+        ...Array.from({ length: n.photos }, (_, k) => ({ src: `${r}naver-img/${n.feedId}/${k}.jpg`, alt: `${n.title} 포스터` })),
+        ...(noticePosters[n.feedId] || []).map((p) => ({ src: `${r}img/notice/${encodeURIComponent(p.file)}`, alt: p.alt || `${n.title} 포스터` })),
+      ];
+      const imgs = ps.map((p, k) => `<a class="np-slide" href="${p.src}" ${ext}${k ? " hidden" : ""}><img src="${p.src}" alt="${esc(p.alt)}${ps.length > 1 ? ` (${k + 1}/${ps.length})` : ""}"${k ? ' loading="lazy"' : ""}></a>`).join("\n        ");
+      return ps.length > 1 ? `<div class="notice-posters np-slider" role="region" aria-roledescription="포스터 넘겨보기" aria-label="포스터 ${ps.length}장">
+      <div class="np-stage">
+        ${imgs}
+        <button class="promo-nav prev" type="button" aria-label="이전 포스터">‹</button>
+        <button class="promo-nav next" type="button" aria-label="다음 포스터">›</button>
+        <span class="promo-count" aria-live="polite">1 / ${ps.length}</span>
+      </div>
+    </div>` : `<div class="notice-posters">
+      ${imgs}
+    </div>`;
+    })()}
     <div class="notice-body">
       <p class="date">${ymd(n.date)}${n.period ? ` · 기간 ${esc(n.period)}` : ""}</p>
       <h1>${esc(n.title)}</h1>
