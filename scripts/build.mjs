@@ -276,7 +276,7 @@ page({
     </ol>
     <div class="foxx" aria-label="F.O.X — Future Of X">
       <div class="foxx-glow" aria-hidden="true"></div>
-      <div class="foxx-tag" aria-hidden="true"><span>F.O.X</span><span class="foxx-line"></span><span>WHAT WE STAND FOR</span></div>
+      <h3 class="foxx-tag"><span class="foxx-line" aria-hidden="true"></span><span>왜 <b>F.O.X.</b>인가?</span></h3>
       <p class="foxx-lines" aria-hidden="true">
         <span class="foxx-row"><b>F</b>UTURE</span>
         <span class="foxx-row"><b>O</b>F</span>
