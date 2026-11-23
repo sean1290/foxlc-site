@@ -285,7 +285,7 @@ page({
       <div class="foxx-edu">
         <div class="foxx-edu-head">
           <h3>Future of <b>X</b> Education</h3>
-          <p>FOX LEARNING CENTER는 미래교육 변화를 주도합니다.</p>
+          <p>FOX LEARNING CENTER는<br>미래교육 변화를 주도합니다.</p>
         </div>
         <ul class="foxx-edu-list">
           <li><span class="foxx-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 24c-4.5-5.5-8-8-12-8a8 8 0 0 0 0 16c4 0 7.5-2.5 12-8zm0 0c4.5 5.5 8 8 12 8a8 8 0 0 0 0-16c-4 0-7.5 2.5-12 8z"/></svg><em>UNDEFINED</em></span><strong>무한의 <i>X</i> 가능성</strong></li>
