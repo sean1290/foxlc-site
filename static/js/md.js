@@ -1,6 +1,6 @@
 /* SEL 칼럼 본문 서식 (브라우저 미리보기와 사이트 빌드가 같이 쓴다)
    지원:  ## 소제목   ### 작은 소제목   **굵게**   [글자](https://주소)
-          ![사진 설명](https://사진주소)  (한 줄에 따로)   - 목록   > 인용
+          ![사진 설명](https://사진주소) 50%  (한 줄에 따로, 끝의 % 는 사진 크기·생략하면 꽉 차게)   - 목록   > 인용
    빈 줄로 문단을 나눈다. HTML 은 모두 글자로 바뀌어 실행되지 않는다. */
 function renderMd(src) {
   function esc(s) {
@@ -20,9 +20,10 @@ function renderMd(src) {
   blocks.forEach(function (b) {
     b = b.replace(/^\n+|\n+$/g, "");
     if (!b.trim()) return;
-    var img = /^!\[([^\]]*)\]\(([^)\s]+)\)$/.exec(b.trim());
+    var img = /^!\[([^\]]*)\]\(([^)\s]+)\)(?:\s*(\d{1,3})%)?$/.exec(b.trim());
     if (img && safeUrl(img[2])) {
-      out.push('<figure><img src="' + esc(img[2]) + '" alt="' + esc(img[1]) + '" loading="lazy">' + (img[1] ? "<figcaption>" + esc(img[1]) + "</figcaption>" : "") + "</figure>");
+      var pct = img[3] ? Math.max(20, Math.min(100, +img[3])) : 100;
+      out.push('<figure' + (pct < 100 ? ' style="width:' + pct + '%"' : "") + '><img src="' + esc(img[2]) + '" alt="' + esc(img[1]) + '" loading="lazy">' + (img[1] ? "<figcaption>" + esc(img[1]) + "</figcaption>" : "") + "</figure>");
       return;
     }
     var h = /^(#{2,3})\s+(.+)$/.exec(b);
@@ -42,7 +43,7 @@ function renderMd(src) {
 }
 /* 목록·검색용 요약: 서식 기호를 뺀 글자 */
 function mdPlain(src, n) {
-  var t = String(src || "").replace(/!\[[^\]]*\]\([^)]*\)/g, " ").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+  var t = String(src || "").replace(/!\[[^\]]*\]\([^)]*\)(\s*\d{1,3}%)?/g, " ").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
     .replace(/^#{2,3}\s+/gm, "").replace(/\*\*/g, "").replace(/^[>\-•]\s?/gm, "").replace(/\s+/g, " ").trim();
   return n && t.length > n ? t.slice(0, n) + "…" : t;
 }

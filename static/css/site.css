@@ -903,7 +903,11 @@ body:has(.inst-modal[open]){overflow:hidden}
 .col-body ul{padding-left:22px}
 .col-body li+li{margin-top:6px}
 .col-body blockquote{padding:14px 18px;border-left:4px solid var(--mint);background:var(--mintbg);border-radius:0 12px 12px 0;color:var(--ink)}
+.col-body figure{margin-left:auto;margin-right:auto}
 .col-body figure img{width:100%;border-radius:14px}
+@media (max-width:640px){.col-body figure[style]{width:100%!important}}
+.col-size{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:var(--ink3);margin-left:4px}
+.col-size button{padding:7px 10px}
 .col-body figcaption{margin-top:6px;font-size:13.5px;color:var(--ink3);text-align:center}
 .col-body a{color:var(--green);font-weight:700}
 .col-admin{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:32px;padding:14px 16px;border-radius:12px;background:#f6f9f8}

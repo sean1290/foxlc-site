@@ -998,6 +998,7 @@ page({
           <button type="button" data-md="quote">인용</button>
           <button type="button" data-md="link">링크</button>
           <label class="col-photo">사진 넣기<input type="file" accept="image/*" multiple hidden></label>
+          <span class="col-size" role="group" aria-label="사진 크기">사진 크기 <button type="button" data-md="size40">작게</button><button type="button" data-md="size65">중간</button><button type="button" data-md="size100">꽉 차게</button></span>
           <span class="col-up" aria-live="polite"></span>
         </div>
         <div class="col-panes">

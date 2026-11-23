@@ -337,9 +337,25 @@
           if (k === "h2") block("## " + (ta.value.slice(ta.selectionStart, ta.selectionEnd) || "소제목"));
           if (k === "list") block("- 첫째 항목\n- 둘째 항목");
           if (k === "quote") block("> " + (ta.value.slice(ta.selectionStart, ta.selectionEnd) || "인용할 문장"));
+          if (k.indexOf("size") === 0) resize(+k.slice(4));
           if (k === "link") { var url = prompt("연결할 주소를 넣어 주세요 (https://…)"); if (url && /^https?:\/\//.test(url)) wrap("[", "](" + url + ")", "링크 글자"); }
         };
       });
+      /* 사진 크기: 커서가 있는 사진 줄(없으면 커서 앞의 가장 가까운 사진)의 끝에 50% 같은 크기를 붙인다 */
+      var resize = function (pct) {
+        var v = ta.value, pos = ta.selectionStart, re = /^!\[[^\]]*\]\([^)\s]+\)(?:\s*\d{1,3}%)?[ \t]*$/gm, m, hit = null, first = null;
+        while ((m = re.exec(v))) {
+          if (!first) first = m;
+          if (m.index <= pos) hit = m; else break;
+        }
+        hit = hit || first;
+        if (!hit) { up.textContent = "먼저 '사진 넣기'로 사진을 넣어 주세요."; return; }
+        var line = hit[0].replace(/\s*\d{1,3}%[ \t]*$/, "").replace(/[ \t]+$/, "");
+        var next = line + (pct < 100 ? " " + pct + "%" : "");
+        ta.setRangeText(next, hit.index, hit.index + hit[0].length, "start");
+        ta.selectionStart = ta.selectionEnd = hit.index + next.length; ta.focus(); preview();
+        up.textContent = "사진 크기를 " + ({ 40: "작게", 65: "중간" }[pct] || "꽉 차게") + " 바꿨습니다. (커서가 있는 사진에 적용돼요)";
+      };
       /* 사진: 브라우저에서 긴 변 1600px JPEG 로 줄여 올린다 */
       var shrink = function (file) {
         return new Promise(function (res, rej) {
