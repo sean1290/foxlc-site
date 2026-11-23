@@ -332,7 +332,7 @@ ${columns.length ? `
 </section>
 
 
-<section class="sec">
+<section class="sec tint">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">GALLERY</div>
@@ -348,7 +348,7 @@ ${columns.length ? `
   </dialog>
 </section>
 
-<section class="sec tint">
+<section class="sec">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">TESTIMONIALS</div>
@@ -360,7 +360,7 @@ ${columns.length ? `
   </div>
 </section>
 
-<section class="sec" id="contact">
+<section class="sec tint" id="contact">
   <div class="wrap">
     <div class="contact">
       <div>
