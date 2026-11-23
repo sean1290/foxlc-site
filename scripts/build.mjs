@@ -269,6 +269,16 @@ page({
       </div>
       <img src="${r}img/about.jpg" width="1000" height="667" alt="연구원과 아이들이 태블릿을 보며 함께 활동하는 모습" loading="lazy">
     </div>
+    <div class="foxx" aria-label="F.O.X — Future Of X">
+      <div class="foxx-glow" aria-hidden="true"></div>
+      <div class="foxx-tag" aria-hidden="true"><span>F.O.X</span><span class="foxx-line"></span><span>WHAT WE STAND FOR</span></div>
+      <p class="foxx-lines" aria-hidden="true">
+        <span class="foxx-row"><b>F</b>UTURE</span>
+        <span class="foxx-row"><b>O</b>F</span>
+        <span class="foxx-row foxx-x"><span class="foxx-word" data-words="Experience|Exploration|Excellence|Expression|Exchange|Expansion|Experiment|Extraordinary|EVERYTHING"><b>X</b></span></span>
+      </p>
+      <p class="sr-only">Future Of X — Experience, Exploration, Excellence, Expression, Exchange, Expansion, Experiment, Extraordinary, EVERYTHING</p>
+    </div>
     <ol class="steps3">
       <li class="step"><div class="circle"><div class="no">STEP 01</div><h3>관찰</h3></div><p>학생의 행동과 감정을 세심하게 살핍니다.</p></li>
       <li class="step"><div class="circle"><div class="no">STEP 02</div><h3>발견</h3></div><p>강점과 필요를 찾아 성장의 단서를 발견합니다.</p></li>

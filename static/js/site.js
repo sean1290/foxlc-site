@@ -149,6 +149,48 @@
     });
   });
 
+  /* ── F.O.X : X 단어 바꾸기 ── */
+  (function () {
+  var fw = $(".foxx-word");
+  if (fw) {
+    var fwords = fw.getAttribute("data-words").split("|"), fk = -1, ftimer = null;
+    var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var paint = function (w) {
+      var html = "", hit = false;
+      for (var c = 0; c < w.length; c++) {
+        var ch = w[c].toUpperCase(), x = !hit && ch === "X";
+        if (x) hit = true;
+        html += '<span class="fl' + (x ? " fx" : "") + '" style="--d:' + (c * 38) + 'ms">' + ch + "</span>";
+      }
+      return html;
+    };
+    var next = function () {
+      fk = (fk + 1) % fwords.length;
+      var w = fwords[fk], last = fk === fwords.length - 1;
+      if (still) { fw.innerHTML = paint(w); fw.classList.toggle("all", last); }
+      else {
+        fw.classList.add("out");
+        setTimeout(function () {
+          fw.classList.remove("out");
+          fw.classList.toggle("all", last);
+          fw.innerHTML = paint(w);
+        }, 420);
+      }
+      ftimer = setTimeout(next, last ? 3800 : 2100);
+    };
+    var started = false;
+    var start = function () { if (!started) { started = true; ftimer = setTimeout(next, 1400); } };
+    var fbox = fw.closest(".foxx") || fw;
+    var seen = function () { var r = fbox.getBoundingClientRect(); return r.top < innerHeight * 0.8 && r.bottom > innerHeight * 0.2; };
+    var check = function () { if (seen()) { start(); removeEventListener("scroll", check); } };
+    addEventListener("scroll", check, { passive: true }); check();
+    document.addEventListener("visibilitychange", function () {
+      if (!started) return;
+      if (document.hidden) clearTimeout(ftimer); else { clearTimeout(ftimer); ftimer = setTimeout(next, 900); }
+    });
+  }
+  })();
+
   /* ── 갤러리 크게 보기 ── */
   var lb = $("#lightbox");
   if (lb && lb.showModal) {
