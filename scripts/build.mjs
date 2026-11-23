@@ -19,6 +19,15 @@ const history = await json("data/history.json");
 const columns = existsSync(path.join(ROOT, "data/columns.json")) ? await json("data/columns.json") : [];
 const mdSrc = await readFile(path.join(ROOT, "static/js/md.js"), "utf8");
 const { renderMd, mdPlain } = new Function(mdSrc + "; return { renderMd, mdPlain };")();
+const colDate = (d) => (d || "").replace(/-/g, ".");
+const colCard = (r, c, tag = "h2") => `<a class="card col-card" href="${r}column/${c.id}/" data-cat="${esc(c.category)}">
+      <div class="col-thumb">${c.cover ? `<img src="${esc(c.cover)}" alt="" loading="lazy">` : `<span>SEL</span>`}</div>
+      <div class="card-body">
+        <div class="col-meta">${c.category ? `<span class="col-cat">${esc(c.category)}</span>` : ""}<span>${colDate(c.published)}</span></div>
+        <${tag} class="card-title">${esc(c.title)}</${tag}>
+        <p class="card-desc">${esc(mdPlain(c.body, 90))}</p>
+      </div>
+    </a>`;
 const noticeFiles = existsSync(path.join(ROOT, "data/notice-attachments.json")) ? await json("data/notice-attachments.json") : {};
 const notices = existsSync(path.join(ROOT, "data/naver.json")) ? await json("data/naver.json") : [];
 
@@ -305,7 +314,21 @@ page({
     <div class="more"><a class="btn ghost" href="${r}videos/#videos">영상 더 보기 →</a></div>
   </div>
 </section>
-
+${columns.length ? `
+<section class="sec home-cols">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">SEL COLUMN</div>
+      <h2>SEL 칼럼</h2>
+      <p>SEL센터 전문가가 전하는 사회정서학습과 심리검사·상담 이야기</p>
+    </div>
+    <div class="col-grid">
+      ${columns.slice(0, 3).map((c) => colCard(r, c, "h3")).join("\n      ")}
+    </div>
+    <div class="more"><a class="btn ghost" href="${r}column/">칼럼 더 보기 →</a></div>
+  </div>
+</section>
+` : ""}
 
 <section class="sec">
   <div class="wrap">
@@ -918,7 +941,6 @@ page({
 // ── SEL 칼럼 (목록 · 글 · 쓰기) ─────────────────────────
 // 글은 Cloudflare API(worker/)에 저장되고, 매일 빌드 때 data/columns.json 으로 받아 정식 페이지를 만든다.
 // 아직 빌드되지 않은 새 글은 column/view/?id= 화면(board.js)에서 바로 보인다.
-const colDate = (d) => (d || "").replace(/-/g, ".");
 page({
   file: "column/index.html", key: "news/column", title: "SEL 칼럼", board: true,
   description: "폭스러닝센터 SEL센터 전문가가 전하는 사회정서학습과 심리검사·상담 이야기.",
@@ -935,14 +957,7 @@ page({
   </div>
   <div class="col-filter" id="colFilter"></div>
   <div class="col-grid" id="colList" data-built="${esc(JSON.stringify(columns.map((c) => c.id)))}">
-    ${columns.length ? columns.map((c) => `<a class="card col-card" href="${r}column/${c.id}/" data-cat="${esc(c.category)}">
-      <div class="col-thumb">${c.cover ? `<img src="${esc(c.cover)}" alt="" loading="lazy">` : `<span>SEL</span>`}</div>
-      <div class="card-body">
-        <div class="col-meta">${c.category ? `<span class="col-cat">${esc(c.category)}</span>` : ""}<span>${colDate(c.published)}</span></div>
-        <h2 class="card-title">${esc(c.title)}</h2>
-        <p class="card-desc">${esc(mdPlain(c.body, 90))}</p>
-      </div>
-    </a>`).join("\n    ") : `<p class="rc-empty">첫 칼럼을 준비하고 있습니다.</p>`}
+    ${columns.length ? columns.map((c) => colCard(r, c)).join("\n    ") : `<p class="rc-empty">첫 칼럼을 준비하고 있습니다.</p>`}
   </div>
   <p class="rc-foot"><a href="${r}column/write/">관리자 글쓰기</a></p>
 </div></div>`,
