@@ -125,7 +125,7 @@
     target.innerHTML = "";
     var f = el("form", { class: "rc-login" }, [
       el("h2", { text: "관리자 로그인" }),
-      el("p", { class: "rc-note", text: "채용공고 작성은 폭스러닝센터 관리자만 할 수 있습니다." }),
+      el("p", { class: "rc-note", text: "글 작성은 폭스러닝센터 관리자만 할 수 있습니다." }),
       el("label", {}, ["아이디", el("input", { name: "username", autocomplete: "username", required: "" })]),
       el("label", {}, ["비밀번호", el("input", { name: "password", type: "password", autocomplete: "current-password", required: "" })]),
       el("button", { class: "btn navy", type: "submit", text: "로그인" }),
@@ -217,6 +217,167 @@
         }, function (err) { msg(m, err.message, true); });
       };
       $("#rcLogout").onclick = function () { setToken(""); location.href = ROOT + "recruit/"; };
+    });
+  }
+  /* ═══ SEL 칼럼 ═══ */
+  var colDate = function (d) { return (d || "").slice(0, 10).replace(/-/g, "."); };
+  var isAdmin = function (u) { return u && u.role === "admin"; };
+
+  /* 카페용 복사: 서식(HTML)과 글자를 함께 복사 → 네이버 카페 글쓰기에 붙여 넣기 */
+  function copyForCafe(title, bodyMd, btn) {
+    var html = "<h2>" + title.replace(/</g, "&lt;") + "</h2>" + window.renderMd(bodyMd);
+    var text = title + "\n\n" + bodyMd.replace(/!\[[^\]]*\]\(([^)]*)\)/g, "$1").replace(/\*\*/g, "").replace(/^#{2,3}\s+/gm, "");
+    var done = function () { var t = btn.textContent; btn.textContent = "복사했습니다 ✓"; setTimeout(function () { btn.textContent = t; }, 2000); };
+    if (navigator.clipboard && window.ClipboardItem) {
+      navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([html], { type: "text/html" }), "text/plain": new Blob([text], { type: "text/plain" }) })]).then(done, function () { navigator.clipboard.writeText(text).then(done); });
+    } else if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done); }
+  }
+  function adminTools(box, c) {
+    box.innerHTML = ""; box.hidden = false;
+    var edit = el("a", { class: "btn line sm", href: ROOT + "column/write/?id=" + c.id, text: "수정" });
+    var copy = el("button", { class: "btn line sm", type: "button", text: "카페용 복사" });
+    copy.onclick = function () { copyForCafe(c.title, c.body, copy); };
+    var del = el("button", { class: "btn line sm rc-del", type: "button", text: "삭제" });
+    del.onclick = function () {
+      if (!confirm("이 칼럼을 삭제할까요? 되돌릴 수 없습니다.")) return;
+      api("DELETE", "/api/columns/" + c.id).then(function () { location.href = ROOT + "column/"; }, function (e) { alert(e.message); });
+    };
+    box.appendChild(el("span", { class: "col-admin-label", text: "관리자" }));
+    [edit, copy, del].forEach(function (b) { box.appendChild(b); });
+  }
+
+  /* 목록: 빌드된 카드 + 아직 빌드 안 된 새 글/임시 글(관리자) + 분류 필터 */
+  var colList = $("#colList");
+  if (colList) {
+    var built = []; try { built = JSON.parse(colList.getAttribute("data-built") || "[]"); } catch (e) {}
+    var buildFilter = function () {
+      var box = $("#colFilter"), cards = [].slice.call(colList.querySelectorAll(".col-card"));
+      var cats = []; cards.forEach(function (c) { var k = c.getAttribute("data-cat"); if (k && cats.indexOf(k) < 0) cats.push(k); });
+      box.innerHTML = ""; if (cats.length < 2) return;
+      ["전체"].concat(cats).forEach(function (k, i) {
+        var b = el("button", { type: "button", text: k }); if (!i) b.setAttribute("aria-current", "true");
+        b.onclick = function () {
+          [].forEach.call(box.children, function (x) { x.removeAttribute("aria-current"); }); b.setAttribute("aria-current", "true");
+          cards.forEach(function (c) { c.hidden = i && c.getAttribute("data-cat") !== k; });
+        };
+        box.appendChild(b);
+      });
+    };
+    buildFilter();
+    if (API) me().then(function (u) {
+      if (isAdmin(u)) $("#colAdminBar").hidden = false;
+      return api("GET", "/api/columns" + (isAdmin(u) ? "?all=1" : ""));
+    }).then(function (d) {
+      var add = (d.columns || []).filter(function (c) { return built.indexOf(c.id) < 0; });
+      if (!add.length) return;
+      var empty = colList.querySelector(".rc-empty"); if (empty) empty.remove();
+      add.reverse().forEach(function (c) {
+        var a = el("a", { class: "card col-card", href: ROOT + "column/view/?id=" + c.id, "data-cat": c.category || "" }, [
+          el("div", { class: "col-thumb" }, [c.cover ? el("img", { src: c.cover, alt: "", loading: "lazy" }) : el("span", { text: "SEL" })]),
+          el("div", { class: "card-body" }, [
+            el("div", { class: "col-meta" }, [c.status === "draft" ? el("span", { class: "col-draft", text: "임시 저장" }) : null, c.category ? el("span", { class: "col-cat", text: c.category }) : null, el("span", { text: colDate(c.published_at || c.created_at) })]),
+            el("h2", { class: "card-title", text: c.title })
+          ])
+        ]);
+        colList.insertBefore(a, colList.firstChild);
+      });
+      buildFilter();
+    }).catch(function () {});
+  }
+
+  /* 빌드된 글 페이지: 관리자면 수정·카페용 복사·삭제 */
+  var colPost = $(".col-post[data-col-id]");
+  if (colPost && API) me().then(function (u) {
+    if (!isAdmin(u)) return;
+    api("GET", "/api/columns/" + colPost.getAttribute("data-col-id")).then(function (d) { adminTools($(".col-admin", colPost), d.column); });
+  });
+
+  /* 새 글 바로 보기 (빌드 전) */
+  var colView = $("#colView");
+  if (colView) {
+    if (!API) return noApi(colView);
+    Promise.all([api("GET", "/api/columns/" + encodeURIComponent(param("id"))), me()]).then(function (r) {
+      var c = r[0].column, u = r[1];
+      document.title = c.title + " | SEL 칼럼 | 폭스러닝센터";
+      colView.innerHTML = "";
+      if (c.category) colView.appendChild(el("span", { class: "col-cat", text: c.category }));
+      colView.appendChild(el("h1", { text: c.title }));
+      colView.appendChild(el("div", { class: "byline" }, [el("img", { src: ROOT + "img/mark.png", alt: "", width: "36", height: "36" }), el("div", {}, [el("b", { text: c.author_name || "폭스러닝센터" }), el("time", { text: colDate(c.published_at || c.created_at) })])]));
+      var body = el("div", { class: "col-body" }); body.innerHTML = window.renderMd(c.body); colView.appendChild(body);
+      var box = el("div", { class: "col-admin", hidden: "" }); colView.appendChild(box);
+      if (isAdmin(u)) adminTools(box, c);
+      colView.appendChild(el("div", { class: "post-nav" }, [el("span"), el("a", { class: "btn ghost sm", href: ROOT + "column/", text: "목록으로" }), el("span")]));
+    }).catch(function (e) { colView.innerHTML = ""; colView.appendChild(el("p", { class: "rc-empty", text: e.message })); });
+  }
+
+  /* 쓰기 · 수정 */
+  var colWrite = $("#colWrite");
+  if (colWrite) {
+    needAdmin(colWrite, function (u) {
+      if (u.must_change) { location.href = ROOT + "admin/?first=1"; return; }
+      var id = param("id");
+      var f = $("#colForm").content.cloneNode(true).firstElementChild;
+      colWrite.innerHTML = ""; colWrite.appendChild(f);
+      var ta = f.body, pv = $(".col-preview", f), up = $(".col-up", f);
+      var preview = function () { pv.innerHTML = window.renderMd(ta.value) || '<p class="col-empty">미리보기</p>'; };
+      ta.addEventListener("input", preview); preview();
+      var wrap = function (before, after, ph) {
+        var a = ta.selectionStart, b = ta.selectionEnd, sel = ta.value.slice(a, b) || ph;
+        ta.setRangeText(before + sel + after, a, b, "end"); ta.focus(); preview();
+      };
+      var block = function (txt) {
+        var a = ta.selectionStart, v = ta.value;
+        var pre = a && v[a - 1] !== "\n" ? "\n\n" : (a && v[a - 2] !== "\n" ? "\n" : "");
+        ta.setRangeText(pre + txt + "\n\n", a, ta.selectionEnd, "end"); ta.focus(); preview();
+      };
+      [].forEach.call(f.querySelectorAll("[data-md]"), function (b) {
+        b.onclick = function () {
+          var k = b.getAttribute("data-md");
+          if (k === "bold") wrap("**", "**", "굵은 글씨");
+          if (k === "h2") block("## " + (ta.value.slice(ta.selectionStart, ta.selectionEnd) || "소제목"));
+          if (k === "list") block("- 첫째 항목\n- 둘째 항목");
+          if (k === "quote") block("> " + (ta.value.slice(ta.selectionStart, ta.selectionEnd) || "인용할 문장"));
+          if (k === "link") { var url = prompt("연결할 주소를 넣어 주세요 (https://…)"); if (url && /^https?:\/\//.test(url)) wrap("[", "](" + url + ")", "링크 글자"); }
+        };
+      });
+      /* 사진: 브라우저에서 긴 변 1600px JPEG 로 줄여 올린다 */
+      var shrink = function (file) {
+        return new Promise(function (res, rej) {
+          var img = new Image(), u = URL.createObjectURL(file);
+          img.onload = function () {
+            var k = Math.min(1, 1600 / Math.max(img.width, img.height)), c = document.createElement("canvas");
+            c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+            var g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+            URL.revokeObjectURL(u); c.toBlob(function (b) { b ? res(b) : rej(new Error("사진을 읽지 못했습니다.")); }, "image/jpeg", 0.84);
+          };
+          img.onerror = function () { rej(new Error("사진을 읽지 못했습니다.")); }; img.src = u;
+        });
+      };
+      var upload = function (blob) {
+        return fetch(API + "/api/images", { method: "POST", headers: { "Content-Type": "image/jpeg", Authorization: "Bearer " + getToken() }, body: blob })
+          .then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || "업로드 실패"); return d.url; }); });
+      };
+      $(".col-photo input", f).onchange = function (e) {
+        var files = [].slice.call(e.target.files || []); e.target.value = "";
+        var n = 0, chain = Promise.resolve();
+        files.forEach(function (file) {
+          chain = chain.then(function () { up.textContent = "사진 올리는 중… (" + (++n) + "/" + files.length + ")"; return shrink(file); })
+            .then(upload).then(function (url) { block("![](" + url + ")"); });
+        });
+        chain.then(function () { up.textContent = files.length ? "사진 " + files.length + "장을 넣었습니다. 사진 설명은 ![ ] 괄호 안에 쓸 수 있어요." : ""; }, function (err) { up.textContent = err.message; });
+      };
+      if (id) api("GET", "/api/columns/" + encodeURIComponent(id)).then(function (d) {
+        var c = d.column; var h1 = $(".page-head h1"); if (h1) h1.textContent = "SEL 칼럼 수정";
+        f.title.value = c.title; f.category.value = c.category || ""; f.status.value = c.status; ta.value = c.body; preview();
+      }, function (e) { msg($(".rc-msg", f), e.message, true); });
+      f.onsubmit = function (e) {
+        e.preventDefault();
+        var data = { title: f.title.value, category: f.category.value, status: f.status.value, body: ta.value };
+        var m = $(".rc-msg", f); msg(m, "저장 중입니다…"); $("button[type=submit]", f).disabled = true;
+        (id ? api("PUT", "/api/columns/" + id, data).then(function () { return { id: id }; }) : api("POST", "/api/columns", data))
+          .then(function (d) { location.href = ROOT + "column/view/?id=" + d.id; })
+          .catch(function (err) { msg(m, err.message, true); $("button[type=submit]", f).disabled = false; });
+      };
     });
   }
 })();

@@ -10,6 +10,11 @@
 //            DELETE /api/recruit/:id       공고 삭제
 //            GET    /api/admin/users       계정 목록
 //            POST   /api/admin/users       계정 추가 { username, name, password, role }
+//  SEL 칼럼  GET  /api/columns             공개 글 목록 (?all=1 + 관리자 → 임시 저장 글 포함)
+//            GET  /api/columns/:id         글 한 건 (조회수 +1)
+//            POST/PUT/DELETE /api/columns[/:id]   관리자
+//            POST /api/images              사진 올리기 (관리자, 본문 = 이미지 바이트)
+//            GET  /api/images/:id          사진 보기 (공개, 오래 캐시)
 //
 // 로그인 토큰은 HMAC 서명한 짧은 문자열(7일)이며 Authorization: Bearer 로 보낸다.
 // 사이트(github.io)와 API(workers.dev)의 주소가 달라 쿠키 대신 이 방식을 쓴다.
@@ -96,9 +101,27 @@ function postFields(b) {
   };
 }
 
+function columnFields(b) {
+  const title = str(b.title, 150);
+  const text = typeof b.body === "string" ? b.body.replace(/\r\n/g, "\n").trim().slice(0, 60000) : "";
+  if (!title || !text) return { error: "제목과 내용을 입력해 주세요." };
+  const cover = (text.match(/!\[[^\]]*\]\((https:\/\/[^)\s]+)\)/) || [])[1] || null;
+  return { title, body: text, category: str(b.category, 40), status: b.status === "draft" ? "draft" : "published", cover };
+}
+// 새 글을 공개하면 사이트를 다시 만들도록 GitHub Actions 를 깨운다 (GITHUB_TOKEN 비밀값이 있을 때만)
+async function triggerRebuild(env, ctx) {
+  if (!env.GITHUB_TOKEN || !env.GITHUB_REPO) return;
+  const job = fetch(`https://api.github.com/repos/${env.GITHUB_REPO}/actions/workflows/site.yml/dispatches`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.GITHUB_TOKEN}`, Accept: "application/vnd.github+json", "User-Agent": "foxlc-api", "Content-Type": "application/json" },
+    body: JSON.stringify({ ref: "main" }),
+  }).catch(() => {});
+  if (ctx && ctx.waitUntil) ctx.waitUntil(job);
+}
+
 // ── 라우터 ──────────────────────────────────────────────
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     const url = new URL(req.url);
     const path = url.pathname.replace(/\/+$/, "");
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(req, env) });
@@ -120,6 +143,14 @@ export default {
         ).bind(id).first();
         return post ? json(req, env, { post }) : fail(req, env, 404, "공고를 찾을 수 없습니다.");
       }
+
+      const img = /^\/api\/images\/(\d+)$/.exec(path);
+      if (img && req.method === "GET") {
+        const row = await env.DB.prepare("SELECT mime, data FROM images WHERE id = ?").bind(Number(img[1])).first();
+        if (!row) return new Response("Not found", { status: 404 });
+        return new Response(new Uint8Array(row.data), { headers: { "Content-Type": row.mime, "Cache-Control": "public, max-age=31536000, immutable", "Access-Control-Allow-Origin": "*" } });
+      }
+      const col = /^\/api\/columns\/(\d+)$/.exec(path);
 
       // 로그인
       if (path === "/api/auth/login" && req.method === "POST") {
@@ -143,6 +174,22 @@ export default {
       }
 
       const me = await readToken(env, req);
+
+      if (path === "/api/columns" && req.method === "GET") {
+        const all = url.searchParams.get("all") === "1" && me && me.role === "admin";
+        const { results } = await env.DB.prepare(
+          `SELECT id, title, category, cover, status, author_name, views, created_at, updated_at, published_at${url.searchParams.get("full") === "1" ? ", body" : ""} FROM columns ${all ? "" : "WHERE status = 'published'"} ORDER BY COALESCE(published_at, created_at) DESC, id DESC LIMIT 1000`
+        ).all();
+        return json(req, env, { columns: results });
+      }
+      if (col && req.method === "GET") {
+        const id = Number(col[1]);
+        const c = await env.DB.prepare("SELECT * FROM columns WHERE id = ?").bind(id).first();
+        if (!c || (c.status !== "published" && !(me && me.role === "admin"))) return fail(req, env, 404, "글을 찾을 수 없습니다.");
+        if (c.status === "published") await env.DB.prepare("UPDATE columns SET views = views + 1 WHERE id = ?").bind(id).run();
+        delete c.author_id;
+        return json(req, env, { column: c });
+      }
 
       if (path === "/api/auth/me" && req.method === "GET") {
         return me ? json(req, env, { user: me }) : fail(req, env, 401, "로그인이 필요합니다.");
@@ -207,6 +254,43 @@ export default {
           return fail(req, env, 409, "이미 있는 아이디입니다.");
         }
         return json(req, env, { ok: true }, 201);
+      }
+
+      if (path === "/api/images" && req.method === "POST") {
+        const no = adminOnly(); if (no) return no;
+        const mime = (req.headers.get("Content-Type") || "").split(";")[0].trim();
+        if (!["image/jpeg", "image/png", "image/webp"].includes(mime)) return fail(req, env, 400, "JPG·PNG·WEBP 사진만 올릴 수 있습니다.");
+        const buf = await req.arrayBuffer();
+        if (!buf.byteLength || buf.byteLength > 1800000) return fail(req, env, 400, "사진이 너무 큽니다. (최대 1.8MB)");
+        const r = await env.DB.prepare("INSERT INTO images (mime, data, size, uploaded_by) VALUES (?, ?, ?, ?)").bind(mime, buf, buf.byteLength, me.id).run();
+        return json(req, env, { url: `${url.origin}/api/images/${r.meta.last_row_id}` }, 201);
+      }
+      if (path === "/api/columns" && req.method === "POST") {
+        const no = adminOnly(); if (no) return no;
+        const f = columnFields(await body(req) || {});
+        if (f.error) return fail(req, env, 400, f.error);
+        const r = await env.DB.prepare(
+          "INSERT INTO columns (title, category, body, cover, status, author_id, author_name, published_at) VALUES (?, ?, ?, ?, ?, ?, ?, CASE WHEN ? = 'published' THEN datetime('now') END)"
+        ).bind(f.title, f.category, f.body, f.cover, f.status, me.id, me.name || me.username, f.status).run();
+        if (f.status === "published") await triggerRebuild(env, ctx);
+        return json(req, env, { id: r.meta.last_row_id }, 201);
+      }
+      if (col && req.method === "PUT") {
+        const no = adminOnly(); if (no) return no;
+        const f = columnFields(await body(req) || {});
+        if (f.error) return fail(req, env, 400, f.error);
+        const r = await env.DB.prepare(
+          "UPDATE columns SET title = ?, category = ?, body = ?, cover = ?, status = ?, updated_at = datetime('now'), published_at = CASE WHEN ? = 'published' THEN COALESCE(published_at, datetime('now')) ELSE published_at END WHERE id = ?"
+        ).bind(f.title, f.category, f.body, f.cover, f.status, f.status, Number(col[1])).run();
+        if (!r.meta.changes) return fail(req, env, 404, "글을 찾을 수 없습니다.");
+        await triggerRebuild(env, ctx);
+        return json(req, env, { ok: true });
+      }
+      if (col && req.method === "DELETE") {
+        const no = adminOnly(); if (no) return no;
+        await env.DB.prepare("DELETE FROM columns WHERE id = ?").bind(Number(col[1])).run();
+        await triggerRebuild(env, ctx);
+        return json(req, env, { ok: true });
       }
 
       return fail(req, env, 404, "Not found");

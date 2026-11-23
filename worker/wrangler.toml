@@ -6,6 +6,7 @@ compatibility_date = "2024-11-01"
 
 [vars]
 # 이 주소에서 온 요청만 받는다 (쉼표로 구분)
+GITHUB_REPO = "sean1290/foxlc-site"
 ALLOWED_ORIGINS = "https://foxlc.foxconnect.kr,https://sean1290.github.io,http://localhost:8081"
 
 [[d1_databases]]
@@ -15,3 +16,4 @@ database_id = "3874da5f-59b9-4b45-8e05-68549fef6a33"
 migrations_dir = "migrations"
 
 # 비밀값(코드에 넣지 않음): npx wrangler secret put SESSION_SECRET
+# (선택) 칼럼을 올리면 사이트를 바로 다시 만들기: npx wrangler secret put GITHUB_TOKEN  (Actions: read & write 권한)

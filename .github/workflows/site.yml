@@ -49,6 +49,11 @@ jobs:
           python3 -m pip install --quiet pillow
           python3 scripts/shrink-images.py static/naver-img
 
+      - name: Sync SEL 칼럼
+        id: columns
+        continue-on-error: true
+        run: node scripts/sync-columns.mjs
+
       - name: Commit new data
         run: |
           git config user.name "github-actions[bot]"
@@ -70,11 +75,11 @@ jobs:
 
       # 조용히 실패하지 않도록: 이슈를 만들고(이메일 알림이 온다) 실행 자체도 실패로 끝낸다.
       - name: Report sync failure
-        if: steps.news.outcome == 'failure' || steps.videos.outcome == 'failure' || steps.naver.outcome == 'failure'
+        if: steps.news.outcome == 'failure' || steps.videos.outcome == 'failure' || steps.naver.outcome == 'failure' || steps.columns.outcome == 'failure'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          body="폭스뉴스: ${{ steps.news.outcome }} / 유튜브: ${{ steps.videos.outcome }} / 네이버 소식: ${{ steps.naver.outcome }}
+          body="폭스뉴스: ${{ steps.news.outcome }} / 유튜브: ${{ steps.videos.outcome }} / 네이버 소식: ${{ steps.naver.outcome }} / SEL 칼럼: ${{ steps.columns.outcome }}
           로그: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           open=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "피드 동기화 실패 in:title" --json number --jq '.[0].number')
           if [ -n "$open" ]; then gh issue comment "$open" --repo "$GITHUB_REPOSITORY" --body "$body"

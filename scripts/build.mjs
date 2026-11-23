@@ -16,6 +16,9 @@ const agreementData = await json("data/agreements.json");
 const researchers = await json("data/researchers.json");
 const instDetails = await json("data/institute-details.json");
 const history = await json("data/history.json");
+const columns = existsSync(path.join(ROOT, "data/columns.json")) ? await json("data/columns.json") : [];
+const mdSrc = await readFile(path.join(ROOT, "static/js/md.js"), "utf8");
+const { renderMd, mdPlain } = new Function(mdSrc + "; return { renderMd, mdPlain };")();
 const noticeFiles = existsSync(path.join(ROOT, "data/notice-attachments.json")) ? await json("data/notice-attachments.json") : {};
 const notices = existsSync(path.join(ROOT, "data/naver.json")) ? await json("data/naver.json") : [];
 
@@ -119,6 +122,7 @@ ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg
         <ul class="sub">
           <li><a href="${r}news/"${cur("news/blog")}>폭스뉴스</a></li>
           <li><a href="${r}videos/"${cur("news/videos")}>폭스 소식</a></li>
+          <li><a href="${r}column/"${cur("news/column")}>SEL 칼럼</a></li>
         </ul>
       </div>
       <div class="nav-item">
@@ -180,6 +184,7 @@ ${file === "index.html" && config.popup && config.popup.enabled ? `
   </div>
 </dialog>` : ""}
 <script src="${r}js/site.js" defer></script>${board ? `
+<script src="${r}js/md.js" defer></script>
 <script src="${r}js/board.js" defer></script>` : ""}
 </body>
 </html>
@@ -907,6 +912,104 @@ page({
     </ol>
     <p class="steps5-note">SEL센터와 폭스러닝센터가 상담 내용과 활동 기록을 함께 봅니다.</p>
   </section>
+</div></div>`,
+});
+
+// ── SEL 칼럼 (목록 · 글 · 쓰기) ─────────────────────────
+// 글은 Cloudflare API(worker/)에 저장되고, 매일 빌드 때 data/columns.json 으로 받아 정식 페이지를 만든다.
+// 아직 빌드되지 않은 새 글은 column/view/?id= 화면(board.js)에서 바로 보인다.
+const colDate = (d) => (d || "").replace(/-/g, ".");
+page({
+  file: "column/index.html", key: "news/column", title: "SEL 칼럼", board: true,
+  description: "폭스러닝센터 SEL센터 전문가가 전하는 사회정서학습과 심리검사·상담 이야기.",
+  body: (r) => `
+<div class="page-head"><div class="wrap">
+  <div class="eyebrow">SEL COLUMN</div>
+  <h1>SEL 칼럼</h1>
+  <p>SEL센터 전문가가 전하는 사회정서학습과 심리검사·상담 이야기</p>
+</div></div>
+<div class="page-body"><div class="wrap">
+  <div class="rc-bar" id="colAdminBar" hidden>
+    <a class="btn navy sm" href="${r}column/write/">글쓰기</a>
+    <a class="btn line sm" href="${r}admin/">관리자</a>
+  </div>
+  <div class="col-filter" id="colFilter"></div>
+  <div class="col-grid" id="colList" data-built="${esc(JSON.stringify(columns.map((c) => c.id)))}">
+    ${columns.length ? columns.map((c) => `<a class="card col-card" href="${r}column/${c.id}/" data-cat="${esc(c.category)}">
+      <div class="col-thumb">${c.cover ? `<img src="${esc(c.cover)}" alt="" loading="lazy">` : `<span>SEL</span>`}</div>
+      <div class="card-body">
+        <div class="col-meta">${c.category ? `<span class="col-cat">${esc(c.category)}</span>` : ""}<span>${colDate(c.published)}</span></div>
+        <h2 class="card-title">${esc(c.title)}</h2>
+        <p class="card-desc">${esc(mdPlain(c.body, 90))}</p>
+      </div>
+    </a>`).join("\n    ") : `<p class="rc-empty">첫 칼럼을 준비하고 있습니다.</p>`}
+  </div>
+  <p class="rc-foot"><a href="${r}column/write/">관리자 글쓰기</a></p>
+</div></div>`,
+});
+columns.forEach((c, i) => {
+  const newer = columns[i - 1], older = columns[i + 1];
+  page({
+    file: `column/${c.id}/index.html`, key: "news/column", title: c.title, board: true,
+    description: mdPlain(c.body, 140), image: undefined,
+    ogType: "article", jsonld: { ...articleLd(c.title, c.published, "", `column/${c.id}/`), image: [c.cover || SITE + "/img/hero.jpg"], author: { "@type": "Person", name: c.author || "폭스러닝센터" } },
+    body: (r) => `
+<div class="page-body" style="padding-top:56px"><div class="wrap">
+  <article class="post col-post" data-col-id="${c.id}">
+    ${c.category ? `<span class="col-cat">${esc(c.category)}</span>` : ""}
+    <h1>${esc(c.title)}</h1>
+    <div class="byline">
+      <img src="${r}img/mark.png" alt="" width="36" height="36">
+      <div><b>${esc(c.author || "폭스러닝센터")}</b><time datetime="${esc(c.published)}">${colDate(c.published)}</time></div>
+    </div>
+    <div class="col-body">${renderMd(c.body)}</div>
+    <div class="col-admin" hidden></div>
+    <div class="post-nav">
+      ${older ? `<a class="btn line sm" href="${r}column/${older.id}/">← 이전 글</a>` : "<span></span>"}
+      <a class="btn ghost sm" href="${r}column/">목록으로</a>
+      ${newer ? `<a class="btn line sm" href="${r}column/${newer.id}/">다음 글 →</a>` : "<span></span>"}
+    </div>
+  </article>
+</div></div>`,
+  });
+});
+page({
+  file: "column/view/index.html", key: "news/column", title: "SEL 칼럼", board: true, noindex: true,
+  body: () => `<div class="page-body" style="padding-top:56px"><div class="wrap">
+  <article class="post col-post" id="colView"><p class="rc-empty">불러오는 중입니다…</p></article>
+</div></div>`,
+});
+page({
+  file: "column/write/index.html", key: "news/column", title: "SEL 칼럼 쓰기", board: true, noindex: true,
+  body: () => `<div class="page-head"><div class="wrap"><div class="eyebrow">SEL COLUMN</div><h1>SEL 칼럼 쓰기</h1></div></div>
+<div class="page-body"><div class="wrap">
+  <div id="colWrite"><p class="rc-empty">확인 중입니다…</p></div>
+  <template id="colForm">
+    <form class="rc-form col-form">
+      <label class="full"><span>제목 <i>*</i></span><input name="title" maxlength="150" required></label>
+      <label><span>분류</span><input name="category" maxlength="40" list="colCats" placeholder="예: 사회정서학습"></label>
+      <label><span>상태</span><select name="status"><option value="published">공개</option><option value="draft">임시 저장 (관리자만 보기)</option></select></label>
+      <datalist id="colCats"><option>사회정서학습</option><option>지능검사</option><option>심리검사</option><option>상담</option><option>부모교육</option><option>SEL 프로그램</option></datalist>
+      <div class="full col-editor">
+        <div class="col-tools" role="toolbar" aria-label="서식">
+          <button type="button" data-md="h2">소제목</button>
+          <button type="button" data-md="bold"><b>굵게</b></button>
+          <button type="button" data-md="list">목록</button>
+          <button type="button" data-md="quote">인용</button>
+          <button type="button" data-md="link">링크</button>
+          <label class="col-photo">사진 넣기<input type="file" accept="image/*" multiple hidden></label>
+          <span class="col-up" aria-live="polite"></span>
+        </div>
+        <div class="col-panes">
+          <textarea name="body" required rows="22" placeholder="본문을 쓰세요. 빈 줄로 문단을 나눕니다.&#10;&#10;## 소제목&#10;**굵게** 쓰려면 별표 두 개로 감쌉니다.&#10;- 목록은 줄 앞에 - 를 붙입니다."></textarea>
+          <div class="col-preview col-body" aria-label="미리보기"></div>
+        </div>
+        <p class="col-hint">카페 글을 옮길 때는 본문을 그대로 붙여 넣고, 사진은 '사진 넣기'로 다시 올려 주세요. 오른쪽은 실제로 보일 모습입니다.</p>
+      </div>
+      <div class="full rc-form-actions"><button class="btn navy" type="submit">저장</button><a class="btn line" href="../">취소</a></div>
+      <div class="full rc-msg" role="status"></div>
+    </form>
+  </template>
 </div></div>`,
 });
 
