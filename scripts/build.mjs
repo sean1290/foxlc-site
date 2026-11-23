@@ -177,7 +177,7 @@ ${body(r)}
       <a href="https://foxconnect.kr/index.do" ${ext}>FOX CONNECT</a>
       <a href="https://www.growxeducation.com/sel" ${ext}>Grow X Education</a>
     </nav>
-    <div class="copy"><span>© 2026 폭스러닝센터</span><span class="foot-links"><a class="privacy-link" href="${r}recruit/">채용공고</a><a class="privacy-link" href="${r}privacy/">개인정보처리방침</a></span></div>
+    <div class="copy"><span>© 2026 폭스러닝센터</span><span class="foot-links"><a class="privacy-link" href="${r}sitemap/">사이트맵</a><a class="privacy-link" href="${r}recruit/">채용공고</a><a class="privacy-link" href="${r}privacy/">개인정보처리방침</a></span></div>
   </div>
 </footer>
 ${file === "index.html" && config.popup && config.popup.enabled ? `
@@ -1162,6 +1162,34 @@ page({
 // ── 개인정보처리방침 ────────────────────────────────────
 // 시행일·보호책임자·보유 기간을 바꾸면 여기서 고친다.
 const PRIVACY_EFFECTIVE = "2026년 11월 19일";
+// ── 사이트맵 (사람이 보는 전체 메뉴) ─────────────────
+page({
+  file: "sitemap/index.html", key: "sitemap", title: "사이트맵",
+  description: "폭스러닝센터 홈페이지의 전체 메뉴를 한눈에 볼 수 있습니다.",
+  body: (r) => {
+    const L = (href, text, out) => `<li><a href="${out ? href : r + href}"${out ? ` ${ext} class="ext"` : ""}>${text}</a></li>`;
+    const groups = [
+      ["센터 소개", [L("about/", "About Us"), L("about/institutes/", "연구소 소개"), L("about/experts/", "전문가 소개"), L("about/agreements/", "교육 협약"), L("about/directions/", "오시는 길")]],
+      ["폭스 소식", [L("news/", "폭스뉴스"), L("videos/", "폭스 소식"), L("column/", "SEL 칼럼"), L("videos/#videos", "폭스 YouTube")]],
+      ["감정체크", [L("emotion-check/", "감정체크 체험"), L("growth/", "성장관리 시스템")]],
+      ["프로그램", [L(CAMP_URL, "글로벌캠프", true), L(INST_URL, "기관 체험", true)]],
+      ["문의 · 안내", [L("#contact", "문의하기"), L("recruit/", "채용공고"), L("privacy/", "개인정보처리방침")]],
+    ];
+    return `
+<div class="page-head"><div class="wrap">
+  <div class="eyebrow">SITEMAP</div>
+  <h1>사이트맵</h1>
+  <p>폭스러닝센터 홈페이지의 전체 메뉴입니다</p>
+</div></div>
+<div class="page-body"><div class="wrap">
+  <div class="sm-grid">
+    <section class="sm-group sm-home"><h2><a href="${r}">홈</a></h2></section>
+    ${groups.map(([t, items]) => `<section class="sm-group"><h2>${t}</h2><ul>${items.join("")}</ul></section>`).join("\n    ")}
+  </div>
+</div></div>`;
+  },
+});
+
 page({
   file: "privacy/index.html", key: "privacy", title: "개인정보처리방침",
   description: "폭스러닝센터 홈페이지의 개인정보처리방침입니다.",

@@ -1020,3 +1020,20 @@ body:has(.inst-modal[open]){overflow:hidden}
 /* 메인 · 폭스 YouTube 제목 */
 .yt-title{display:flex;align-items:center;justify-content:center;gap:.32em}
 .yt-title img{height:1.15em;width:auto;display:block}
+
+/* 사이트맵 */
+.sm-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:20px;max-width:1040px;margin:0 auto}
+.sm-group{grid-column:span 2}.sm-group:nth-last-child(-n+2){grid-column:span 3}
+.sm-group{padding:24px 26px;border:1px solid var(--line);border-radius:16px;background:#fff}
+.sm-group h2{font-size:18px;font-weight:800;color:var(--navy);padding-bottom:12px;margin-bottom:12px;border-bottom:2px solid var(--mint)}
+.sm-group ul{list-style:none;padding:0;margin:0;display:grid;gap:4px}
+.sm-group a{text-decoration:none}
+.sm-group li a{display:block;padding:6px 0;color:var(--ink2);font-weight:600}
+.sm-group li a:hover{color:var(--green)}
+.sm-group a.ext::after{content:" ↗";font-size:.85em;color:var(--ink3)}
+.sm-home{grid-column:1/-1;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--mintbg);border-color:var(--mint)}
+.sm-home h2{border:0;margin:0;padding:0;font-size:18px}
+.sm-home h2 a::after{content:" →"}
+.sm-home h2 a{color:var(--navy)}
+@media (max-width:900px){.sm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sm-group,.sm-group:nth-last-child(-n+2){grid-column:auto}.sm-home{grid-column:1/-1}}
+@media (max-width:560px){.sm-grid{grid-template-columns:1fr}.sm-group:last-child{grid-column:auto}.sm-home{padding:18px}}
