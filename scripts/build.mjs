@@ -712,7 +712,7 @@ page({
 // ── 센터 시설 ───────────────────────────────────────────
 page({
   file: "about/facilities/index.html", key: "about/facilities", title: "센터 시설",
-  description: "대전 유성구 골프존 조이마루 2층 폭스러닝센터의 라운지, 교실, 튼튼 연구소 활동장, SEL센터 검사·상담실을 사진으로 소개합니다.",
+  description: "대전 유성구 골프존 조이마루 2층 폭스러닝센터의 라운지, 교실, AWS 트랙장, SEL센터 검사·상담실을 사진으로 소개합니다.",
   image: "img/facilities/hero.jpg",
   body: (r) => {
     let n = 0;
