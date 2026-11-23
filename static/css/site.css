@@ -1016,3 +1016,7 @@ body:has(.inst-modal[open]){overflow:hidden}
   .step h3{font-size:19px}
   .step p{font-size:13px;line-height:1.6}
 }
+
+/* 메인 · 폭스 YouTube 제목 */
+.yt-title{display:flex;align-items:center;justify-content:center;gap:.32em}
+.yt-title img{height:1.15em;width:auto;display:block}

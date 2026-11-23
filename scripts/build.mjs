@@ -321,8 +321,7 @@ ${columns.length ? `
 <section class="sec">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">FOX YOUTUBE</div>
-      <h2>폭스 YouTube</h2>
+      <h2 class="yt-title">폭스 <img src="${r}img/youtube-logo.png" alt="YouTube" width="534" height="120"></h2>
       <p>폭스커넥트 유튜브 채널의 최신 영상입니다</p>
     </div>
     <div class="grid3 home-videos">
