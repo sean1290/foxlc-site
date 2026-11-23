@@ -67,6 +67,8 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+      - name: Wait for artifact (GitHub 반영 지연 대비)
+        run: sleep 30
       - id: deploy
         uses: actions/deploy-pages@v4
       - name: Notify search engines (IndexNow)
