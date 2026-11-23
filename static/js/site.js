@@ -162,6 +162,33 @@
     lb.addEventListener("click", function (e) { if (e.target === lb) lb.close(); });
   }
 
+  /* ── 센터 시설 사진 크게 보기 ── */
+  var flb = $("#facLb");
+  if (flb && flb.showModal) {
+    var ft = $$(".fac-tile"), fi = 0, fimg = $("img", flb), fcap = $("figcaption", flb);
+    var fshow = function (k) {
+      fi = (k + ft.length) % ft.length;
+      fimg.src = ft[fi].getAttribute("data-full"); fimg.alt = $("img", ft[fi]).alt;
+      fcap.textContent = $(".fac-cap", ft[fi]).textContent + "  ·  " + (fi + 1) + " / " + ft.length;
+      var nx = new Image(); nx.src = ft[(fi + 1) % ft.length].getAttribute("data-full");
+    };
+    ft.forEach(function (b, k) { b.addEventListener("click", function () { fshow(k); flb.showModal(); }); });
+    $(".promo-nav.prev", flb).addEventListener("click", function () { fshow(fi - 1); });
+    $(".promo-nav.next", flb).addEventListener("click", function () { fshow(fi + 1); });
+    $(".fac-lb-x", flb).addEventListener("click", function () { flb.close(); });
+    flb.addEventListener("click", function (e) { if (e.target === flb) flb.close(); });
+    flb.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") fshow(fi - 1);
+      if (e.key === "ArrowRight") fshow(fi + 1);
+    });
+    var ftx = null;
+    flb.addEventListener("touchstart", function (e) { ftx = e.touches[0].clientX; }, { passive: true });
+    flb.addEventListener("touchend", function (e) {
+      if (ftx === null) return; var dx = e.changedTouches[0].clientX - ftx; ftx = null;
+      if (Math.abs(dx) > 40) fshow(fi + (dx < 0 ? 1 : -1));
+    });
+  }
+
   /* ── 페이지 번호 ── */
   function pager(nav, pages, current, go) {
     nav.innerHTML = "";

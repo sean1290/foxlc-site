@@ -29,6 +29,7 @@ const colCard = (r, c, tag = "h2") => `<a class="card col-card" href="${r}column
       </div>
     </a>`;
 const noticePosters = existsSync(path.join(ROOT, "data/notice-posters.json")) ? await json("data/notice-posters.json") : {};
+const facilities = await json("data/facilities.json");
 const noticeFiles = existsSync(path.join(ROOT, "data/notice-attachments.json")) ? await json("data/notice-attachments.json") : {};
 const notices = existsSync(path.join(ROOT, "data/naver.json")) ? await json("data/naver.json") : [];
 
@@ -121,6 +122,7 @@ ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg
         <ul class="sub">
           <li><a href="${r}about/"${cur("about/us")}>About Us</a></li>
           <li><a href="${r}about/institutes/"${cur("about/institutes")}>연구소 소개</a></li>
+          <li><a href="${r}about/facilities/"${cur("about/facilities")}>센터 시설</a></li>
           <li><a href="${r}about/experts/"${cur("about/experts")}>전문가 소개</a></li>
           <li><a href="${r}about/agreements/"${cur("about/agreements")}>교육 협약</a></li>
           <li><a href="${r}about/directions/"${cur("about/directions")}>오시는 길</a></li>
@@ -707,6 +709,54 @@ page({
   },
 });
 
+// ── 센터 시설 ───────────────────────────────────────────
+page({
+  file: "about/facilities/index.html", key: "about/facilities", title: "센터 시설",
+  description: "대전 유성구 골프존 조이마루 2층 폭스러닝센터의 라운지, 교실, 튼튼 연구소 활동장, SEL센터 검사·상담실을 사진으로 소개합니다.",
+  image: "img/facilities/hero.jpg",
+  body: (r) => {
+    let n = 0;
+    const tile = (g) => g.items.map(([id, cls, cap]) => `<button type="button" class="fac-tile ${cls}" data-i="${n++}" data-full="${r}img/facilities/${id}-l.jpg" aria-label="${esc(cap)} 크게 보기">
+          <img src="${r}img/facilities/${id}-m.jpg" alt="폭스러닝센터 ${esc(cap)}" loading="lazy">
+          <span class="fac-cap">${esc(cap)}</span>
+        </button>`).join("\n        ");
+    return `
+<section class="fac-hero">
+  <img src="${r}img/facilities/hero.jpg" alt="폭스러닝센터 라운지 전경" fetchpriority="high">
+  <div class="fac-hero-in wrap">
+    <div class="eyebrow">FACILITIES</div>
+    <h1>아이들의 하루가<br>머무는 공간</h1>
+    <p>배우고, 쉬고, 함께 성장하는 폭스러닝센터의 공간을 소개합니다.</p>
+  </div>
+</section>
+<nav class="fac-jump wrap" aria-label="공간 바로가기">
+  ${facilities.map((g) => `<a href="#fac-${g.no}">${esc(g.title)}</a>`).join("")}
+</nav>
+<div class="page-body fac-body"><div class="wrap">
+  ${facilities.map((g) => `<section class="fac-group" id="fac-${g.no}" aria-labelledby="fac-${g.no}-t">
+    <header class="fac-head">
+      <span class="fac-no">${g.no}</span>
+      <div><div class="fac-en">${esc(g.en)}</div><h2 id="fac-${g.no}-t">${esc(g.title)}</h2></div>
+      <p>${esc(g.desc)}</p>
+    </header>
+    <div class="fac-grid">
+        ${tile(g)}
+    </div>
+  </section>`).join("\n  ")}
+  <div class="fac-cta">
+    <p>직접 와서 보시면 더 좋습니다. 방문 상담은 미리 연락 주세요.</p>
+    <div><a class="btn navy" href="${r}about/directions/">오시는 길</a><a class="btn line" href="${r}#contact">방문 상담 문의</a></div>
+  </div>
+</div></div>
+<dialog class="fac-lb" id="facLb" aria-label="시설 사진 크게 보기">
+  <figure><img src="data:," alt=""><figcaption></figcaption></figure>
+  <button type="button" class="promo-nav prev" aria-label="이전 사진">‹</button>
+  <button type="button" class="promo-nav next" aria-label="다음 사진">›</button>
+  <button type="button" class="fac-lb-x" aria-label="닫기">닫기 ✕</button>
+</dialog>`;
+  },
+});
+
 // ── 오시는 길 ───────────────────────────────────────────
 page({
   file: "about/directions/index.html", key: "about/directions", title: "오시는 길",
@@ -1169,7 +1219,7 @@ page({
   body: (r) => {
     const L = (href, text, out) => `<li><a href="${out ? href : r + href}"${out ? ` ${ext} class="ext"` : ""}>${text}</a></li>`;
     const groups = [
-      ["센터 소개", [L("about/", "About Us"), L("about/institutes/", "연구소 소개"), L("about/experts/", "전문가 소개"), L("about/agreements/", "교육 협약"), L("about/directions/", "오시는 길")]],
+      ["센터 소개", [L("about/", "About Us"), L("about/institutes/", "연구소 소개"), L("about/facilities/", "센터 시설"), L("about/experts/", "전문가 소개"), L("about/agreements/", "교육 협약"), L("about/directions/", "오시는 길")]],
       ["폭스 소식", [L("news/", "폭스뉴스"), L("videos/", "폭스 소식"), L("column/", "SEL 칼럼"), L("videos/#videos", "폭스 YouTube")]],
       ["감정체크", [L("emotion-check/", "감정체크 체험"), L("growth/", "성장관리 시스템")]],
       ["프로그램", [L(CAMP_URL, "글로벌캠프", true), L(INST_URL, "기관 체험", true)]],
