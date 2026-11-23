@@ -269,6 +269,11 @@ page({
       </div>
       <img src="${r}img/about.jpg" width="1000" height="667" alt="연구원과 아이들이 태블릿을 보며 함께 활동하는 모습" loading="lazy">
     </div>
+    <ol class="steps3">
+      <li class="step"><div class="circle"><div class="no">STEP 01</div><h3>관찰</h3></div><p>학생의 행동과 감정을 세심하게 살핍니다.</p></li>
+      <li class="step"><div class="circle"><div class="no">STEP 02</div><h3>발견</h3></div><p>강점과 필요를 찾아 성장의 단서를 발견합니다.</p></li>
+      <li class="step"><div class="circle"><div class="no">STEP 03</div><h3>반응</h3></div><p>맞춤형 지원으로 아이의 성장에 응답합니다.</p></li>
+    </ol>
     <div class="foxx" aria-label="F.O.X — Future Of X">
       <div class="foxx-glow" aria-hidden="true"></div>
       <div class="foxx-tag" aria-hidden="true"><span>F.O.X</span><span class="foxx-line"></span><span>WHAT WE STAND FOR</span></div>
@@ -277,13 +282,19 @@ page({
         <span class="foxx-row"><b>O</b>F</span>
         <span class="foxx-row foxx-x"><span class="foxx-word" data-words="Experience|Exploration|Excellence|Expression|Exchange|Expansion|Experiment|Extraordinary|EVERYTHING"><b>X</b></span></span>
       </p>
+      <div class="foxx-edu">
+        <div class="foxx-edu-head">
+          <h3>Future of <b>X</b> Education</h3>
+          <p>FOX LEARNING CENTER는 미래교육 변화를 주도합니다.</p>
+        </div>
+        <ul class="foxx-edu-list">
+          <li><span class="foxx-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 24c-4.5-5.5-8-8-12-8a8 8 0 0 0 0 16c4 0 7.5-2.5 12-8zm0 0c4.5 5.5 8 8 12 8a8 8 0 0 0 0-16c-4 0-7.5 2.5-12 8z"/></svg><em>UNDEFINED</em></span><strong>무한의 <i>X</i> 가능성</strong></li>
+          <li><span class="foxx-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 14h8a4 4 0 1 1 8 0h8v8a4 4 0 1 1 0 8v8h-8a4 4 0 1 0-8 0h-8v-8a4 4 0 1 0 0-8z"/></svg><em>CLASS</em></span><strong>놀이 <i>X</i> 배움</strong></li>
+          <li><span class="foxx-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 39S9 30 9 19a8 8 0 0 1 15-4 8 8 0 0 1 15 4c0 11-15 20-15 20z"/><path d="M30 27h8M34 23v8"/></svg><em>PSYCHOLOGY</em></span><strong>정서 <i>X</i> 인지</strong></li>
+        </ul>
+      </div>
       <p class="sr-only">Future Of X — Experience, Exploration, Excellence, Expression, Exchange, Expansion, Experiment, Extraordinary, EVERYTHING</p>
     </div>
-    <ol class="steps3">
-      <li class="step"><div class="circle"><div class="no">STEP 01</div><h3>관찰</h3></div><p>학생의 행동과 감정을 세심하게 살핍니다.</p></li>
-      <li class="step"><div class="circle"><div class="no">STEP 02</div><h3>발견</h3></div><p>강점과 필요를 찾아 성장의 단서를 발견합니다.</p></li>
-      <li class="step"><div class="circle"><div class="no">STEP 03</div><h3>반응</h3></div><p>맞춤형 지원으로 아이의 성장에 응답합니다.</p></li>
-    </ol>
   </div>
 </section>
 
