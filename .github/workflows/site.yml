@@ -64,6 +64,9 @@ jobs:
           path: dist
       - id: deploy
         uses: actions/deploy-pages@v4
+      - name: Notify search engines (IndexNow)
+        continue-on-error: true
+        run: sleep 30 && node scripts/indexnow.mjs
 
       # 조용히 실패하지 않도록: 이슈를 만들고(이메일 알림이 온다) 실행 자체도 실패로 끝낸다.
       - name: Report sync failure

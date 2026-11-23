@@ -24,7 +24,29 @@ const INST_URL = "https://fox-institutions-v2.wnsals539.workers.dev/#/";
 const NAVER_MAP = "https://map.naver.com/p/search/" + encodeURIComponent("폭스러닝센터 대전");
 const ADDRESS = "대전 유성구 엑스포로97번길 40 2층 204호 폭스러닝센터";
 const YT_CHANNEL = "https://www.youtube.com/@future_x_foxconnect/videos";
-const DESC = "상담 전문가와 교육 전문가가 함께하는 사회정서학습(SEL) 기반 교육 기관, 대전 폭스러닝센터입니다.";
+const DESC = "대전 유성구 폭스러닝센터는 전문가와 함께하는 사회정서학습(SEL) 기반 러닝센터입니다. SEL·AI·언어·미술·수리·튼튼 연구소와 SEL 센터, 방학클래스를 운영합니다.";
+// ── 검색엔진용 구조화 데이터 (schema.org) ──
+const SITE = (config.siteUrl || "").replace(/\/$/, "");
+const ORG = {
+  "@type": ["EducationalOrganization", "LocalBusiness"],
+  "@id": SITE + "/#org",
+  name: "폭스러닝센터",
+  alternateName: ["FOX LC", "FOX LEARNING CENTER", "폭스 러닝센터"],
+  description: "전문가와 함께하는 사회정서학습(SEL) 기반 러닝센터",
+  url: SITE + "/",
+  logo: SITE + "/img/logo.png",
+  image: SITE + "/img/hero.jpg",
+  telephone: "1433-2700",
+  address: { "@type": "PostalAddress", streetAddress: "엑스포로97번길 40 2층 204호", addressLocality: "유성구", addressRegion: "대전광역시", addressCountry: "KR" },
+  openingHoursSpecification: [{ "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "10:00", closes: "19:00" }],
+  parentOrganization: { "@type": "Organization", name: "FOX CONNECT", url: "https://foxconnect.kr/" },
+  sameAs: ["https://www.youtube.com/@future_x_foxconnect", "https://map.naver.com/p/entry/place/1874946138"],
+};
+const articleLd = (headline, date, img, url) => ({
+  "@context": "https://schema.org", "@type": "Article", headline, datePublished: date, dateModified: date,
+  image: img ? [SITE + "/" + img] : [SITE + "/img/hero.jpg"], mainEntityOfPage: SITE + "/" + url,
+  author: { "@type": "Organization", name: "폭스러닝센터", url: SITE + "/" }, publisher: { "@id": SITE + "/#org" },
+});
 
 const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const ext = 'target="_blank" rel="noopener"';
@@ -32,12 +54,12 @@ const ext = 'target="_blank" rel="noopener"';
 // ── 공통 틀 ─────────────────────────────────────────────
 // file: dist 기준 경로 (예: "about/institutes/index.html"), key: 메뉴에서 현재 위치 표시용
 const API_BASE = (process.env.FOXLC_API ?? config.apiBase ?? "").replace(/\/$/, "");
-function layout({ file, key, title, description = DESC, body, image, board, noindex }) {
+function layout({ file, key, title, description = DESC, body, image, board, noindex, jsonld, ogType }) {
   const depth = file.split("/").length - 1;
   const r = "../".repeat(depth);              // 사이트 루트로 가는 상대 경로
   const cur = (k) => (k === key ? ' aria-current="page"' : "");
   const top = (k) => (key && key.startsWith(k) ? ' aria-current="true"' : "");
-  const pageTitle = title ? `${title} | 폭스러닝센터` : "폭스러닝센터 | 사회정서학습(SEL) 기반 교육 기관";
+  const pageTitle = title ? `${title} | 폭스러닝센터` : "폭스러닝센터 | 대전 유성구 사회정서학습(SEL) 기반 러닝센터";
   const url = config.siteUrl ? config.siteUrl.replace(/\/$/, "") + "/" + file.replace(/index\.html$/, "") : "";
   const ogImage = config.siteUrl ? config.siteUrl.replace(/\/$/, "") + "/" + (image || "img/hero.jpg") : "";
   return `<!doctype html>
@@ -47,13 +69,19 @@ function layout({ file, key, title, description = DESC, body, image, board, noin
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(pageTitle)}</title>
 <meta name="description" content="${esc(description)}">
-<meta property="og:type" content="website">
+<meta property="og:type" content="${ogType || "website"}">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">${config.verify && config.verify.google ? `
+<meta name="google-site-verification" content="${esc(config.verify.google)}">` : ""}${config.verify && config.verify.naver ? `
+<meta name="naver-site-verification" content="${esc(config.verify.naver)}">` : ""}
 <meta property="og:site_name" content="폭스러닝센터">
 <meta property="og:title" content="${esc(pageTitle)}">
 <meta property="og:description" content="${esc(description)}">${url ? `
 <meta property="og:url" content="${esc(url)}">
 <meta property="og:image" content="${esc(ogImage)}">
 <link rel="canonical" href="${esc(url)}">` : ""}
+<link rel="alternate" type="application/rss+xml" title="폭스러닝센터 소식" href="${r}rss.xml">${jsonld ? `
+<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, "\\u003c")}</script>` : ""}
 <link rel="icon" href="${r}img/favicon.png">
 <link rel="apple-touch-icon" href="${r}img/mark.png">
 ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg" fetchpriority="high">
@@ -198,6 +226,7 @@ const QUOTES = [
 
 page({
   file: "index.html", key: "home", title: "",
+  jsonld: { "@context": "https://schema.org", "@graph": [ORG, { "@type": "WebSite", "@id": SITE + "/#website", name: "폭스러닝센터", url: SITE + "/", inLanguage: "ko-KR", publisher: { "@id": SITE + "/#org" } }] },
   body: (r) => `
 <section class="hero">
   <div class="hero-photo" style="background-image:url(${r}img/hero.jpg)"></div>
@@ -651,6 +680,7 @@ page({
 // ── 오시는 길 ───────────────────────────────────────────
 page({
   file: "about/directions/index.html", key: "about/directions", title: "오시는 길",
+  jsonld: { "@context": "https://schema.org", ...ORG },
   description: `${ADDRESS} · 성심당 DCC점 맞은편, 골프존 조이마루 건물 2층 · 전화 1433-2700`,
   body: () => `
 <div class="page-head"><div class="wrap">
@@ -730,6 +760,7 @@ news.forEach((p, i) => {
   const newer = news[i - 1], older = news[i + 1];
   page({
     file: `news/${p.num}/index.html`, key: "news/blog", title: p.title,
+    ogType: "article", jsonld: articleLd(p.title, p.date.replace(/\./g, "-"), p.photos ? `news-img/${p.num}/0.jpg` : "", `news/${p.num}/`),
     description: excerpt(p), image: p.photos ? `news-img/${p.num}/0.jpg` : undefined,
     body: (r) => `
 <div class="page-body" style="padding-top:56px"><div class="wrap">
@@ -801,6 +832,7 @@ notices.forEach((n, i) => {
   const newer = notices[i - 1], older = notices[i + 1];
   page({
     file: `notice/${n.feedId}/index.html`, key: "news/videos", title: n.title,
+    ogType: "article", jsonld: articleLd(n.title, `${n.date.slice(0, 4)}-${n.date.slice(4, 6)}-${n.date.slice(6, 8)}`, n.photos ? `naver-img/${n.feedId}/0.jpg` : "", `notice/${n.feedId}/`),
     description: noticeExcerpt(n.text), image: n.photos ? `naver-img/${n.feedId}/0.jpg` : undefined,
     body: (r) => `
 <div class="page-body" style="padding-top:56px"><div class="wrap">
@@ -1071,9 +1103,20 @@ for (const p of pages) {
 }
 if (config.siteUrl) {
   const base = config.siteUrl.replace(/\/$/, "") + "/";
-  const urls = pages.filter((p) => p.file !== "404.html" && !p.noindex).map((p) => base + p.file.replace(/index\.html$/, ""));
+  const listed = pages.filter((p) => p.file !== "404.html" && !p.noindex);
+  const lastmod = (p) => (p.jsonld && p.jsonld.datePublished) || "";
   await writeFile(path.join(DIST, "sitemap.xml"),
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `<url><loc>${esc(u)}</loc></url>`).join("\n")}\n</urlset>\n`);
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${listed.map((p) => `<url><loc>${esc(base + p.file.replace(/index\.html$/, ""))}</loc>${lastmod(p) ? `<lastmod>${lastmod(p)}</lastmod>` : ""}</url>`).join("\n")}\n</urlset>\n`);
+  // RSS: 네이버 서치어드바이저에 제출하는 최신 글 목록 (센터 소식 + 폭스뉴스, 최신 40개)
+  const items = listed.filter((p) => p.ogType === "article").map((p) => ({ title: p.title, link: base + p.file.replace(/index\.html$/, ""), date: p.jsonld.datePublished, desc: p.description }))
+    .sort((a, b) => b.date.localeCompare(a.date)).slice(0, 40);
+  const rfc = (d) => new Date(d + "T09:00:00+09:00").toUTCString();
+  await writeFile(path.join(DIST, "rss.xml"), `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+<title>폭스러닝센터 소식</title><link>${esc(base)}</link><description>${esc(DESC)}</description><language>ko</language>
+${items.map((it) => `<item><title>${esc(it.title)}</title><link>${esc(it.link)}</link><guid>${esc(it.link)}</guid><pubDate>${rfc(it.date)}</pubDate><description>${esc(it.desc)}</description></item>`).join("\n")}
+</channel></rss>
+`);
   await writeFile(path.join(DIST, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${base}sitemap.xml\n`);
 }
 await writeFile(path.join(DIST, ".nojekyll"), "");
