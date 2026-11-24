@@ -131,12 +131,20 @@ ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg
         </ul>
       </div>
       <div class="nav-item">
+        <a class="nav-top" href="${r}sel/"${top("sel")}>SEL 센터</a>
+        <button class="sub-toggle" type="button" aria-label="SEL 센터 하위 메뉴" aria-expanded="false"></button>
+        <ul class="sub">
+          <li><a href="${r}sel/"${cur("sel/about")}>소개</a></li>
+          <li><a href="${r}sel/programs/"${cur("sel/programs")}>프로그램</a></li>
+          <li><a href="${r}column/"${cur("sel/column")}>SEL 칼럼</a></li>
+        </ul>
+      </div>
+      <div class="nav-item">
         <a class="nav-top" href="${r}news/"${top("news")}>폭스 소식</a>
         <button class="sub-toggle" type="button" aria-label="폭스 소식 하위 메뉴" aria-expanded="false"></button>
         <ul class="sub">
           <li><a href="${r}news/"${cur("news/blog")}>폭스뉴스</a></li>
           <li><a href="${r}videos/"${cur("news/videos")}>폭스 소식</a></li>
-          <li><a href="${r}column/"${cur("news/column")}>SEL 칼럼</a></li>
         </ul>
       </div>
       <div class="nav-item">
@@ -1076,11 +1084,127 @@ page({
 </div></div>`,
 });
 
+// ── SEL 센터 (소개 · 프로그램) ───────────────────────────
+// 아직 받지 못한 내용은 todo() 자리표시로 둔다 (내용을 받으면 채운다).
+const todo = (what) => `<div class="sel-todo" role="note"><b>준비 중</b><span>${what}</span></div>`;
+page({
+  file: "sel/index.html", key: "sel/about", title: "SEL 센터",
+  description: "SEL 연구소와 SEL 센터는 아이들이 자신을 이해하고, 타인과 건강하게 관계 맺으며, 스스로 생각하고 행동하는 힘을 기르는 교육을 연구합니다.",
+  body: (r) => `
+<section class="sel-hero"><div class="wrap">
+  <div class="eyebrow">SEL CENTER</div>
+  <h1>SEL 센터</h1>
+  <p class="sel-lead">아이들이 <b>자신을 이해하고</b>, 타인과 <b>건강하게 관계 맺으며</b>, 스스로 <b>생각하고 행동하는 힘</b>을 기르는 교육을 연구합니다.</p>
+  <div class="sel-hero-act"><a class="btn mint" href="${r}sel/programs/">프로그램 보기</a><a class="btn line-w" href="#sel-partner">학교·기관 협력</a></div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sel-duo">
+    <article class="sel-duo-card"><span class="sel-tag">연구 · 개발</span><h2>SEL 연구소</h2><p>아이들의 성장과 발달을 연구하고, 그 결과를 바탕으로 폭스러닝센터만의 교육 프로그램을 만듭니다.</p></article>
+    <span class="sel-duo-x" aria-hidden="true">×</span>
+    <article class="sel-duo-card"><span class="sel-tag">검사 · 상담 · 현장</span><h2>SEL 센터</h2><p>검사와 상담, 마음성장 프로그램으로 아이 한 명 한 명을 깊이 이해하고, 교육 현장에서 변화를 확인합니다.</p></article>
+  </div>
+</div></section>
+
+<section class="sec tint"><div class="wrap">
+  <div class="sec-head"><div class="eyebrow">WHAT WE DO</div><h2>세 가지 핵심 사업</h2><p>감정을 다루는 데서 멈추지 않고, 연구하고 · 개발하고 · 현장에서 검증합니다</p></div>
+  <ol class="sel-rdi">
+    <li><span class="sel-rdi-no">01</span><b>RESEARCH</b><p>아이들의 성장과 발달을 연구합니다.</p></li>
+    <li><span class="sel-rdi-no">02</span><b>DEVELOPMENT</b><p>폭스러닝센터만의 교육 프로그램을 개발합니다.</p></li>
+    <li><span class="sel-rdi-no">03</span><b>IMPACT</b><p>교육 현장에서 변화를 확인하고 검증합니다.</p></li>
+  </ol>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><div class="eyebrow">FRAMEWORK</div><h2>프레임워크</h2></div>
+  ${todo("SEL 연구소가 개발한 프레임워크 (이름 · 구성 단계 · 역량) — 내용을 받으면 그림과 함께 채웁니다.")}
+</div></section>
+
+<section class="sec tint"><div class="wrap">
+  <div class="sec-head"><div class="eyebrow">RESEARCH AREAS</div><h2>연구 범위</h2></div>
+  ${todo("연구 주제 목록 (6~8개) — 받으면 주제별 카드로 보여 줍니다.")}
+</div></section>
+
+<section class="sec" id="sel-partner"><div class="wrap">
+  <div class="sec-head"><div class="eyebrow">FOR SCHOOLS</div><h2>학교 · 기관 협력</h2><p>SEL 연구소는 외부 학교와 교육기관에 교육과정과 교사연수 프로그램을 제공하는 전문 연구기관으로 나아갑니다</p></div>
+  <div class="sel-partner">
+    <article><h3>SEL 교육과정</h3>${todo("학교·기관용 교육과정 패키지 구성")}</article>
+    <article><h3>교사연수</h3>${todo("교사연수 프로그램 구성")}</article>
+    <article><h3>기관 체험</h3><p>기관 단위로 폭스러닝센터의 SEL 프로그램을 체험합니다.</p><a class="btn line sm" href="${INST_URL}" ${ext}>기관 체험 안내</a></article>
+  </div>
+</div></section>
+
+<section class="sec tint"><div class="wrap">
+  <div class="sec-head"><div class="eyebrow">IN THE FIELD</div><h2>현장 적용 사례</h2></div>
+  ${todo("학교·기관 적용 사례 2~4건 (대상 · 한 일 · 결과)")}
+</div></section>
+
+${columns.length ? `<section class="sec"><div class="wrap">
+  <div class="sec-head"><div class="eyebrow">SEL COLUMN</div><h2>SEL 칼럼</h2><p>SEL 센터가 전하는 사회정서학습과 심리검사·상담 이야기</p></div>
+  <div class="col-grid">${columns.slice(0, 3).map((c) => colCard(r, c, "h3")).join("")}</div>
+  <div class="more"><a class="btn ghost" href="${r}column/">칼럼 더 보기 →</a></div>
+</div></section>` : ""}
+
+<section class="sel-cta"><div class="wrap">
+  <h2>우리 아이에게 맞는 방법을 함께 찾아보세요</h2>
+  <div class="sel-cta-act"><a class="btn mint" href="${r}#contact">검사 · 상담 문의</a><a class="btn line-w" href="${r}#contact">학교 · 기관 협력 문의</a><a class="btn line-w" href="tel:14332700">전화 1433-2700</a></div>
+</div></section>`,
+});
+
+const SEL_PROGRAMS = [
+  { group: "kids", title: "아이", items: [
+    { name: "SEL Insight 종합심리평가", tag: "검사", desc: "인지 능력, 기질과 성격, 정서·행동 특성을 함께 살펴보고, 여러 결과를 종합해 해석하는 평가입니다.", rows: [], more: "대상 · 소요 시간 · 진행 과정" },
+    { name: "웩슬러 지능검사", tag: "검사", desc: "다양한 인지 영역을 살펴보며 아이의 강점과 학습 특성을 이해하는 표준화 검사입니다.",
+      rows: [["유아용 K-WPPSI-IV", "만 4세 0개월 ~ 7세 7개월 · 약 60~90분"], ["아동용 K-WISC-V", "만 6세 0개월 ~ 16세 11개월 · 약 90~120분"], ["진행", "검사 → 결과 분석 → 부모 상담 → 맞춤 지원 연계"]] },
+    { name: "TCI · JTCI 기질검사", tag: "검사", desc: "아이의 기질과 성격 특성을 이해하고, 아이에게 맞는 소통과 양육 방향을 찾는 검사입니다.",
+      rows: [["JTCI (아동·청소년)", "만 3세 ~ 18세 · 약 20~30분 · 양육자 보고식"], ["TCI (성인)", "만 18세 이상 · 약 20~30분 · 자기 보고식"], ["진행", "검사 → 결과 분석 → 결과 상담 → 양육 지원 가이드"]] },
+    { name: "정서행동 평가", tag: "검사", desc: "아이의 정서와 행동 특성을 살펴보는 평가입니다.", rows: [], more: "검사 종류 · 대상 · 소요 시간" },
+    { name: "아동 · 청소년 개별 상담", tag: "상담", desc: "아이의 마음과 고민을 전문가와 일대일로 살펴봅니다.", rows: [], more: "대상 · 회차 · 진행 방식" },
+    { name: "마음성장 프로그램", tag: "프로그램", desc: "그림책, 놀이, 미술 등을 활용해 사회정서 역량을 키우는 활동입니다.", rows: [], more: "대상 · 회차 · 구성" },
+    { name: "SEL 연구소 정규 수업", tag: "수업", desc: "CASEL의 사회정서학습 5가지 핵심 역량을 바탕으로 한 정규 수업입니다.",
+      rows: [["주요 활동", "감정 이해와 표현 · 사회적 관계와 의사소통 · 자신감과 자기조절 · 다양한 프로젝트 활동"]], more: "대상 · 요일 · 시간" },
+  ] },
+  { group: "parents", title: "부모", items: [
+    { name: "부모 양육 상담", tag: "상담", desc: "검사 결과와 아이의 일상 모습을 함께 살펴보고, 가정에서 실천할 양육 방향을 함께 찾습니다.", rows: [], more: "회차 · 진행 방식" },
+  ] },
+  { group: "schools", title: "학교 · 기관", items: [
+    { name: "SEL 교육과정", tag: "학교·기관", desc: "학교와 교육기관에서 운영할 수 있는 SEL 교육과정입니다.", rows: [], more: "구성 · 대상 학년 · 운영 방식" },
+    { name: "교사연수", tag: "학교·기관", desc: "교사를 위한 사회정서학습 연수 프로그램입니다.", rows: [], more: "구성 · 시간 · 대상" },
+    { name: "기관 체험", tag: "학교·기관", desc: "기관 단위로 폭스러닝센터의 프로그램을 체험합니다.", rows: [], link: [INST_URL, "기관 체험 안내"] },
+  ] },
+];
+page({
+  file: "sel/programs/index.html", key: "sel/programs", title: "SEL 센터 프로그램",
+  description: "SEL 센터의 검사 · 상담 · 마음성장 프로그램과 학교 · 기관용 프로그램을 소개합니다.",
+  body: (r) => `
+<div class="page-head"><div class="wrap">
+  <div class="eyebrow">PROGRAMS</div>
+  <h1>프로그램</h1>
+  <p>아이와 가정, 학교에 맞는 프로그램을 골라 보세요</p>
+</div></div>
+<div class="page-body"><div class="wrap">
+  <nav class="sel-chips" aria-label="대상별 보기">${SEL_PROGRAMS.map((g) => `<a href="#p-${g.group}">${g.title}</a>`).join("")}</nav>
+  ${SEL_PROGRAMS.map((g) => `<section class="sel-pg" id="p-${g.group}" aria-labelledby="p-${g.group}-t">
+    <h2 id="p-${g.group}-t">${g.title}</h2>
+    <div class="sel-pcards">
+      ${g.items.map((it) => `<article class="sel-pcard">
+        <span class="sel-tag">${esc(it.tag)}</span>
+        <h3>${esc(it.name)}</h3>
+        <p>${esc(it.desc)}</p>
+        ${it.rows.length ? `<dl>${it.rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>` : ""}
+        ${it.more ? `<p class="sel-more">상세 정보 준비 중 · ${esc(it.more)}</p>` : ""}
+        <div class="sel-pact">${it.link ? `<a class="btn line sm" href="${it.link[0]}" ${ext}>${esc(it.link[1])}</a>` : `<a class="btn navy sm" href="${r}#contact">문의하기</a>`}</div>
+      </article>`).join("\n      ")}
+    </div>
+  </section>`).join("\n  ")}
+</div></div>`,
+});
+
 // ── SEL 칼럼 (목록 · 글 · 쓰기) ─────────────────────────
 // 글은 Cloudflare API(worker/)에 저장되고, 매일 빌드 때 data/columns.json 으로 받아 정식 페이지를 만든다.
 // 아직 빌드되지 않은 새 글은 column/view/?id= 화면(board.js)에서 바로 보인다.
 page({
-  file: "column/index.html", key: "news/column", title: "SEL 칼럼", board: true,
+  file: "column/index.html", key: "sel/column", title: "SEL 칼럼", board: true,
   description: "폭스러닝센터 SEL센터 전문가가 전하는 사회정서학습과 심리검사·상담 이야기.",
   body: (r) => `
 <div class="page-head"><div class="wrap">
@@ -1103,7 +1227,7 @@ page({
 columns.forEach((c, i) => {
   const newer = columns[i - 1], older = columns[i + 1];
   page({
-    file: `column/${c.id}/index.html`, key: "news/column", title: c.title, board: true, rx: true,
+    file: `column/${c.id}/index.html`, key: "sel/column", title: c.title, board: true, rx: true,
     description: mdPlain(c.body, 140), image: undefined,
     ogType: "article", jsonld: { ...articleLd(c.title, c.published, "", `column/${c.id}/`), image: [c.cover || SITE + "/img/hero.jpg"], author: { "@type": "Person", name: c.author || "폭스러닝센터" } },
     body: (r) => `
@@ -1128,13 +1252,13 @@ columns.forEach((c, i) => {
   });
 });
 page({
-  file: "column/view/index.html", key: "news/column", title: "SEL 칼럼", board: true, rx: true, noindex: true,
+  file: "column/view/index.html", key: "sel/column", title: "SEL 칼럼", board: true, rx: true, noindex: true,
   body: () => `<div class="page-body" style="padding-top:56px"><div class="wrap">
   <article class="post col-post" id="colView"><p class="rc-empty">불러오는 중입니다…</p></article>
 </div></div>`,
 });
 page({
-  file: "column/write/index.html", key: "news/column", title: "SEL 칼럼 쓰기", board: true, noindex: true,
+  file: "column/write/index.html", key: "sel/column", title: "SEL 칼럼 쓰기", board: true, noindex: true,
   body: () => `<div class="page-head"><div class="wrap"><div class="eyebrow">SEL COLUMN</div><h1>SEL 칼럼 쓰기</h1></div></div>
 <div class="page-body"><div class="wrap">
   <div id="colWrite"><p class="rc-empty">확인 중입니다…</p></div>
@@ -1304,7 +1428,8 @@ page({
     const L = (href, text, out) => `<li><a href="${out ? href : r + href}"${out ? ` ${ext} class="ext"` : ""}>${text}</a></li>`;
     const groups = [
       ["센터 소개", [L("about/", "About Us"), L("about/institutes/", "연구소 소개"), L("about/facilities/", "센터 시설"), L("about/experts/", "전문가 소개"), L("about/agreements/", "교육 협약"), L("about/directions/", "오시는 길")]],
-      ["폭스 소식", [L("news/", "폭스뉴스"), L("videos/", "폭스 소식"), L("column/", "SEL 칼럼"), L("videos/#videos", "폭스 YouTube")]],
+      ["SEL 센터", [L("sel/", "소개"), L("sel/programs/", "프로그램"), L("column/", "SEL 칼럼")]],
+      ["폭스 소식", [L("news/", "폭스뉴스"), L("videos/", "폭스 소식"), L("videos/#videos", "폭스 YouTube")]],
       ["감정체크", [L("emotion-check/", "감정체크 체험"), L("growth/", "성장관리 시스템")]],
       ["프로그램", [L(CAMP_URL, "글로벌캠프", true), L(INST_URL, "기관 체험", true)]],
       ["문의 · 안내", [L("#contact", "문의하기"), L("recruit/", "채용공고"), L("privacy/", "개인정보처리방침")]],
