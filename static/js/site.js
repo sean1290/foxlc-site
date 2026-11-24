@@ -191,6 +191,37 @@
   }
   })();
 
+  /* ── F.O.X : 점과 선으로 그려지는 여우 마크 ── */
+  (function () {
+    var svg = $(".foxx-mark");
+    if (!svg) return;
+    var els = $$("[data-on]", svg), step = 0, timer = null, running = false;
+    var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var apply = function (n) {
+      els.forEach(function (el) {
+        var on = +el.getAttribute("data-on"), off = +(el.getAttribute("data-off") || 99);
+        el.classList.toggle("on", n >= on && n < off);
+      });
+      svg.classList.toggle("done", n >= 7);
+    };
+    if (still) { apply(7); return; }
+    var LAST = 7;
+    var tick = function () {
+      step++;
+      if (step <= LAST) { apply(step); timer = setTimeout(tick, step === LAST ? 3600 : 720); }
+      else { svg.classList.add("fade"); timer = setTimeout(function () { svg.classList.remove("fade"); step = 0; apply(0); timer = setTimeout(tick, 500); }, 900); }
+    };
+    var box = svg.closest(".foxx") || svg;
+    var vis = function () { var r = box.getBoundingClientRect(); return r.top < innerHeight * 0.8 && r.bottom > innerHeight * 0.2; };
+    var go = function () { if (!running && vis()) { running = true; removeEventListener("scroll", go); timer = setTimeout(tick, 600); } };
+    addEventListener("scroll", go, { passive: true }); go();
+    document.addEventListener("visibilitychange", function () {
+      if (!running) return;
+      clearTimeout(timer);
+      if (!document.hidden) { svg.classList.remove("fade"); step = 0; apply(0); timer = setTimeout(tick, 500); }
+    });
+  })();
+
   /* ── 갤러리 크게 보기 ── */
   var lb = $("#lightbox");
   if (lb && lb.showModal) {

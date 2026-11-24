@@ -276,6 +276,28 @@ page({
     </ol>
     <div class="foxx" aria-label="F.O.X — Future Of X">
       <div class="foxx-glow" aria-hidden="true"></div>
+      <svg class="foxx-mark" viewBox="-20 0 300 318" aria-hidden="true" focusable="false">
+        <line class="fm-l " x1="40" y1="52" x2="130" y2="140" pathLength="1" data-on="2"/>
+        <line class="fm-l " x1="130" y1="140" x2="220" y2="52" pathLength="1" data-on="4"/>
+        <line class="fm-l " x1="40" y1="52" x2="40" y2="214" pathLength="1" data-on="5"/>
+        <line class="fm-l " x1="220" y1="52" x2="220" y2="214" pathLength="1" data-on="5"/>
+        <line class="fm-l thin " x1="117" y1="153" x2="60" y2="202" pathLength="1" data-on="5"/>
+        <line class="fm-l thin " x1="143" y1="153" x2="200" y2="202" pathLength="1" data-on="5"/>
+        <line class="fm-l " x1="40" y1="214" x2="130" y2="276" pathLength="1" data-on="7"/>
+        <line class="fm-l " x1="220" y1="214" x2="130" y2="276" pathLength="1" data-on="7"/>
+        <circle class="fm-d " cx="40" cy="52" r="7" data-on="1"/>
+        <circle class="fm-d " cx="130" cy="140" r="7" data-on="1" data-off="7"/>
+        <circle class="fm-d " cx="220" cy="52" r="7" data-on="3"/>
+        <circle class="fm-d " cx="40" cy="214" r="7" data-on="5" data-off="7"/>
+        <circle class="fm-d " cx="220" cy="214" r="7" data-on="5" data-off="7"/>
+        <circle class="fm-d fm-id" cx="130" cy="276" r="7" data-on="6"/>
+        <text class="fm-t" x="40" y="30" data-on="1">PLAY</text>
+        <text class="fm-t" x="130" y="172" data-on="1" data-off="5">EDUCATION</text>
+        <text class="fm-t" x="220" y="30" data-on="3">EXPERIENCE</text>
+        <text class="fm-t" x="40" y="244" data-on="5" data-off="6">EDUCATION</text>
+        <text class="fm-t" x="220" y="244" data-on="5" data-off="6">EDUCATION</text>
+        <text class="fm-t" x="130" y="306" data-on="6">ID</text>
+      </svg>
       <h3 class="foxx-tag"><span class="foxx-line" aria-hidden="true"></span><span>왜 <b>F.O.X.</b>인가?</span></h3>
       <p class="foxx-lines" aria-hidden="true">
         <span class="foxx-row"><b>F</b>UTURE</span>
