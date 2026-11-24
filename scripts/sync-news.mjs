@@ -1,7 +1,8 @@
-// 폭스뉴스(news.foxconnect.kr) 글을 data/news.json 과 static/news-img/ 로 가져온다.
-// - 목록 페이지의 본문이 글 전체다(상세 페이지는 스크립트에 오류 페이지를 돌려준다).
-// - 사진은 핫링크가 막혀 있어서 모두 내려받아 직접 서빙한다.
-// - 이미 가져온 글(newsId 기준)은 사진을 다시 받지 않는다.
+// 폭스뉴스(news.foxconnect.kr) 목록을 data/news.json 과 static/news-img/<번호>/0.jpg 로 가져온다.
+// - 공개 사이트에는 제목 · 날짜 · 대표사진 · 짧은 요약만 둔다.
+// - 본문 전체와 나머지 사진은 학부모 전용이라 이 저장소(공개)에 두지 않는다.
+//   → API 서버(worker/)가 따로 가져와 승인된 학부모에게만 보여 준다 (POST /api/news/sync).
+// - 이미 가져온 글(newsId 기준)은 대표사진을 다시 받지 않는다.
 // 글을 하나도 읽지 못하면 조용히 넘어가지 않고 오류로 끝난다.
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
@@ -17,7 +18,6 @@ const LIST = (page) =>
 
 const MIN_ID = 6860;     // 이 번호보다 오래된 글은 가져오지 않는다 (Wix 때와 같은 시작점)
 const MAX_PAGES = 15;    // 한 번에 훑는 목록 페이지 수 상한 (페이지당 8개)
-const MAX_PHOTOS = 20;
 const UA = "Mozilla/5.0 (compatible; foxlc-site-sync)";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -62,21 +62,20 @@ export function parseList(html) {
   }).filter((p) => p.newsId && p.title);
 }
 
-async function downloadPhotos(post) {
+// 대표사진(첫 장)만 받는다. 있으면 1, 없으면 0
+async function downloadCover(post) {
   if (!post.atchFileId) return 0;
+  const res = await get(`${HOST}/fms/getImage.do?atchFileId=${post.atchFileId}&fileSn=0`);
+  const buf = Buffer.from(await res.arrayBuffer());
+  const type = res.headers.get("content-type") || "";
+  if (buf.length === 0 || !type.startsWith("image/")) return 0;
   const dir = path.join(IMG_DIR, String(post.num));
   await mkdir(dir, { recursive: true });
-  let n = 0;
-  for (; n < MAX_PHOTOS; n++) {
-    const res = await get(`${HOST}/fms/getImage.do?atchFileId=${post.atchFileId}&fileSn=${n}`);
-    const buf = Buffer.from(await res.arrayBuffer());
-    const type = res.headers.get("content-type") || "";
-    if (buf.length === 0 || !type.startsWith("image/")) break;
-    await writeFile(path.join(dir, `${n}.jpg`), buf);
-    await sleep(150);
-  }
-  return n;
+  await writeFile(path.join(dir, "0.jpg"), buf);
+  return 1;
 }
+// 목록 카드에 보이는 짧은 요약 (본문 앞부분)
+export const excerptOf = (it) => { const t = [it.before, ...it.after].join(" ").trim(); return t.length > 110 ? t.slice(0, 110) + "…" : t; };
 
 async function main() {
   const known = existsSync(DATA) ? JSON.parse(await readFile(DATA, "utf8")) : [];
@@ -95,15 +94,14 @@ async function main() {
       const old = byId.get(it.newsId);
       if (old) {
         // 제목·본문이 고쳐졌으면 반영한다 (사진은 그대로 둔다).
-        const next = { ...old, date: it.date, title: it.title, before: it.before, after: it.after };
+        const next = { ...old, date: it.date, title: it.title, excerpt: excerptOf(it) };
         if (JSON.stringify(next) !== JSON.stringify(old)) { byId.set(it.newsId, next); updated++; }
         continue;
       }
-      const photos = await downloadPhotos(it);
-      byId.set(it.newsId, { newsId: it.newsId, num: it.num, date: it.date, title: it.title,
-                            before: it.before, after: it.after, photos });
+      const photos = await downloadCover(it);
+      byId.set(it.newsId, { newsId: it.newsId, num: it.num, date: it.date, title: it.title, excerpt: excerptOf(it), photos });
       added++; fresh++;
-      console.log(`+ ${it.newsId} ${it.date} 사진 ${photos}장  ${it.title}`);
+      console.log(`+ ${it.newsId} ${it.date} 대표사진 ${photos ? "있음" : "없음"}  ${it.title}`);
     }
     const reachedOld = items.some((it) => it.num < MIN_ID);
     if (reachedOld || (fresh === 0 && known.length > 0)) break;

@@ -9,6 +9,10 @@ compatibility_date = "2024-11-01"
 GITHUB_REPO = "sean1290/foxlc-site"
 ALLOWED_ORIGINS = "https://foxlc.foxconnect.kr,https://sean1290.github.io,http://localhost:8081"
 
+# 매일 20:20 (한국 시간) 폭스뉴스 새 글 본문·사진 가져오기
+[triggers]
+crons = ["20 11 * * *"]
+
 [[d1_databases]]
 binding = "DB"
 database_name = "foxlc"

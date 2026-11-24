@@ -36,6 +36,18 @@ jobs:
         id: news
         continue-on-error: true
         run: node scripts/sync-news.mjs
+      # 폭스뉴스 본문·사진(학부모 전용)은 이 공개 저장소가 아니라 API 서버가 직접 가져와 보관한다.
+      - name: Sync 폭스뉴스 본문 (학부모 전용 API)
+        continue-on-error: true
+        run: |
+          API=$(node -p "require('./site.config.json').apiBase || ''")
+          [ -n "$API" ] || exit 0
+          for page in 1 2; do
+            for i in 1 2 3 4 5; do
+              r=$(curl -s -m 60 -X POST "$API/api/news/sync?page=$page"); echo "$r"
+              echo "$r" | grep -q '"more":true' || break
+            done
+          done
       - name: Sync 유튜브 영상
         id: videos
         continue-on-error: true
