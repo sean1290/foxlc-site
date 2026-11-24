@@ -1,0 +1,4 @@
+SUIT — Copyright (c) 2022 Sun (http://sun.fo/suit)
+Korean glyphs from Source Han Sans (Sandoll Communications).
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+https://scripts.sil.org/OFL

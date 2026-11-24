@@ -15,6 +15,7 @@ const videos = await json("data/videos.json");
 const agreementData = await json("data/agreements.json");
 const researchers = await json("data/researchers.json");
 const instDetails = await json("data/institute-details.json");
+const { LEAFLETS } = await import("./leaflets.mjs");
 const history = await json("data/history.json");
 const columns = existsSync(path.join(ROOT, "data/columns.json")) ? await json("data/columns.json") : [];
 const mdSrc = await readFile(path.join(ROOT, "static/js/md.js"), "utf8");
@@ -498,7 +499,15 @@ ${INSTITUTES.map((x) => {
   const d = instDetails[x.id] || {};
   const photos = [{ src: `${r}img/institutes/${x.id}.jpg`, caption: `${x.name} 활동 공간` },
     ...(d.photos || []).map((ph) => ({ src: `${r}img/institutes/${x.id}/${ph.file}`, caption: ph.caption || "" }))];
-  return `<dialog class="inst-modal" id="inst-${x.id}" aria-labelledby="inst-${x.id}-title">
+  const gal = `    <div class="im-gallery">
+      <figure class="im-main"><img src="${photos[0].src}" alt="${esc(photos[0].caption || `${x.name} 활동 사진 1`)}" loading="lazy">${photos.length > 1 ? `
+        <button type="button" class="im-nav prev" aria-label="이전 사진">‹</button><button type="button" class="im-nav next" aria-label="다음 사진">›</button>
+        <span class="im-count">1 / ${photos.length}</span>` : ""}
+        <figcaption>${esc(photos[0].caption)}</figcaption></figure>${photos.length > 1 ? `
+      <div class="im-thumbs" role="list">${photos.map((ph, i) => `<button type="button" role="listitem" class="im-thumb"${i ? "" : ' aria-current="true"'} data-src="${ph.src}" data-alt="${esc(ph.caption || `${x.name} 활동 사진 ${i + 1}`)}" data-caption="${esc(ph.caption)}" aria-label="사진 ${i + 1} 보기"><img src="${ph.src}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
+    </div>
+`;
+  return `<dialog class="inst-modal${LEAFLETS[x.id] ? ` lf lf-${x.id}` : ""}" id="inst-${x.id}" aria-labelledby="inst-${x.id}-title">
   <div class="im-head">
     <div>
       <span class="label">${x.label}</span>
@@ -507,15 +516,13 @@ ${INSTITUTES.map((x) => {
     </div>
     <form method="dialog"><button class="im-close" aria-label="닫기">✕</button></form>
   </div>
-  <div class="im-body">
-    <div class="im-gallery">
-      <figure class="im-main"><img src="${photos[0].src}" alt="${esc(photos[0].caption || `${x.name} 활동 사진 1`)}" loading="lazy">${photos.length > 1 ? `
-        <button type="button" class="im-nav prev" aria-label="이전 사진">‹</button><button type="button" class="im-nav next" aria-label="다음 사진">›</button>
-        <span class="im-count">1 / ${photos.length}</span>` : ""}
-        <figcaption>${esc(photos[0].caption)}</figcaption></figure>${photos.length > 1 ? `
-      <div class="im-thumbs" role="list">${photos.map((ph, i) => `<button type="button" role="listitem" class="im-thumb"${i ? "" : ' aria-current="true"'} data-src="${ph.src}" data-alt="${esc(ph.caption || `${x.name} 활동 사진 ${i + 1}`)}" data-caption="${esc(ph.caption)}" aria-label="사진 ${i + 1} 보기"><img src="${ph.src}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
-    </div>
-    <div class="im-text">
+  ${LEAFLETS[x.id] ? `<div class="lf-body">
+${LEAFLETS[x.id](r)}
+<section class="lf-sec lf-gal"><h3 class="lf-band">활동 사진</h3>
+${gal}</section>
+<div class="im-actions lf-actions"><a class="btn navy" href="tel:14332700">전화 문의 1433-2700</a><a class="btn line" href="${r}#contact">문의 남기기</a></div>
+</div>` : `<div class="im-body">
+${gal}    <div class="im-text">
       <p class="im-desc">${esc(x.desc)}</p>
       ${(d.text || []).map((t) => `<p>${esc(t)}</p>`).join("")}
       <h3>프로그램</h3>
@@ -524,6 +531,7 @@ ${INSTITUTES.map((x) => {
       <div class="im-actions"><a class="btn navy sm" href="tel:14332700">전화 문의 1433-2700</a><a class="btn line sm" href="${r}#contact">문의 남기기</a></div>
     </div>
   </div>
+`}
 </dialog>`;
 }).join("\n")}`,
 });
