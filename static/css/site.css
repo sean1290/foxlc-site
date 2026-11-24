@@ -1284,3 +1284,12 @@ body:has(.inst-modal[open]){overflow:hidden}
 .card-stats .st-view{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E")}
 .card-stats .st-like{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-7.5-4.6-9.5-9.3C1.1 8.4 3.3 5 6.7 5c2 0 3.6 1.1 5.3 3 1.7-1.9 3.3-3 5.3-3 3.4 0 5.6 3.4 4.2 6.7C19.5 16.4 12 21 12 21z'/%3E%3C/svg%3E")}
 .card-stats .st-like{color:#d0566a}
+
+/* 하단 SNS */
+.site-foot .social{display:flex;gap:10px;margin-top:18px}
+.site-foot .sns{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);color:#fff;transition:transform .2s,background .2s}
+.site-foot .sns svg{width:21px;height:21px}
+.site-foot .sns:hover{transform:translateY(-2px)}
+.site-foot .sns-ig:hover{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285aeb 90%)}
+.site-foot .sns-blog:hover{background:#03c75a}
+.site-foot .sns-t{fill:#1c2645}.site-foot .sns-blog:hover .sns-t{fill:#03a94d}

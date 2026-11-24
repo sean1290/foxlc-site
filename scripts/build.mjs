@@ -54,7 +54,7 @@ const ORG = {
   address: { "@type": "PostalAddress", streetAddress: "엑스포로97번길 40 2층 204호", addressLocality: "유성구", addressRegion: "대전광역시", addressCountry: "KR" },
   openingHoursSpecification: [{ "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "10:00", closes: "19:00" }],
   parentOrganization: { "@type": "Organization", name: "FOX CONNECT", url: "https://foxconnect.kr/" },
-  sameAs: ["https://www.youtube.com/@future_x_foxconnect", "https://map.naver.com/p/entry/place/1874946138"],
+  sameAs: ["https://www.youtube.com/@future_x_foxconnect", "https://map.naver.com/p/entry/place/1874946138", "https://www.instagram.com/foxlc_future/", "https://blog.naver.com/foxedu"],
 };
 const articleLd = (headline, date, img, url) => ({
   "@context": "https://schema.org", "@type": "Article", headline, datePublished: date, dateModified: date,
@@ -163,6 +163,10 @@ ${body(r)}
       <div>
         <h2>FOX LEARNING CENTER</h2>
         <p>사회정서학습 기반 러닝센터</p>
+        <div class="social">
+          <a class="sns sns-ig" href="https://www.instagram.com/foxlc_future/" ${ext} aria-label="폭스러닝센터 인스타그램 (새 창)" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg></a>
+          <a class="sns sns-blog" href="https://blog.naver.com/foxedu" ${ext} aria-label="폭스러닝센터 네이버 블로그 (새 창)" title="네이버 블로그"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.5 4h15A2.5 2.5 0 0 1 22 6.5v9a2.5 2.5 0 0 1-2.5 2.5h-5.2L12 21l-2.3-3H4.5A2.5 2.5 0 0 1 2 15.5v-9A2.5 2.5 0 0 1 4.5 4z"/><text x="12" y="13.9" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="7.4" class="sns-t">blog</text></svg></a>
+        </div>
       </div>
       <div>
         <h3>연락처</h3>
