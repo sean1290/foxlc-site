@@ -6,7 +6,8 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: "40 11 * * *"   # 매일 20:40 KST
+    # GitHub 예약 실행은 몇 시간씩 늦어질 때가 많아서 3시간마다 돈다 (KST 02:40, 05:40, … 20:40, 23:40)
+    - cron: "40 */3 * * *"
   workflow_dispatch:
 
 permissions:
