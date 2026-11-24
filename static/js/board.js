@@ -306,6 +306,11 @@
       var body = el("div", { class: "col-body" }); body.innerHTML = window.renderMd(c.body); colView.appendChild(body);
       var box = el("div", { class: "col-admin", hidden: "" }); colView.appendChild(box);
       if (isAdmin(u)) adminTools(box, c);
+      if (c.status === "published") {   /* 좋아요 · 댓글 (react.js) */
+        var rxSec = el("section", { class: "rx", "data-rx": "column", "data-rx-id": String(c.id), "aria-label": "좋아요와 댓글", hidden: "" });
+        colView.appendChild(rxSec);
+        if (window.foxlcRx) window.foxlcRx(rxSec);
+      }
       colView.appendChild(el("div", { class: "post-nav" }, [el("span"), el("a", { class: "btn ghost sm", href: ROOT + "column/", text: "목록으로" }), el("span")]));
     }).catch(function (e) { colView.innerHTML = ""; colView.appendChild(el("p", { class: "rc-empty", text: e.message })); });
   }

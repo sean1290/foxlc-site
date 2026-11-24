@@ -1246,3 +1246,33 @@ body:has(.inst-modal[open]){overflow:hidden}
 .nav-login.in b{font-weight:800;color:var(--navy)}
 @media (max-width:1100px){.nav-login.in{max-width:none}}
 .nav-login.in span{overflow:hidden;text-overflow:ellipsis}
+
+/* ── 좋아요 · 댓글 (static/js/react.js) ── */
+.rx{margin-top:40px;padding-top:28px;border-top:1px solid var(--line)}
+.rx-wrap{max-width:1040px;margin:0 auto}
+.rx-wrap + .post-nav{max-width:1040px;margin:40px auto 0}
+.rx-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.rx-like{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border:1.5px solid var(--line);border-radius:999px;background:#fff;color:var(--navy);font-size:15px;font-weight:700;cursor:pointer;transition:border-color .15s,background .15s}
+.rx-like:hover{border-color:var(--navy)}
+.rx-like.on{background:#fff1f2;border-color:#f3b4bc;color:#c2364a}
+.rx-heart{font-size:17px;line-height:1}
+.rx-count{font-size:15px;font-weight:700;color:var(--ink2)}
+.rx .rx-note{margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--green)}
+.rx .rx-note.err{color:#c2364a}
+.rx-list{list-style:none;margin-top:22px;display:grid;gap:10px}
+.rx-item{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.rx-item.mine{background:var(--mintbg);border-color:#cfe8dd}
+.rx-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px}
+.rx-head b{color:var(--navy);font-weight:800}
+.rx-head time{color:var(--ink3);font-size:13px}
+.rx-staff{font-size:12px;font-weight:700;color:var(--green);background:var(--mintbg);border:1px solid #cfe8dd;border-radius:999px;padding:1px 8px}
+.rx-del{margin-left:auto;background:none;border:0;color:var(--ink3);font-size:13px;cursor:pointer;text-decoration:underline}
+.rx-del:hover{color:#c2364a}
+.rx .rx-body{margin:6px 0 0;font-size:15.5px;line-height:1.75;white-space:pre-wrap;color:var(--ink)}
+.rx-form{margin-top:18px}
+.rx-form textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:15.5px;line-height:1.7;resize:vertical;background:#fff}
+.rx-form textarea:focus{outline:none;border-color:var(--mint);box-shadow:0 0 0 3px rgba(114,192,161,.25)}
+.rx-form-foot{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:8px}
+.rx-left{font-size:13px;color:var(--ink3)}
+.rx .rx-guest{margin:18px 0 0;line-height:1.7;padding:14px 16px;border-radius:12px;background:var(--mintbg);font-size:14.5px;color:var(--ink2)}
+.rx-guest a{color:var(--navy);font-weight:800}

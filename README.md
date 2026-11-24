@@ -56,4 +56,6 @@ http://localhost:8080 에서 확인합니다. 피드를 직접 가져오려면 `
   `FOXLC_API=http://localhost:8787 npm run serve`
 - 관리자 추가: 사이트의 `/admin/` 화면(로그인 후) 또는 `node worker/add-admin.mjs <아이디> "<이름>"` 로 SQL 을 만들어 `npx wrangler d1 execute foxlc --remote --file=add-admin.sql`
 - 비밀번호는 PBKDF2 로 해시해서 저장하고, 로그인 토큰은 `SESSION_SECRET`(Worker 비밀값)으로 서명합니다.
+- 좋아요 · 댓글: 폭스뉴스 · SEL 칼럼 · 폭스 소식 글 아래에 붙는다 (`static/js/react.js`, API `/api/rx/...`, 표 `likes` · `comments`).
+  읽기는 폭스뉴스만 회원 전용이고, 좋아요 · 댓글 쓰기는 승인된 회원과 관리자만 된다. 회원 이름은 홍*동 처럼 가려서 보인다.
 - 나중에 회원가입을 열 때는 `users.role` 의 `member` 를 쓰면 됩니다. 쓰기·수정·삭제는 `admin` 만 됩니다.

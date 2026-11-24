@@ -23,6 +23,11 @@
 //  폭스뉴스  GET  /api/news/:num           본문 (승인된 학부모 · 관리자)
 //            GET  /api/news/:num/photo/:i  사진 (승인된 학부모 · 관리자)
 //            POST /api/news/sync?page=N    news.foxconnect.kr 에서 본문·사진 가져오기 (매일 사이트 빌드 때 호출)
+//  좋아요·댓글 (kind = news | column | notice, id = 글 번호)
+//            GET  /api/rx/:kind/:id        좋아요 수 · 내가 눌렀는지 · 댓글 목록 (폭스뉴스는 회원만)
+//            POST /api/rx/:kind/:id/like   좋아요 누르기/취소 (승인된 회원 · 관리자)
+//            POST /api/rx/:kind/:id/comments  댓글 쓰기 { body } (승인된 회원 · 관리자)
+//            DELETE /api/rx/comments/:cid  댓글 지우기 (쓴 사람 · 관리자)
 //
 // 로그인 토큰은 HMAC 서명한 짧은 문자열(7일)이며 Authorization: Bearer 로 보낸다.
 // 사이트(github.io)와 API(workers.dev)의 주소가 달라 쿠키 대신 이 방식을 쓴다.
@@ -206,6 +211,41 @@ async function syncNewsPage(env, page) {
   return { page, items: items.length, more: left > 0, oldest: items.length ? Math.min(...nums) : null };
 }
 const canReadNews = (me) => me && (me.role === "admin" || (me.role === "member" && me.status === "approved"));
+
+// ── 좋아요 · 댓글 ───────────────────────────────────────
+const RX_MAX_COMMENT = 500;
+const RX_HOURLY = 20;           // 한 사람이 한 시간에 쓸 수 있는 댓글 수
+// 공개 화면에 보이는 이름: 관리자(센터)는 이름 그대로, 회원은 가운데 글자를 가린다 (홍길동 → 홍*동)
+function rxName(u) {
+  const n = (u.name || "").trim() || u.username || "회원";
+  if (u.role === "admin") return n;
+  const c = [...n];
+  if (c.length <= 1) return n;
+  if (c.length === 2) return c[0] + "*";
+  return c[0] + "*".repeat(c.length - 2) + c[c.length - 1];
+}
+// 글이 실제로 있는지 확인한다 (폭스 소식은 사이트 빌드 데이터에만 있어서 번호 모양만 본다)
+async function rxTargetOk(env, kind, id, me) {
+  if (kind === "news") return !!(await env.DB.prepare("SELECT 1 AS ok FROM news_posts WHERE num = ?").bind(Number(id)).first());
+  if (kind === "column") {
+    const c = await env.DB.prepare("SELECT status FROM columns WHERE id = ?").bind(Number(id)).first();
+    return !!c && (c.status === "published" || (me && me.role === "admin"));
+  }
+  return true;
+}
+async function rxState(env, kind, id, me) {
+  const likes = (await env.DB.prepare("SELECT COUNT(*) AS n FROM likes WHERE kind = ? AND target = ?").bind(kind, id).first()).n;
+  const liked = me ? !!(await env.DB.prepare("SELECT 1 AS ok FROM likes WHERE kind = ? AND target = ? AND user_id = ?").bind(kind, id, me.id).first()) : false;
+  const { results } = await env.DB.prepare(
+    `SELECT c.id, c.body, c.created_at, c.user_id, u.name, u.username, u.role FROM comments c JOIN users u ON u.id = c.user_id
+     WHERE c.kind = ? AND c.target = ? ORDER BY c.id LIMIT 500`
+  ).bind(kind, id).all();
+  const comments = results.map((c) => ({
+    id: c.id, body: c.body, created_at: c.created_at, name: rxName(c), staff: c.role === "admin",
+    mine: !!me && me.id === c.user_id, can_delete: !!me && (me.id === c.user_id || me.role === "admin"),
+  }));
+  return { likes, liked, comments, can_write: !!canReadNews(me) };
+}
 const PHONE = (v) => String(v || "").replace(/\D/g, "");
 function tempPassword() {
   const abc = "abcdefghjkmnpqrstuvwxyz23456789";
@@ -308,6 +348,49 @@ export default {
       }
 
       const me = await readToken(env, req);
+
+      // 좋아요 · 댓글
+      const rxDel = /^\/api\/rx\/comments\/(\d+)$/.exec(path);
+      if (rxDel && req.method === "DELETE") {
+        if (!me) return fail(req, env, 401, "로그인이 필요합니다.");
+        const c = await env.DB.prepare("SELECT user_id FROM comments WHERE id = ?").bind(Number(rxDel[1])).first();
+        if (!c) return fail(req, env, 404, "댓글을 찾을 수 없습니다.");
+        if (c.user_id !== me.id && me.role !== "admin") return fail(req, env, 403, "직접 쓴 댓글만 지울 수 있습니다.");
+        await env.DB.prepare("DELETE FROM comments WHERE id = ?").bind(Number(rxDel[1])).run();
+        return json(req, env, { ok: true });
+      }
+      const rx = /^\/api\/rx\/(news|column|notice)\/(\d{1,20})(?:\/(like|comments))?$/.exec(path);
+      if (rx) {
+        const [, kind, rawId, sub] = rx;
+        const id = rawId.replace(/^0+(?=\d)/, "");   // 007 과 7 을 같은 글로 본다
+        // 폭스뉴스는 본문과 같이 회원만 본다
+        if (kind === "news" && !canReadNews(me)) {
+          return fail(req, env, me ? 403 : 401, !me ? "회원 로그인이 필요합니다." : me.status === "pending" ? "가입 승인 후 이용할 수 있습니다." : "권한이 없습니다.");
+        }
+        if (!sub && req.method === "GET") {
+          if (!(await rxTargetOk(env, kind, id, me))) return fail(req, env, 404, "글을 찾을 수 없습니다.");
+          return json(req, env, await rxState(env, kind, id, me));
+        }
+        if (sub && req.method === "POST") {
+          if (!me) return fail(req, env, 401, "로그인하면 좋아요와 댓글을 남길 수 있습니다.");
+          if (!canReadNews(me)) return fail(req, env, 403, me.status === "pending" ? "가입 승인 후 좋아요와 댓글을 남길 수 있습니다." : "권한이 없습니다.");
+          if (!(await rxTargetOk(env, kind, id, me))) return fail(req, env, 404, "글을 찾을 수 없습니다.");
+          if (sub === "like") {
+            const r = await env.DB.prepare("INSERT OR IGNORE INTO likes (kind, target, user_id) VALUES (?, ?, ?)").bind(kind, id, me.id).run();
+            if (!r.meta.changes) await env.DB.prepare("DELETE FROM likes WHERE kind = ? AND target = ? AND user_id = ?").bind(kind, id, me.id).run();
+            const n = (await env.DB.prepare("SELECT COUNT(*) AS n FROM likes WHERE kind = ? AND target = ?").bind(kind, id).first()).n;
+            return json(req, env, { likes: n, liked: !!r.meta.changes });
+          }
+          const b = await body(req) || {};
+          const text = typeof b.body === "string" ? b.body.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim() : "";
+          if (!text) return fail(req, env, 400, "댓글 내용을 입력해 주세요.");
+          if ([...text].length > RX_MAX_COMMENT) return fail(req, env, 400, `댓글은 ${RX_MAX_COMMENT}자까지 쓸 수 있습니다.`);
+          const recent = await env.DB.prepare("SELECT COUNT(*) AS n FROM comments WHERE user_id = ? AND created_at > datetime('now', '-1 hour')").bind(me.id).first();
+          if (recent.n >= RX_HOURLY) return fail(req, env, 429, "댓글을 너무 많이 썼습니다. 잠시 뒤에 다시 시도해 주세요.");
+          await env.DB.prepare("INSERT INTO comments (kind, target, user_id, body) VALUES (?, ?, ?, ?)").bind(kind, id, me.id, text).run();
+          return json(req, env, await rxState(env, kind, id, me), 201);
+        }
+      }
 
       if (path === "/api/columns" && req.method === "GET") {
         const all = url.searchParams.get("all") === "1" && me && me.role === "admin";
@@ -478,6 +561,8 @@ export default {
       if (col && req.method === "DELETE") {
         const no = adminOnly(); if (no) return no;
         await env.DB.prepare("DELETE FROM columns WHERE id = ?").bind(Number(col[1])).run();
+        await env.DB.prepare("DELETE FROM likes WHERE kind = 'column' AND target = ?").bind(col[1]).run();
+        await env.DB.prepare("DELETE FROM comments WHERE kind = 'column' AND target = ?").bind(col[1]).run();
         await triggerRebuild(env, ctx);
         return json(req, env, { ok: true });
       }

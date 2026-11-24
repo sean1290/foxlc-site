@@ -64,11 +64,13 @@ const articleLd = (headline, date, img, url) => ({
 
 const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const ext = 'target="_blank" rel="noopener"';
+// 좋아요 · 댓글 자리 (static/js/react.js 가 채운다. 볼 권한이 없거나 API 가 없으면 숨은 채로 둔다)
+const rxBox = (kind, id) => `<section class="rx" data-rx="${kind}" data-rx-id="${esc(id)}" aria-label="좋아요와 댓글" hidden></section>`;
 
 // ── 공통 틀 ─────────────────────────────────────────────
 // file: dist 기준 경로 (예: "about/institutes/index.html"), key: 메뉴에서 현재 위치 표시용
 const API_BASE = (process.env.FOXLC_API ?? config.apiBase ?? "").replace(/\/$/, "");
-function layout({ file, key, title, description = DESC, body, image, board, member, noindex, jsonld, ogType }) {
+function layout({ file, key, title, description = DESC, body, image, board, member, rx, noindex, jsonld, ogType }) {
   const depth = file.split("/").length - 1;
   const r = "../".repeat(depth);              // 사이트 루트로 가는 상대 경로
   const cur = (k) => (k === key ? ' aria-current="page"' : "");
@@ -199,7 +201,8 @@ ${file === "index.html" && config.popup && config.popup.enabled ? `
 <script src="${r}js/site.js" defer></script>${board ? `
 <script src="${r}js/md.js" defer></script>
 <script src="${r}js/board.js" defer></script>` : ""}${member ? `
-<script src="${r}js/member.js" defer></script>` : ""}
+<script src="${r}js/member.js" defer></script>` : ""}${rx ? `
+<script src="${r}js/react.js" defer></script>` : ""}
 </body>
 </html>
 `;
@@ -885,7 +888,7 @@ page({
 news.forEach((p, i) => {
   const newer = news[i - 1], older = news[i + 1];
   page({
-    file: `news/${p.num}/index.html`, key: "news/blog", title: p.title, member: true,
+    file: `news/${p.num}/index.html`, key: "news/blog", title: p.title, member: true, rx: true,
     ogType: "article", jsonld: articleLd(p.title, p.date.replace(/\./g, "-"), p.photos ? `news-img/${p.num}/0.jpg` : "", `news/${p.num}/`),
     description: excerpt(p), image: p.photos ? `news-img/${p.num}/0.jpg` : undefined,
     body: (r) => `
@@ -900,6 +903,7 @@ news.forEach((p, i) => {
       ${p.photos ? `<figure class="mb-cover"><img src="${r}news-img/${p.num}/0.jpg" alt="${esc(p.title)} 대표 사진"></figure>` : ""}
       <div class="mb-gate"><span class="mb-lock" aria-hidden="true"></span><h2>회원 전용 글입니다</h2><p>본문과 활동 사진은 센터에서 승인한 학부모·직원 회원만 볼 수 있습니다.</p><div class="mb-gate-act"><a class="btn navy" href="${r}member/?next=news/${p.num}/">로그인</a><a class="btn line" href="${r}member/join/">회원가입 신청</a></div></div>
     </div>
+    ${rxBox("news", p.num)}
     <div class="post-nav">
       ${older ? `<a class="btn line sm" href="${r}news/${older.num}/">← 이전 글</a>` : "<span></span>"}
       <a class="btn ghost sm" href="${r}news/">목록으로</a>
@@ -993,7 +997,7 @@ page({
 notices.forEach((n, i) => {
   const newer = notices[i - 1], older = notices[i + 1];
   page({
-    file: `notice/${n.feedId}/index.html`, key: "news/videos", title: n.title,
+    file: `notice/${n.feedId}/index.html`, key: "news/videos", title: n.title, rx: true,
     ogType: "article", jsonld: articleLd(n.title, `${n.date.slice(0, 4)}-${n.date.slice(4, 6)}-${n.date.slice(6, 8)}`, n.photos ? `naver-img/${n.feedId}/0.jpg` : "", `notice/${n.feedId}/`),
     description: noticeExcerpt(n.text), image: n.photos ? `naver-img/${n.feedId}/0.jpg` : undefined,
     body: (r) => `
@@ -1032,6 +1036,7 @@ notices.forEach((n, i) => {
       <p class="src">원문: <a href="${NAVER_FEED}" ${ext}>네이버 플레이스 소식</a></p>
     </div>
   </article>
+  <div class="rx-wrap">${rxBox("notice", n.feedId)}</div>
   <div class="post-nav">
     ${older ? `<a class="btn line sm" href="${r}notice/${older.feedId}/">← 이전 소식</a>` : "<span></span>"}
     <a class="btn ghost sm" href="${r}videos/#notices">목록으로</a>
@@ -1113,7 +1118,7 @@ page({
 columns.forEach((c, i) => {
   const newer = columns[i - 1], older = columns[i + 1];
   page({
-    file: `column/${c.id}/index.html`, key: "news/column", title: c.title, board: true,
+    file: `column/${c.id}/index.html`, key: "news/column", title: c.title, board: true, rx: true,
     description: mdPlain(c.body, 140), image: undefined,
     ogType: "article", jsonld: { ...articleLd(c.title, c.published, "", `column/${c.id}/`), image: [c.cover || SITE + "/img/hero.jpg"], author: { "@type": "Person", name: c.author || "폭스러닝센터" } },
     body: (r) => `
@@ -1127,6 +1132,7 @@ columns.forEach((c, i) => {
     </div>
     <div class="col-body">${renderMd(c.body)}</div>
     <div class="col-admin" hidden></div>
+    ${rxBox("column", c.id)}
     <div class="post-nav">
       ${older ? `<a class="btn line sm" href="${r}column/${older.id}/">← 이전 글</a>` : "<span></span>"}
       <a class="btn ghost sm" href="${r}column/">목록으로</a>
@@ -1137,7 +1143,7 @@ columns.forEach((c, i) => {
   });
 });
 page({
-  file: "column/view/index.html", key: "news/column", title: "SEL 칼럼", board: true, noindex: true,
+  file: "column/view/index.html", key: "news/column", title: "SEL 칼럼", board: true, rx: true, noindex: true,
   body: () => `<div class="page-body" style="padding-top:56px"><div class="wrap">
   <article class="post col-post" id="colView"><p class="rc-empty">불러오는 중입니다…</p></article>
 </div></div>`,
