@@ -52,6 +52,8 @@ button,input,textarea{font:inherit;color:inherit}
 .sub small{color:var(--ink3);font-size:12px;margin-left:4px}
 .sub-toggle,.menu-btn{display:none}
 .nav-cta{margin-left:12px}
+.nav-login+.nav-cta{margin-left:8px}
+.nav-login[aria-current]{border-color:var(--navy)}
 
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 22px;border-radius:999px;
@@ -971,6 +973,7 @@ body:has(.inst-modal[open]){overflow:hidden}
   .nav-item:hover>.sub,.nav-item:focus-within>.sub{display:none}
   .nav-item.open>.sub{display:block}
   .nav-cta{margin:16px 0 0}
+  .nav-login+.nav-cta{margin:8px 0 0}
   .about,.growth,.contact{grid-template-columns:1fr;gap:36px}
   .inst-grid{grid-template-columns:1fr 1fr}
   .foot-grid{grid-template-columns:1fr 1fr}

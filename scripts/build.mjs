@@ -147,6 +147,7 @@ ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg
       </div>
       <div class="nav-item"><a class="nav-top ext" href="${CAMP_URL}" ${ext}>글로벌캠프</a></div>
       <div class="nav-item"><a class="nav-top ext" href="${INST_URL}" ${ext}>기관 체험</a></div>
+      <a class="btn line sm nav-cta nav-login" href="${r}member/"${key === "member" ? ' aria-current="page"' : ""}>로그인</a>
       <a class="btn navy sm nav-cta" href="${r}#contact">문의하기</a>
     </nav>
   </div>
@@ -179,7 +180,7 @@ ${body(r)}
       <a href="https://foxconnect.kr/index.do" ${ext}>FOX CONNECT</a>
       <a href="https://www.growxeducation.com/sel" ${ext}>Grow X Education</a>
     </nav>
-    <div class="copy"><span>© 2026 폭스러닝센터</span><span class="foot-links"><a class="privacy-link" href="${r}member/">학부모 로그인</a><a class="privacy-link" href="${r}sitemap/">사이트맵</a><a class="privacy-link" href="${r}recruit/">채용공고</a><a class="privacy-link" href="${r}privacy/">개인정보처리방침</a></span></div>
+    <div class="copy"><span>© 2026 폭스러닝센터</span><span class="foot-links"><a class="privacy-link" href="${r}sitemap/">사이트맵</a><a class="privacy-link" href="${r}recruit/">채용공고</a><a class="privacy-link" href="${r}privacy/">개인정보처리방침</a><a class="privacy-link" href="${r}admin/">관리자</a></span></div>
   </div>
 </footer>
 ${file === "index.html" && config.popup && config.popup.enabled ? `
@@ -928,11 +929,11 @@ page({
     <label><span>비밀번호 확인 <i>*</i></span><input name="password2" type="password" autocomplete="new-password" minlength="8" required></label>
     <label><span>보호자 이름 <i>*</i></span><input name="name" autocomplete="name" maxlength="20" required></label>
     <label><span>연락처 <i>*</i></span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="13" required placeholder="010-0000-0000"></label>
-    <label class="full"><span>자녀 이름 · 수강 프로그램 <i>*</i></span><input name="child" maxlength="60" required placeholder="예: 홍길동 (SEL 연구소 화요일반)"></label>
+    <label class="full"><span>자녀 이름 <i>*</i></span><input name="child" maxlength="60" required placeholder="예: 홍길동 (자녀가 여럿이면 쉼표로 구분)"></label>
     <input class="mb-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
     <div class="full consent">
       <label><input type="checkbox" name="consent" required> <span><b>개인정보 수집·이용에 동의합니다. (필수)</b></span></label>
-      <p>수집 항목: 아이디, 비밀번호(암호화 저장), 보호자 이름, 연락처, 자녀 이름·수강 프로그램 · 목적: 학부모 확인 및 회원 전용 게시물 제공 · 보유 기간: 회원 탈퇴 시까지(탈퇴 즉시 삭제). 동의하지 않으실 수 있으며, 이 경우 회원 전용 게시물을 보실 수 없습니다. <a href="${r}privacy/">개인정보처리방침 보기</a></p>
+      <p>수집 항목: 아이디, 비밀번호(암호화 저장), 보호자 이름, 연락처, 자녀 이름 · 목적: 학부모 확인 및 회원 전용 게시물 제공 · 보유 기간: 회원 탈퇴 시까지(탈퇴 즉시 삭제). 동의하지 않으실 수 있으며, 이 경우 회원 전용 게시물을 보실 수 없습니다. <a href="${r}privacy/">개인정보처리방침 보기</a></p>
     </div>
     <div class="full rc-form-actions"><button class="btn navy" type="submit">가입 신청</button><a class="btn line" href="${r}member/">이미 회원이에요</a></div>
     <div class="full rc-msg" role="status"></div>
@@ -1327,7 +1328,7 @@ page({
         <ul><li><b>홈페이지 문의 처리:</b> 문의 내용 확인, 답변 및 상담 안내를 위한 연락</li><li><b>학부모 회원 관리:</b> 센터 학부모 여부 확인, 회원 전용 게시물(폭스뉴스) 제공, 회원 문의 대응</li></ul>`],
       ["처리하는 개인정보 항목", `<table class="pv-table"><thead><tr><th>구분</th><th>항목</th><th>수집 방법</th></tr></thead>
         <tbody><tr><td>홈페이지 문의</td><td>이름, 연락처(전화번호), 문의 내용</td><td>홈페이지 '문의하기' 양식에 이용자가 직접 입력</td></tr>
-        <tr><td>학부모 회원</td><td>아이디, 비밀번호(암호화하여 저장), 보호자 이름, 연락처(전화번호), 자녀 이름·수강 프로그램</td><td>홈페이지 '학부모 회원가입' 양식에 이용자가 직접 입력</td></tr></tbody></table>
+        <tr><td>학부모 회원</td><td>아이디, 비밀번호(암호화하여 저장), 보호자 이름, 연락처(전화번호), 자녀 이름</td><td>홈페이지 '학부모 회원가입' 양식에 이용자가 직접 입력</td></tr></tbody></table>
         <p>센터는 위 항목 외의 개인정보를 수집하지 않습니다. '감정체크 체험' 화면에 입력한 내용은 어디에도 전송·저장되지 않습니다.</p>`],
       ["처리 및 보유 기간", `<p>센터는 이용자의 동의를 받은 기간 동안 개인정보를 처리·보유합니다.</p>
         <ul><li><b>홈페이지 문의:</b> 문의 처리 완료 후 <b>1년</b>까지 보관 후 파기합니다. 다만 이용자가 삭제를 요청하면 지체 없이 파기합니다.</li><li><b>학부모 회원:</b> 회원 탈퇴 시까지 보관하며, 탈퇴하거나 가입 신청이 승인되지 않으면 지체 없이 파기합니다. 회원은 '학부모 로그인' 화면에서 언제든지 직접 탈퇴할 수 있습니다.</li></ul>`],

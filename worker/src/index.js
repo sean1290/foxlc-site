@@ -256,7 +256,7 @@ export default {
         const name = str(b.name, 20), child = str(b.child, 60), phone = PHONE(b.phone);
         if (!name) return fail(req, env, 400, "보호자 이름을 입력해 주세요.");
         if (!/^0\d{8,10}$/.test(phone)) return fail(req, env, 400, "연락처를 정확히 입력해 주세요.");
-        if (!child) return fail(req, env, 400, "자녀 이름(또는 반·프로그램)을 입력해 주세요.");
+        if (!child) return fail(req, env, 400, "자녀 이름을 입력해 주세요.");
         if (b.consent !== true) return fail(req, env, 400, "개인정보 수집·이용에 동의해 주세요.");
         const recent = await env.DB.prepare("SELECT COUNT(*) AS n FROM users WHERE role = 'member' AND created_at > datetime('now', '-1 hour')").first();
         if (recent.n >= 30) return fail(req, env, 429, "가입 신청이 많습니다. 잠시 뒤에 다시 시도해 주세요.");

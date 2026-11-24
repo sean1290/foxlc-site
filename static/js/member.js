@@ -171,7 +171,7 @@
       if (!/^[a-z0-9._-]{4,30}$/.test(f.username.value.trim().toLowerCase())) return msg(m, "아이디는 영문 소문자·숫자·._- 4~30자로 정해 주세요.", true);
       if (f.password.value.length < 8) return msg(m, "비밀번호는 8자 이상이어야 합니다.", true);
       if (f.password.value !== f.password2.value) return msg(m, "비밀번호 확인이 일치하지 않습니다.", true);
-      if (!f.name.value.trim() || !f.child.value.trim()) return msg(m, "보호자 이름과 자녀 이름(수강 프로그램)을 입력해 주세요.", true);
+      if (!f.name.value.trim() || !f.child.value.trim()) return msg(m, "보호자 이름과 자녀 이름을 입력해 주세요.", true);
       if (!/^0\d{8,10}$/.test(f.phone.value.replace(/\D/g, ""))) return msg(m, "연락처를 정확히 입력해 주세요.", true);
       if (!f.consent.checked) return msg(m, "개인정보 수집·이용에 동의해 주세요.", true);
       msg(m, "신청하는 중입니다…"); $("button[type=submit]", f).disabled = true;
@@ -217,7 +217,7 @@
         el("span", { class: "mb-badge", text: st }),
         el("div", { class: "mb-row-info" }, [
           el("b", { text: m.name }), el("span", { text: " · " + phoneFmt(m.phone) + " · 아이디 " + m.username }),
-          el("small", { text: "자녀·프로그램: " + m.child + " · 신청 " + (m.created_at || "").slice(0, 16) })
+          el("small", { text: "자녀: " + m.child + " · 신청 " + (m.created_at || "").slice(0, 16) })
         ]),
         acts
       ]);
