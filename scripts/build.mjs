@@ -1263,31 +1263,39 @@ page({
   file: "admin/index.html", key: "admin", title: "관리자", board: true, member: true, noindex: true,
   body: () => `<div class="page-head"><div class="wrap"><div class="eyebrow">ADMIN</div><h1>관리자</h1></div></div>
 <div class="page-body"><div class="wrap">
-  <div class="rc-admin" id="rcAdmin"><p class="rc-empty">확인 중입니다…</p></div>
-  <section class="mb-admin" id="mbAdmin" hidden aria-labelledby="mbAdminT"><h2 id="mbAdminT">회원 승인 <span class="mb-count" id="mbCount"></span></h2><p class="mb-admin-help">가입 신청한 분이 센터 학부모·직원이 맞는지 확인한 뒤 승인해 주세요. 승인된 회원만 폭스뉴스 본문을 볼 수 있습니다. 승인된 직원에게는 '관리자 지정'으로 글쓰기·회원 승인 권한을 줄 수 있습니다.</p><div class="mb-tabs" id="mbTabs" role="tablist"></div><div id="mbList"></div></section>
+  <div class="adm-layout">
+    <div class="adm-main">
+      <section class="mb-admin" id="mbAdmin" hidden aria-labelledby="mbAdminT"><h2 id="mbAdminT">회원 승인 <span class="mb-count" id="mbCount"></span></h2><p class="mb-admin-help">가입 신청한 분이 센터 학부모·직원이 맞는지 확인한 뒤 승인해 주세요. 승인된 회원만 폭스뉴스 본문을 볼 수 있습니다. 승인된 직원에게는 '관리자 지정'으로 글쓰기·회원 승인 권한을 줄 수 있습니다.</p><div class="mb-tabs" id="mbTabs" role="tablist"></div><div id="mbList"></div></section>
+    </div>
+    <aside class="adm-side" aria-label="계정 설정">
+      <div class="rc-admin" id="rcAdmin"><p class="rc-empty">확인 중입니다…</p></div>
+    </aside>
+  </div>
   <template id="rcAdminTpl">
     <p class="rc-who">로그인: <b id="rcWho"></b> <button class="btn line sm" id="rcLogout" type="button">로그아웃</button></p>
     <p class="rc-first" id="rcFirst" hidden>처음 로그인하셨습니다. 아래에서 <b>비밀번호를 먼저 바꿔 주세요.</b></p>
-    <div class="rc-panels">
+    <details class="rc-fold" id="rcPwFold">
+      <summary>비밀번호 변경</summary>
       <form class="rc-panel" id="rcPw">
-        <h2>비밀번호 변경</h2>
         <label>현재 비밀번호<input name="current" type="password" autocomplete="current-password" required></label>
         <label>새 비밀번호 (8자 이상)<input name="next" type="password" autocomplete="new-password" minlength="8" required></label>
         <label>새 비밀번호 확인<input name="next2" type="password" autocomplete="new-password" minlength="8" required></label>
         <button class="btn navy sm" type="submit">변경</button>
         <div class="rc-msg" role="status"></div>
       </form>
+    </details>
+    <details class="rc-fold">
+      <summary>관리자 추가 · 계정 목록</summary>
       <form class="rc-panel" id="rcAdd">
-        <h2>관리자 추가</h2>
         <label>아이디 (영문 소문자·숫자)<input name="username" pattern="[a-z0-9._-]{3,40}" required></label>
         <label>이름<input name="name" maxlength="40"></label>
         <label>임시 비밀번호 (8자 이상)<input name="password" type="text" minlength="8" required></label>
         <button class="btn navy sm" type="submit">추가</button>
         <div class="rc-msg" role="status"></div>
-        <h3>계정 목록</h3>
+        <h3>관리자 계정</h3>
         <ul id="rcUsers" class="rc-users"></ul>
       </form>
-    </div>
+    </details>
   </template>
 </div></div>`,
 });

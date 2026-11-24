@@ -189,7 +189,7 @@
       var tpl = $("#rcAdminTpl").content.cloneNode(true);
       admin.innerHTML = ""; admin.appendChild(tpl);
       $("#rcWho").textContent = (u.name ? u.name + " · " : "") + u.username;
-      if (u.must_change) $("#rcFirst").hidden = false;
+      if (u.must_change) { $("#rcFirst").hidden = false; $("#rcPwFold").open = true; }
       var pw = $("#rcPw");
       pw.onsubmit = function (e) {
         e.preventDefault();
