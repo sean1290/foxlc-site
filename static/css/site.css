@@ -1338,3 +1338,6 @@ body:has(.inst-modal[open]){overflow:hidden}
 .st-foot{font-size:12.5px;color:var(--ink3)}
 @media (max-width:1100px){.st-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:700px){.st-kpis{grid-template-columns:1fr 1fr}.st-grid2{grid-template-columns:1fr}.st-kpi b{font-size:24px}}
+
+/* 사진 보호: 길게 눌러 저장(휴대폰) · 끌기 · 선택 막기 */
+img{-webkit-user-drag:none;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}

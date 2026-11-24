@@ -154,6 +154,13 @@
       }, function () {});
   })();
 
+  /* ── 사진 보호: 우클릭 메뉴 · 끌어다 저장 막기 ── */
+  (function () {
+    var isPic = function (t) { return t && t.closest && t.closest("img, picture, figure, video, canvas, .gallery, .fac-tile, .np-stage, .promo-stage, .thumb, .poster, .col-thumb"); };
+    document.addEventListener("contextmenu", function (e) { if (isPic(e.target)) e.preventDefault(); });
+    document.addEventListener("dragstart", function (e) { if (e.target && e.target.tagName === "IMG") e.preventDefault(); });
+  })();
+
   /* ── 방문 기록 (쿠키 없음 · 관리자 화면 방문 통계용) ── */
   (function () {
     var api = (document.querySelector('meta[name="foxlc-api"]') || {}).content || "";
