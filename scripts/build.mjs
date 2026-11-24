@@ -866,7 +866,7 @@ page({
   <p>폭스러닝센터 연구소들의 활동 소식을 전합니다</p>
 </div></div>
 <div class="page-body"><div class="wrap">
-  <div class="mb-note" id="mbNote"><span class="mb-lock" aria-hidden="true"></span><p><b>폭스뉴스 본문은 학부모 회원만 볼 수 있습니다.</b> 아이들의 활동 사진이 담겨 있어 센터에서 승인한 학부모님께만 공개합니다.</p><span class="mb-note-act"><a class="btn navy sm" href="${r}member/?next=news/">로그인</a><a class="btn line sm" href="${r}member/join/">회원가입</a></span></div>
+  <div class="mb-note" id="mbNote"><span class="mb-lock" aria-hidden="true"></span><p><b>폭스뉴스 본문은 회원만 볼 수 있습니다.</b> 아이들의 활동 사진이 담겨 있어 센터에서 승인한 학부모님과 직원에게만 공개합니다.</p><span class="mb-note-act"><a class="btn navy sm" href="${r}member/?next=news/">로그인</a><a class="btn line sm" href="${r}member/join/">회원가입</a></span></div>
   <div class="grid3" id="newsGrid">
     ${news.map((p, i) => `<a class="card post-card" href="${r}news/${p.num}/"${i >= 9 ? " hidden" : ""}>
       <div class="thumb">${p.photos ? `<img src="${r}news-img/${p.num}/0.jpg" alt="" loading="lazy">` : ""}</div>
@@ -898,7 +898,7 @@ news.forEach((p, i) => {
     </div>
     <div class="mb-news" id="mbNews" data-num="${p.num}">
       ${p.photos ? `<figure class="mb-cover"><img src="${r}news-img/${p.num}/0.jpg" alt="${esc(p.title)} 대표 사진"></figure>` : ""}
-      <div class="mb-gate"><span class="mb-lock" aria-hidden="true"></span><h2>학부모 회원 전용 글입니다</h2><p>본문과 활동 사진은 센터에서 승인한 학부모 회원만 볼 수 있습니다.</p><div class="mb-gate-act"><a class="btn navy" href="${r}member/?next=news/${p.num}/">학부모 로그인</a><a class="btn line" href="${r}member/join/">회원가입 신청</a></div></div>
+      <div class="mb-gate"><span class="mb-lock" aria-hidden="true"></span><h2>회원 전용 글입니다</h2><p>본문과 활동 사진은 센터에서 승인한 학부모·직원 회원만 볼 수 있습니다.</p><div class="mb-gate-act"><a class="btn navy" href="${r}member/?next=news/${p.num}/">로그인</a><a class="btn line" href="${r}member/join/">회원가입 신청</a></div></div>
     </div>
     <div class="post-nav">
       ${older ? `<a class="btn line sm" href="${r}news/${older.num}/">← 이전 글</a>` : "<span></span>"}
@@ -910,30 +910,35 @@ news.forEach((p, i) => {
   });
 });
 
-// ── 학부모 회원 (로그인 · 가입 신청) ─────────────────────
+// ── 회원 (학부모 · 직원: 로그인 · 가입 신청) ─────────────────────
 page({
-  file: "member/index.html", key: "member", title: "학부모 로그인", member: true, noindex: true,
-  body: (r) => `<div class="page-head"><div class="wrap"><div class="eyebrow">PARENTS</div><h1>학부모 로그인</h1><p>폭스뉴스 본문과 활동 사진은 승인된 학부모 회원만 볼 수 있습니다</p></div></div>
+  file: "member/index.html", key: "member", title: "로그인", member: true, noindex: true,
+  body: (r) => `<div class="page-head"><div class="wrap"><div class="eyebrow">MEMBERS</div><h1>로그인</h1><p>학부모·직원 회원 로그인 · 폭스뉴스 본문과 활동 사진은 승인된 회원만 볼 수 있습니다</p></div></div>
 <div class="page-body"><div class="wrap">
   <div class="mb-box" id="mbHome"><p class="rc-empty">확인 중입니다…</p></div>
 </div></div>`,
 });
 page({
-  file: "member/join/index.html", key: "member", title: "학부모 회원가입", member: true, noindex: true,
-  body: (r) => `<div class="page-head"><div class="wrap"><div class="eyebrow">PARENTS</div><h1>학부모 회원가입</h1><p>가입 신청 후 센터에서 확인하고 승인해 드립니다</p></div></div>
+  file: "member/join/index.html", key: "member", title: "회원가입", member: true, noindex: true,
+  body: (r) => `<div class="page-head"><div class="wrap"><div class="eyebrow">MEMBERS</div><h1>회원가입</h1><p>가입 신청 후 센터에서 확인하고 승인해 드립니다</p></div></div>
 <div class="page-body"><div class="wrap">
   <form class="mb-box rc-form mb-join" id="mbJoin" novalidate>
     <ol class="mb-steps"><li class="on">가입 신청</li><li>센터 확인 · 승인</li><li>폭스뉴스 열람</li></ol>
+    <fieldset class="full mb-kind"><legend>가입 유형 <i>*</i></legend>
+      <label><input type="radio" name="kind" value="parent" checked><span><b>학부모</b><small>센터에 다니는 아이의 보호자</small></span></label>
+      <label><input type="radio" name="kind" value="staff"><span><b>직원</b><small>폭스러닝센터 연구원·선생님·직원</small></span></label>
+    </fieldset>
     <label class="full"><span>아이디 <i>*</i></span><input name="username" autocomplete="username" pattern="[a-z0-9._\\-]{4,30}" maxlength="30" required placeholder="영문 소문자·숫자 4~30자"></label>
     <label><span>비밀번호 <i>*</i></span><input name="password" type="password" autocomplete="new-password" minlength="8" required placeholder="8자 이상"></label>
     <label><span>비밀번호 확인 <i>*</i></span><input name="password2" type="password" autocomplete="new-password" minlength="8" required></label>
-    <label><span>보호자 이름 <i>*</i></span><input name="name" autocomplete="name" maxlength="20" required></label>
+    <label><span class="mb-name-l">보호자 이름 <i>*</i></span><input name="name" autocomplete="name" maxlength="20" required></label>
     <label><span>연락처 <i>*</i></span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="13" required placeholder="010-0000-0000"></label>
-    <label class="full"><span>자녀 이름 <i>*</i></span><input name="child" maxlength="60" required placeholder="예: 홍길동 (자녀가 여럿이면 쉼표로 구분)"></label>
+    <label class="full mb-f-parent"><span>자녀 이름 <i>*</i></span><input name="child" maxlength="60" placeholder="예: 홍길동 (자녀가 여럿이면 쉼표로 구분)"></label>
+    <label class="full mb-f-staff" hidden><span>소속 · 담당 <i>*</i></span><input name="dept" maxlength="60" placeholder="예: SEL 연구소 연구원"></label>
     <input class="mb-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
     <div class="full consent">
       <label><input type="checkbox" name="consent" required> <span><b>개인정보 수집·이용에 동의합니다. (필수)</b></span></label>
-      <p>수집 항목: 아이디, 비밀번호(암호화 저장), 보호자 이름, 연락처, 자녀 이름 · 목적: 학부모 확인 및 회원 전용 게시물 제공 · 보유 기간: 회원 탈퇴 시까지(탈퇴 즉시 삭제). 동의하지 않으실 수 있으며, 이 경우 회원 전용 게시물을 보실 수 없습니다. <a href="${r}privacy/">개인정보처리방침 보기</a></p>
+      <p>수집 항목: 아이디, 비밀번호(암호화 저장), 이름(학부모는 보호자 이름), 연락처, 자녀 이름(학부모) 또는 소속·담당(직원) · 목적: 학부모·직원 확인 및 회원 전용 게시물 제공 · 보유 기간: 회원 탈퇴 시까지(탈퇴 즉시 삭제). 동의하지 않으실 수 있으며, 이 경우 회원 전용 게시물을 보실 수 없습니다. <a href="${r}privacy/">개인정보처리방침 보기</a></p>
     </div>
     <div class="full rc-form-actions"><button class="btn navy" type="submit">가입 신청</button><a class="btn line" href="${r}member/">이미 회원이에요</a></div>
     <div class="full rc-msg" role="status"></div>
@@ -1259,7 +1264,7 @@ page({
   body: () => `<div class="page-head"><div class="wrap"><div class="eyebrow">ADMIN</div><h1>관리자</h1></div></div>
 <div class="page-body"><div class="wrap">
   <div class="rc-admin" id="rcAdmin"><p class="rc-empty">확인 중입니다…</p></div>
-  <section class="mb-admin" id="mbAdmin" hidden aria-labelledby="mbAdminT"><h2 id="mbAdminT">학부모 회원 <span class="mb-count" id="mbCount"></span></h2><p class="mb-admin-help">가입 신청한 분이 센터 학부모가 맞는지 확인한 뒤 승인해 주세요. 승인된 회원만 폭스뉴스 본문을 볼 수 있습니다.</p><div id="mbList"></div></section>
+  <section class="mb-admin" id="mbAdmin" hidden aria-labelledby="mbAdminT"><h2 id="mbAdminT">회원 승인 <span class="mb-count" id="mbCount"></span></h2><p class="mb-admin-help">가입 신청한 분이 센터 학부모·직원이 맞는지 확인한 뒤 승인해 주세요. 승인된 회원만 폭스뉴스 본문을 볼 수 있습니다. 승인된 직원에게는 '관리자 지정'으로 글쓰기·회원 승인 권한을 줄 수 있습니다.</p><div class="mb-tabs" id="mbTabs" role="tablist"></div><div id="mbList"></div></section>
   <template id="rcAdminTpl">
     <p class="rc-who">로그인: <b id="rcWho"></b> <button class="btn line sm" id="rcLogout" type="button">로그아웃</button></p>
     <p class="rc-first" id="rcFirst" hidden>처음 로그인하셨습니다. 아래에서 <b>비밀번호를 먼저 바꿔 주세요.</b></p>
@@ -1325,19 +1330,20 @@ page({
     const sec = (n, title, html) => `<section class="pv-sec" id="pv-${n}"><h2>제${n}조 (${title})</h2>${html}</section>`;
     const sections = [
       ["처리 목적", `<p>폭스러닝센터(이하 '센터')는 다음의 목적을 위하여 개인정보를 처리합니다. 처리한 개인정보는 다음 목적 이외의 용도로 이용하지 않으며, 목적이 바뀌는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 하겠습니다.</p>
-        <ul><li><b>홈페이지 문의 처리:</b> 문의 내용 확인, 답변 및 상담 안내를 위한 연락</li><li><b>학부모 회원 관리:</b> 센터 학부모 여부 확인, 회원 전용 게시물(폭스뉴스) 제공, 회원 문의 대응</li></ul>`],
+        <ul><li><b>홈페이지 문의 처리:</b> 문의 내용 확인, 답변 및 상담 안내를 위한 연락</li><li><b>회원 관리(학부모·직원):</b> 센터 학부모·직원 여부 확인, 회원 전용 게시물(폭스뉴스) 제공, 회원 문의 대응</li></ul>`],
       ["처리하는 개인정보 항목", `<table class="pv-table"><thead><tr><th>구분</th><th>항목</th><th>수집 방법</th></tr></thead>
         <tbody><tr><td>홈페이지 문의</td><td>이름, 연락처(전화번호), 문의 내용</td><td>홈페이지 '문의하기' 양식에 이용자가 직접 입력</td></tr>
-        <tr><td>학부모 회원</td><td>아이디, 비밀번호(암호화하여 저장), 보호자 이름, 연락처(전화번호), 자녀 이름</td><td>홈페이지 '학부모 회원가입' 양식에 이용자가 직접 입력</td></tr></tbody></table>
+        <tr><td>학부모 회원</td><td>아이디, 비밀번호(암호화하여 저장), 보호자 이름, 연락처(전화번호), 자녀 이름</td><td>홈페이지 '회원가입' 양식에 이용자가 직접 입력</td></tr>
+        <tr><td>직원 회원</td><td>아이디, 비밀번호(암호화하여 저장), 이름, 연락처(전화번호), 소속·담당</td><td>홈페이지 '회원가입' 양식에 이용자가 직접 입력</td></tr></tbody></table>
         <p>센터는 위 항목 외의 개인정보를 수집하지 않습니다. '감정체크 체험' 화면에 입력한 내용은 어디에도 전송·저장되지 않습니다.</p>`],
       ["처리 및 보유 기간", `<p>센터는 이용자의 동의를 받은 기간 동안 개인정보를 처리·보유합니다.</p>
-        <ul><li><b>홈페이지 문의:</b> 문의 처리 완료 후 <b>1년</b>까지 보관 후 파기합니다. 다만 이용자가 삭제를 요청하면 지체 없이 파기합니다.</li><li><b>학부모 회원:</b> 회원 탈퇴 시까지 보관하며, 탈퇴하거나 가입 신청이 승인되지 않으면 지체 없이 파기합니다. 회원은 '학부모 로그인' 화면에서 언제든지 직접 탈퇴할 수 있습니다.</li></ul>`],
+        <ul><li><b>홈페이지 문의:</b> 문의 처리 완료 후 <b>1년</b>까지 보관 후 파기합니다. 다만 이용자가 삭제를 요청하면 지체 없이 파기합니다.</li><li><b>학부모·직원 회원:</b> 회원 탈퇴 시까지 보관하며, 탈퇴하거나 가입 신청이 승인되지 않으면 지체 없이 파기합니다. 회원은 '로그인' 화면에서 언제든지 직접 탈퇴할 수 있습니다.</li></ul>`],
       ["제3자 제공", `<p>센터는 이용자의 개인정보를 제1조의 목적 범위 안에서만 처리하며, 이용자의 동의나 법률의 특별한 규정 등 「개인정보 보호법」 제17조 및 제18조에 해당하는 경우를 제외하고는 제3자에게 제공하지 않습니다.</p>`],
       ["처리 위탁 및 국외 이전", `<p>센터는 홈페이지 문의 내용을 안전하게 보관하기 위하여 다음과 같이 개인정보 처리 업무를 위탁하고 있습니다.</p>
         <table class="pv-table"><thead><tr><th>수탁자</th><th>위탁 업무</th><th>이전 국가</th></tr></thead>
         <tbody><tr><td>Google LLC</td><td>문의 내용 저장(Google 스프레드시트) 및 알림 메일 발송</td><td>미국 등 Google 데이터센터 소재 국가 (문의 접수 시 네트워크를 통해 전송)</td></tr>
-        <tr><td>Cloudflare, Inc.</td><td>학부모 회원 정보 및 회원 전용 게시물 저장(Cloudflare Workers · D1)</td><td>미국 등 Cloudflare 데이터센터 소재 국가 (회원가입·로그인 시 네트워크를 통해 전송)</td></tr></tbody></table>
-        <p>이전되는 항목은 문의의 경우 이름, 연락처, 문의 내용이고, 학부모 회원의 경우 제2조의 회원 항목이며, 보유 기간은 제3조와 같습니다. 국외 이전을 원하지 않으시면 온라인 문의 대신 전화(1433-2700)나 카카오톡(FOX_LC)으로 문의하실 수 있습니다.</p>`],
+        <tr><td>Cloudflare, Inc.</td><td>회원(학부모·직원) 정보 및 회원 전용 게시물 저장(Cloudflare Workers · D1)</td><td>미국 등 Cloudflare 데이터센터 소재 국가 (회원가입·로그인 시 네트워크를 통해 전송)</td></tr></tbody></table>
+        <p>이전되는 항목은 문의의 경우 이름, 연락처, 문의 내용이고, 회원의 경우 제2조의 회원 항목이며, 보유 기간은 제3조와 같습니다. 국외 이전을 원하지 않으시면 온라인 문의 대신 전화(1433-2700)나 카카오톡(FOX_LC)으로 문의하실 수 있습니다.</p>`],
       ["파기 절차 및 방법", `<p>센터는 보유 기간이 지나거나 처리 목적이 달성된 개인정보를 지체 없이 파기합니다. 전자적 파일 형태의 정보는 복구할 수 없는 방법으로 삭제하고, 종이에 출력된 정보는 분쇄하거나 소각합니다.</p>`],
       ["정보주체의 권리와 행사 방법", `<p>이용자는 언제든지 센터에 대해 개인정보 열람, 정정, 삭제, 처리 정지를 요구할 수 있습니다. 권리 행사는 전화(1433-2700) 또는 카카오톡(FOX_LC)으로 하실 수 있으며, 센터는 지체 없이 조치하겠습니다. 법정대리인이나 위임을 받은 사람을 통해서도 하실 수 있습니다.</p>`],
       ["만 14세 미만 아동의 개인정보", `<p>센터 홈페이지의 문의 양식은 보호자(학부모) 또는 기관 담당자를 대상으로 합니다. 만 14세 미만 아동이 문의하려는 경우에는 보호자가 대신 문의해 주시기 바랍니다.</p>`],

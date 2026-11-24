@@ -15,10 +15,10 @@
 //            POST/PUT/DELETE /api/columns[/:id]   관리자
 //            POST /api/images              사진 올리기 (관리자, 본문 = 이미지 바이트)
 //            GET  /api/images/:id          사진 보기 (공개, 오래 캐시)
-//  학부모    POST /api/members/signup      가입 신청 (관리자 승인 후 이용)
+//  회원      POST /api/members/signup      가입 신청 { kind: parent|staff } (관리자 승인 후 이용)
 //            DELETE /api/members/me        회원 탈퇴 { password }
 //            GET  /api/admin/members       학부모 회원 목록 (관리자)
-//            POST /api/admin/members/:id/(approve|reject|reset)   승인 · 거절 · 임시 비밀번호
+//            POST /api/admin/members/:id/(approve|reject|reset|promote)   승인 · 거절 · 임시 비밀번호 · 관리자 권한(직원)
 //            DELETE /api/admin/members/:id 회원 삭제 (관리자)
 //  폭스뉴스  GET  /api/news/:num           본문 (승인된 학부모 · 관리자)
 //            GET  /api/news/:num/photo/:i  사진 (승인된 학부모 · 관리자)
@@ -86,7 +86,7 @@ async function readToken(env, req) {
   const p = JSON.parse(new TextDecoder().decode(fromB64u(m[1])));
   if (!p.exp || p.exp < Date.now()) return null;
   // 역할은 매번 DB에서 다시 읽는다 (권한이 바뀌거나 계정이 지워지면 바로 반영)
-  return env.DB.prepare("SELECT id, username, name, role, must_change, status FROM users WHERE id = ?").bind(p.uid).first();
+  return env.DB.prepare("SELECT id, username, name, role, must_change, status, kind FROM users WHERE id = ?").bind(p.uid).first();
 }
 
 // ── 입력 검사 ───────────────────────────────────────────
@@ -253,18 +253,21 @@ export default {
         if (!/^[a-z0-9._-]{4,30}$/.test(username)) return fail(req, env, 400, "아이디는 영문 소문자·숫자·._- 4~30자로 정해 주세요.");
         const password = typeof b.password === "string" ? b.password : "";
         if (password.length < 8 || password.length > 100) return fail(req, env, 400, "비밀번호는 8자 이상이어야 합니다.");
-        const name = str(b.name, 20), child = str(b.child, 60), phone = PHONE(b.phone);
-        if (!name) return fail(req, env, 400, "보호자 이름을 입력해 주세요.");
+        const kind = b.kind === "staff" ? "staff" : "parent";
+        const name = str(b.name, 20), phone = PHONE(b.phone);
+        const child = kind === "parent" ? str(b.child, 60) : "", dept = kind === "staff" ? str(b.dept, 60) : "";
+        if (!name) return fail(req, env, 400, kind === "staff" ? "이름을 입력해 주세요." : "보호자 이름을 입력해 주세요.");
         if (!/^0\d{8,10}$/.test(phone)) return fail(req, env, 400, "연락처를 정확히 입력해 주세요.");
-        if (!child) return fail(req, env, 400, "자녀 이름을 입력해 주세요.");
+        if (kind === "parent" && !child) return fail(req, env, 400, "자녀 이름을 입력해 주세요.");
+        if (kind === "staff" && !dept) return fail(req, env, 400, "소속(연구소·담당)을 입력해 주세요.");
         if (b.consent !== true) return fail(req, env, 400, "개인정보 수집·이용에 동의해 주세요.");
         const recent = await env.DB.prepare("SELECT COUNT(*) AS n FROM users WHERE role = 'member' AND created_at > datetime('now', '-1 hour')").first();
         if (recent.n >= 30) return fail(req, env, 429, "가입 신청이 많습니다. 잠시 뒤에 다시 시도해 주세요.");
         const h = await hashPassword(password);
         try {
           await env.DB.prepare(
-            "INSERT INTO users (username, name, pw_salt, pw_hash, role, must_change, status, phone, child, consent_at) VALUES (?, ?, ?, ?, 'member', 0, 'pending', ?, ?, datetime('now'))"
-          ).bind(username, name, h.salt, h.hash, phone, child).run();
+            "INSERT INTO users (username, name, pw_salt, pw_hash, role, must_change, status, phone, child, dept, kind, consent_at) VALUES (?, ?, ?, ?, 'member', 0, 'pending', ?, ?, ?, ?, datetime('now'))"
+          ).bind(username, name, h.salt, h.hash, phone, child, dept, kind).run();
         } catch {
           return fail(req, env, 409, "이미 사용 중인 아이디입니다.");
         }
@@ -300,7 +303,7 @@ export default {
         }
         await env.DB.prepare("DELETE FROM login_failures WHERE username = ?").bind(username).run();
         if (u.status === "rejected") return fail(req, env, 403, "가입이 승인되지 않은 계정입니다. 센터(1433-2700)로 문의해 주세요.");
-        const user = { id: u.id, username: u.username, name: u.name, role: u.role, must_change: u.must_change, status: u.status };
+        const user = { id: u.id, username: u.username, name: u.name, role: u.role, must_change: u.must_change, status: u.status, kind: u.kind };
         return json(req, env, { token: await makeToken(env, user), user });
       }
 
@@ -415,19 +418,24 @@ export default {
       if (path === "/api/admin/members" && req.method === "GET") {
         const no = adminOnly(); if (no) return no;
         const { results } = await env.DB.prepare(
-          "SELECT id, username, name, phone, child, status, created_at, decided_at FROM users WHERE role = 'member' ORDER BY CASE status WHEN 'pending' THEN 0 WHEN 'approved' THEN 1 ELSE 2 END, id DESC"
+          "SELECT id, username, name, phone, child, dept, kind, status, created_at, decided_at FROM users WHERE role = 'member' ORDER BY CASE status WHEN 'pending' THEN 0 WHEN 'approved' THEN 1 ELSE 2 END, id DESC"
         ).all();
         return json(req, env, { members: results });
       }
-      const mAct = /^\/api\/admin\/members\/(\d+)(?:\/(approve|reject|reset))?$/.exec(path);
+      const mAct = /^\/api\/admin\/members\/(\d+)(?:\/(approve|reject|reset|promote))?$/.exec(path);
       if (mAct && (req.method === "POST" || req.method === "DELETE")) {
         const no = adminOnly(); if (no) return no;
         const id = Number(mAct[1]);
-        const m = await env.DB.prepare("SELECT id FROM users WHERE id = ? AND role = 'member'").bind(id).first();
+        const m = await env.DB.prepare("SELECT id, kind, status FROM users WHERE id = ? AND role = 'member'").bind(id).first();
         if (!m) return fail(req, env, 404, "회원을 찾을 수 없습니다.");
         if (req.method === "DELETE") { await env.DB.prepare("DELETE FROM users WHERE id = ?").bind(id).run(); return json(req, env, { ok: true }); }
         if (mAct[2] === "approve" || mAct[2] === "reject") {
           await env.DB.prepare("UPDATE users SET status = ?, decided_at = datetime('now') WHERE id = ?").bind(mAct[2] === "approve" ? "approved" : "rejected", id).run();
+          return json(req, env, { ok: true });
+        }
+        if (mAct[2] === "promote") {
+          if (m.kind !== "staff" || m.status !== "approved") return fail(req, env, 400, "승인된 직원만 관리자로 지정할 수 있습니다.");
+          await env.DB.prepare("UPDATE users SET role = 'admin', decided_at = datetime('now') WHERE id = ?").bind(id).run();
           return json(req, env, { ok: true });
         }
         if (mAct[2] === "reset") {
