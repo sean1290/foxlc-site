@@ -70,7 +70,7 @@ const rxBox = (kind, id) => `<section class="rx" data-rx="${kind}" data-rx-id="$
 // ── 공통 틀 ─────────────────────────────────────────────
 // file: dist 기준 경로 (예: "about/institutes/index.html"), key: 메뉴에서 현재 위치 표시용
 const API_BASE = (process.env.FOXLC_API ?? config.apiBase ?? "").replace(/\/$/, "");
-function layout({ file, key, title, description = DESC, body, image, board, member, rx, noindex, jsonld, ogType }) {
+function layout({ file, key, title, description = DESC, body, image, board, member, rx, stats, noindex, jsonld, ogType }) {
   const depth = file.split("/").length - 1;
   const r = "../".repeat(depth);              // 사이트 루트로 가는 상대 경로
   const cur = (k) => (k === key ? ' aria-current="page"' : "");
@@ -206,7 +206,8 @@ ${file === "index.html" && config.popup && config.popup.enabled ? `
 <script src="${r}js/md.js" defer></script>
 <script src="${r}js/board.js" defer></script>` : ""}${member ? `
 <script src="${r}js/member.js" defer></script>` : ""}${rx ? `
-<script src="${r}js/react.js" defer></script>` : ""}
+<script src="${r}js/react.js" defer></script>` : ""}${stats ? `
+<script src="${r}js/stats.js" defer></script>` : ""}
 </body>
 </html>
 `;
@@ -1270,11 +1271,13 @@ page({
 </div></div>`,
 });
 page({
-  file: "admin/index.html", key: "admin", title: "관리자", board: true, member: true, noindex: true,
+  file: "admin/index.html", key: "admin", title: "관리자", board: true, member: true, stats: true, noindex: true,
   body: () => `<div class="page-head"><div class="wrap"><div class="eyebrow">ADMIN</div><h1>관리자</h1></div></div>
 <div class="page-body"><div class="wrap">
   <div class="adm-layout">
     <div class="adm-main">
+      <div class="adm-tabs" id="admTabs" role="tablist" hidden><button type="button" role="tab" data-tab="members" aria-selected="true">회원 승인</button><button type="button" role="tab" data-tab="stats" aria-selected="false">방문 통계</button></div>
+      <section class="st-admin" id="stAdmin" hidden aria-label="방문 통계"></section>
       <section class="mb-admin" id="mbAdmin" hidden aria-labelledby="mbAdminT"><h2 id="mbAdminT">회원 승인 <span class="mb-count" id="mbCount"></span></h2><p class="mb-admin-help">가입 신청한 분이 센터 학부모·직원이 맞는지 확인한 뒤 승인해 주세요. 승인된 회원만 폭스뉴스 본문을 볼 수 있습니다. 승인된 직원에게는 '관리자 지정'으로 글쓰기·회원 승인 권한을 줄 수 있습니다.</p><div class="mb-tabs" id="mbTabs" role="tablist"></div><div id="mbList"></div></section>
     </div>
     <aside class="adm-side" aria-label="계정 설정">
@@ -1348,14 +1351,15 @@ page({
     const sec = (n, title, html) => `<section class="pv-sec" id="pv-${n}"><h2>제${n}조 (${title})</h2>${html}</section>`;
     const sections = [
       ["처리 목적", `<p>폭스러닝센터(이하 '센터')는 다음의 목적을 위하여 개인정보를 처리합니다. 처리한 개인정보는 다음 목적 이외의 용도로 이용하지 않으며, 목적이 바뀌는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 하겠습니다.</p>
-        <ul><li><b>홈페이지 문의 처리:</b> 문의 내용 확인, 답변 및 상담 안내를 위한 연락</li><li><b>회원 관리(학부모·직원):</b> 센터 학부모·직원 여부 확인, 회원 전용 게시물(폭스뉴스) 제공, 회원 문의 대응</li></ul>`],
+        <ul><li><b>홈페이지 문의 처리:</b> 문의 내용 확인, 답변 및 상담 안내를 위한 연락</li><li><b>홈페이지 개선:</b> 개인을 식별할 수 없는 방문 통계를 이용한 이용 현황 파악</li><li><b>회원 관리(학부모·직원):</b> 센터 학부모·직원 여부 확인, 회원 전용 게시물(폭스뉴스) 제공, 회원 문의 대응</li></ul>`],
       ["처리하는 개인정보 항목", `<table class="pv-table"><thead><tr><th>구분</th><th>항목</th><th>수집 방법</th></tr></thead>
         <tbody><tr><td>홈페이지 문의</td><td>이름, 연락처(전화번호), 문의 내용</td><td>홈페이지 '문의하기' 양식에 이용자가 직접 입력</td></tr>
         <tr><td>학부모 회원</td><td>아이디, 비밀번호(암호화하여 저장), 보호자 이름, 연락처(전화번호), 자녀 이름</td><td>홈페이지 '회원가입' 양식에 이용자가 직접 입력</td></tr>
+        <tr><td>방문 통계 (자동 수집)</td><td>방문한 페이지, 이전에 보던 사이트 주소, 기기·브라우저 종류, 대략적인 지역(시·도), 방문 시각</td><td>홈페이지 이용 시 자동 생성 (IP 주소는 저장하지 않고, 하루 단위로 바뀌는 익명 값으로만 처리하여 개인을 식별할 수 없음)</td></tr>
         <tr><td>직원 회원</td><td>아이디, 비밀번호(암호화하여 저장), 이름, 연락처(전화번호), 소속·담당</td><td>홈페이지 '회원가입' 양식에 이용자가 직접 입력</td></tr></tbody></table>
         <p>센터는 위 항목 외의 개인정보를 수집하지 않습니다. '감정체크 체험' 화면에 입력한 내용은 어디에도 전송·저장되지 않습니다.</p>`],
       ["처리 및 보유 기간", `<p>센터는 이용자의 동의를 받은 기간 동안 개인정보를 처리·보유합니다.</p>
-        <ul><li><b>홈페이지 문의:</b> 문의 처리 완료 후 <b>1년</b>까지 보관 후 파기합니다. 다만 이용자가 삭제를 요청하면 지체 없이 파기합니다.</li><li><b>학부모·직원 회원:</b> 회원 탈퇴 시까지 보관하며, 탈퇴하거나 가입 신청이 승인되지 않으면 지체 없이 파기합니다. 회원은 '로그인' 화면에서 언제든지 직접 탈퇴할 수 있습니다.</li></ul>`],
+        <ul><li><b>홈페이지 문의:</b> 문의 처리 완료 후 <b>1년</b>까지 보관 후 파기합니다. 다만 이용자가 삭제를 요청하면 지체 없이 파기합니다.</li><li><b>방문 통계:</b> 수집일로부터 약 13개월(400일)이 지나면 자동으로 삭제합니다.</li><li><b>학부모·직원 회원:</b> 회원 탈퇴 시까지 보관하며, 탈퇴하거나 가입 신청이 승인되지 않으면 지체 없이 파기합니다. 회원은 '로그인' 화면에서 언제든지 직접 탈퇴할 수 있습니다.</li></ul>`],
       ["제3자 제공", `<p>센터는 이용자의 개인정보를 제1조의 목적 범위 안에서만 처리하며, 이용자의 동의나 법률의 특별한 규정 등 「개인정보 보호법」 제17조 및 제18조에 해당하는 경우를 제외하고는 제3자에게 제공하지 않습니다.</p>`],
       ["처리 위탁 및 국외 이전", `<p>센터는 홈페이지 문의 내용을 안전하게 보관하기 위하여 다음과 같이 개인정보 처리 업무를 위탁하고 있습니다.</p>
         <table class="pv-table"><thead><tr><th>수탁자</th><th>위탁 업무</th><th>이전 국가</th></tr></thead>
@@ -1367,7 +1371,7 @@ page({
       ["만 14세 미만 아동의 개인정보", `<p>센터 홈페이지의 문의 양식은 보호자(학부모) 또는 기관 담당자를 대상으로 합니다. 만 14세 미만 아동이 문의하려는 경우에는 보호자가 대신 문의해 주시기 바랍니다.</p>`],
       ["안전성 확보 조치", `<p>센터는 개인정보의 안전성 확보를 위해 다음과 같은 조치를 하고 있습니다.</p>
         <ul><li>문의 내용에 접근할 수 있는 담당자를 최소한으로 지정</li><li>접근 권한이 있는 계정의 비밀번호 관리</li><li>홈페이지와 문의 전송 구간의 암호화 통신(HTTPS) 적용</li></ul>`],
-      ["쿠키 등 자동 수집 장치", `<p>센터 홈페이지는 이용자를 식별하는 쿠키를 직접 설치·운영하지 않습니다. 다만 홈페이지에 포함된 외부 서비스(YouTube 영상, Google 지도, Google 글꼴)는 해당 서비스 제공자의 정책에 따라 쿠키 등을 사용할 수 있습니다. 이용자는 웹 브라우저 설정에서 쿠키 저장을 거부할 수 있습니다.</p>`],
+      ["쿠키 등 자동 수집 장치", `<p>센터 홈페이지는 이용자를 식별하는 쿠키를 직접 설치·운영하지 않으며, 방문 통계도 쿠키 없이 익명으로 집계합니다. 다만 홈페이지에 포함된 외부 서비스(YouTube 영상, Google 지도, Google 글꼴)는 해당 서비스 제공자의 정책에 따라 쿠키 등을 사용할 수 있습니다. 이용자는 웹 브라우저 설정에서 쿠키 저장을 거부할 수 있습니다.</p>`],
       ["개인정보 보호책임자", `<p>센터는 개인정보 처리에 관한 업무를 총괄하고, 관련 불만 처리와 피해 구제를 위하여 아래와 같이 개인정보 보호책임자를 지정하고 있습니다.</p>
         <table class="pv-table"><tbody><tr><th>담당</th><td>폭스러닝센터 운영실</td></tr><tr><th>연락처</th><td>1433-2700 · 카카오톡 FOX_LC</td></tr><tr><th>주소</th><td>${ADDRESS}</td></tr></tbody></table>`],
       ["권익 침해 구제 방법", `<p>개인정보 침해에 대한 신고나 상담이 필요하신 경우 아래 기관에 문의하실 수 있습니다.</p>

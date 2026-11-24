@@ -154,6 +154,19 @@
       }, function () {});
   })();
 
+  /* ── 방문 기록 (쿠키 없음 · 관리자 화면 방문 통계용) ── */
+  (function () {
+    var api = (document.querySelector('meta[name="foxlc-api"]') || {}).content || "";
+    var root = (document.querySelector('meta[name="foxlc-root"]') || {}).content || "./";
+    if (!api || navigator.webdriver) return;
+    var base = new URL(root, location.href).pathname, path = location.pathname;
+    var p = "/" + (path.indexOf(base) === 0 ? path.slice(base.length) : path.replace(/^\//, ""));
+    if (p.indexOf("/admin") === 0) return;
+    var qs = new URLSearchParams(location.search);
+    var body = JSON.stringify({ p: p, t: document.title, r: document.referrer || "", u: qs.get("utm_source") || "", g: qs.has("gclid") ? 1 : 0 });
+    try { fetch(api + "/api/stat/hit", { method: "POST", body: body, keepalive: true, headers: { "Content-Type": "text/plain" } }).catch(function () {}); } catch (e) {}
+  })();
+
   /* ── 목록 카드: 조회수 · 좋아요 수 ── */
   (function () {
     var api = (document.querySelector('meta[name="foxlc-api"]') || {}).content || "";

@@ -30,6 +30,8 @@
 //            DELETE /api/rx/comments/:cid  댓글 지우기 (쓴 사람 · 관리자)
 //            POST /api/rx/:kind/:id/view   조회수 +1 (누구나, 브라우저에서 12시간에 한 번)
 //            GET  /api/rx/stats?kind=K     목록용 조회수 · 좋아요 수 (누구나, 숫자만)
+//  방문통계  POST /api/stat/hit             페이지 방문 기록 (쿠키 없음, IP 저장 안 함)
+//            GET  /api/admin/stats?days=N  관리자 화면 '방문 통계' (관리자)
 //
 // 로그인 토큰은 HMAC 서명한 짧은 문자열(7일)이며 Authorization: Bearer 로 보낸다.
 // 사이트(github.io)와 API(workers.dev)의 주소가 달라 쿠키 대신 이 방식을 쓴다.
@@ -248,6 +250,63 @@ async function rxState(env, kind, id, me) {
   }));
   return { likes, liked, comments, can_write: !!canReadNews(me) };
 }
+// ── 방문 통계 ───────────────────────────────────────────
+const kstDay = (ms = Date.now()) => new Date(ms + 9 * 3600e3).toISOString().slice(0, 10);
+const BOT = /bot|crawl|spider|slurp|headless|lighthouse|preview|facebookexternalhit|kakaotalk-scrap|daum[ -]?oa|yeti|bingpreview|python|curl|wget|httpclient|node-fetch|axios/i;
+function uaInfo(ua) {
+  const device = /iPad|Tablet|SM-T|Tab/i.test(ua) ? "태블릿" : /Mobi|iPhone|Android/i.test(ua) ? "휴대폰" : "PC";
+  const os = /iPhone|iPad|iPod/.test(ua) ? "iOS" : /Android/.test(ua) ? "Android" : /Windows/.test(ua) ? "Windows" : /Mac OS X|Macintosh/.test(ua) ? "macOS" : /Linux|CrOS/.test(ua) ? "Linux" : "기타";
+  const browser = /KAKAOTALK/i.test(ua) ? "카카오톡 앱" : /NAVER\(inapp|NAVER/.test(ua) ? "네이버 앱" : /Instagram/.test(ua) ? "인스타그램 앱" : /FBAN|FBAV/.test(ua) ? "페이스북 앱"
+    : /SamsungBrowser/.test(ua) ? "삼성 인터넷" : /Whale/.test(ua) ? "네이버 웨일" : /Edg\//.test(ua) ? "Edge" : /Firefox|FxiOS/.test(ua) ? "Firefox"
+    : /CriOS|Chrome\//.test(ua) ? "Chrome" : /Safari/.test(ua) ? "Safari" : "기타";
+  return { device, os, browser };
+}
+const REGIONS = [["Seoul", "서울"], ["Busan", "부산"], ["Daegu", "대구"], ["Incheon", "인천"], ["Gwangju", "광주"], ["Daejeon", "대전"], ["Ulsan", "울산"], ["Sejong", "세종"],
+  ["Gyeonggi", "경기"], ["Gangwon", "강원"], ["Chungcheongbuk", "충북"], ["North Chungcheong", "충북"], ["Chungcheongnam", "충남"], ["South Chungcheong", "충남"],
+  ["Jeollabuk", "전북"], ["North Jeolla", "전북"], ["Jeonbuk", "전북"], ["Jeollanam", "전남"], ["South Jeolla", "전남"], ["Gyeongsangbuk", "경북"], ["North Gyeongsang", "경북"],
+  ["Gyeongsangnam", "경남"], ["South Gyeongsang", "경남"], ["Jeju", "제주"]];
+function regionOf(cf) {
+  if (!cf) return { region: "", country: "" };
+  const country = cf.country || "";
+  if (country !== "KR") return { region: country ? "해외" : "", country };
+  const r = String(cf.region || "");
+  const hit = REGIONS.find(([en]) => r.toLowerCase().includes(en.toLowerCase()));
+  return { region: hit ? hit[1] : (r || "국내 기타"), country };
+}
+// 유입 경로: 이전 페이지 주소(ref) · 앱 정보(ua) · 광고 꼬리표(utm, gclid) 로 나눈다
+function sourceOf(refUrl, ua, utm, siteHost) {
+  let host = "", q = "";
+  try {
+    const u = new URL(refUrl);
+    host = u.hostname.replace(/^www\./, "");
+    q = (u.searchParams.get("query") || u.searchParams.get("q") || "").trim().slice(0, 60);
+  } catch {}
+  if (utm.gclid) return { src: "구글 광고", host, q };
+  if (utm.source) return { src: "캠페인: " + utm.source.slice(0, 30), host, q };
+  if (host && (host === siteHost || host.endsWith("github.io"))) return { src: "internal", host: "", q: "" };
+  if (!host) {
+    if (/KAKAOTALK/i.test(ua)) return { src: "카카오톡", host, q };
+    if (/Instagram/.test(ua)) return { src: "인스타그램", host, q };
+    if (/NAVER/.test(ua)) return { src: "네이버 앱", host, q };
+    return { src: "직접 방문", host, q };
+  }
+  const rules = [
+    [/(^|\.)search\.naver\.com$/, "네이버 검색"], [/(^|\.)blog\.naver\.com$/, "네이버 블로그"], [/(^|\.)cafe\.naver\.com$/, "네이버 카페"],
+    [/(^|\.)(map|place|m\.place|pcmap)\.naver\.com$|naver\.me$/, "네이버 지도·플레이스"], [/naver\.com$/, "네이버 (기타)"],
+    [/(^|\.)google\.[a-z.]+$/, "구글 검색"], [/(^|\.)(search\.)?daum\.net$/, "다음 검색"], [/bing\.com$/, "Bing"],
+    [/instagram\.com$/, "인스타그램"], [/(facebook|fb)\.com$/, "페이스북"], [/(youtube\.com|youtu\.be)$/, "유튜브"],
+    [/kakao\.com$|kakaocdn\.net$/, "카카오"], [/foxconnect\.kr$/, "FOX CONNECT"], [/growxeducation\.com$/, "Grow X Education"],
+  ];
+  const r = rules.find(([re]) => re.test(host));
+  return { src: r ? r[1] : "기타 사이트", host, q: r && /검색/.test(r[1]) ? q : "" };
+}
+async function visitorId(env, req, day) {
+  const ip = req.headers.get("CF-Connecting-IP") || "";
+  const ua = req.headers.get("User-Agent") || "";
+  const h = await crypto.subtle.digest("SHA-256", enc.encode(`${day}|${ip}|${ua}|${env.SESSION_SECRET || ""}`));
+  return hex(h).slice(0, 16);
+}
+
 const PHONE = (v) => String(v || "").replace(/\D/g, "");
 function tempPassword() {
   const abc = "abcdefghjkmnpqrstuvwxyz23456789";
@@ -286,6 +345,25 @@ export default {
         return new Response(new Uint8Array(row.data), { headers: { "Content-Type": row.mime, "Cache-Control": "public, max-age=31536000, immutable", "Access-Control-Allow-Origin": "*" } });
       }
       const col = /^\/api\/columns\/(\d+)$/.exec(path);
+
+      // 방문 기록: 사이트의 모든 페이지가 한 번씩 보낸다 (본문은 text/plain JSON — 미리 확인 요청 없이 보내려고)
+      if (path === "/api/stat/hit" && req.method === "POST") {
+        const ua = req.headers.get("User-Agent") || "";
+        if (!ua || BOT.test(ua)) return new Response(null, { status: 204, headers: cors(req, env) });
+        let b = {};
+        try { b = JSON.parse(await req.text()) || {}; } catch {}
+        const p = typeof b.p === "string" ? b.p.slice(0, 200) : "";
+        if (!p.startsWith("/") || p.startsWith("/admin")) return new Response(null, { status: 204, headers: cors(req, env) });
+        const day = kstDay();
+        let siteHost = "";
+        try { siteHost = new URL(req.headers.get("Origin") || "").hostname; } catch {}
+        const s = sourceOf(typeof b.r === "string" ? b.r.slice(0, 500) : "", ua, { gclid: !!b.g, source: typeof b.u === "string" ? b.u : "" }, siteHost);
+        const d = uaInfo(ua), g = regionOf(req.cf);
+        await env.DB.prepare(
+          "INSERT INTO hits (day, path, title, src, ref, q, device, browser, os, region, country, vid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        ).bind(day, p.replace(/index\.html$/, ""), typeof b.t === "string" ? b.t.slice(0, 120) : "", s.src, s.host.slice(0, 80), s.q, d.device, d.browser, d.os, g.region, g.country, await visitorId(env, req, day)).run();
+        return new Response(null, { status: 204, headers: cors(req, env) });
+      }
 
       // 학부모 가입 신청
       if (path === "/api/members/signup" && req.method === "POST") {
@@ -345,6 +423,7 @@ export default {
         }
         await env.DB.prepare("DELETE FROM login_failures WHERE username = ?").bind(username).run();
         if (u.status === "rejected") return fail(req, env, 403, "가입이 승인되지 않은 계정입니다. 센터(1433-2700)로 문의해 주세요.");
+        await env.DB.prepare("INSERT OR IGNORE INTO logins (day, user_id) VALUES (?, ?)").bind(kstDay(), u.id).run();
         const user = { id: u.id, username: u.username, name: u.name, role: u.role, must_change: u.must_change, status: u.status, kind: u.kind };
         return json(req, env, { token: await makeToken(env, user), user });
       }
@@ -521,6 +600,30 @@ export default {
         return json(req, env, { ok: true }, 201);
       }
 
+      if (path === "/api/admin/stats" && req.method === "GET") {
+        const no = adminOnly(); if (no) return no;
+        const days = Math.min(Math.max(parseInt(url.searchParams.get("days") || "30", 10) || 30, 1), 400);
+        const today = kstDay(), from = kstDay(Date.now() - (days - 1) * 864e5), prevFrom = kstDay(Date.now() - (2 * days - 1) * 864e5);
+        const all = async (sql, ...args) => (await env.DB.prepare(sql).bind(...args).all()).results;
+        const one = async (sql, ...args) => await env.DB.prepare(sql).bind(...args).first();
+        const visits = "COUNT(DISTINCT day || vid)";
+        const [series, prev, pages, sources, queries, devices, browsers, oses, regions, todayRow, signups, logins] = await Promise.all([
+          all(`SELECT day, COUNT(*) AS pv, COUNT(DISTINCT vid) AS uv FROM hits WHERE day >= ? GROUP BY day ORDER BY day`, from),
+          one(`SELECT COUNT(*) AS pv, ${visits} AS uv FROM hits WHERE day >= ? AND day < ?`, prevFrom, from),
+          all(`SELECT path, MAX(title) AS title, COUNT(*) AS pv, ${visits} AS uv FROM hits WHERE day >= ? GROUP BY path ORDER BY pv DESC LIMIT 15`, from),
+          all(`SELECT src AS k, ${visits} AS n FROM hits WHERE day >= ? AND src != 'internal' GROUP BY src ORDER BY n DESC LIMIT 15`, from),
+          all(`SELECT q AS k, COUNT(*) AS n FROM hits WHERE day >= ? AND q != '' GROUP BY q ORDER BY n DESC LIMIT 15`, from),
+          all(`SELECT device AS k, ${visits} AS n FROM hits WHERE day >= ? GROUP BY device ORDER BY n DESC`, from),
+          all(`SELECT browser AS k, ${visits} AS n FROM hits WHERE day >= ? GROUP BY browser ORDER BY n DESC LIMIT 10`, from),
+          all(`SELECT os AS k, ${visits} AS n FROM hits WHERE day >= ? GROUP BY os ORDER BY n DESC`, from),
+          all(`SELECT region AS k, ${visits} AS n FROM hits WHERE day >= ? AND region != '' GROUP BY region ORDER BY n DESC LIMIT 12`, from),
+          one(`SELECT COUNT(*) AS pv, COUNT(DISTINCT vid) AS uv FROM hits WHERE day = ?`, today),
+          all(`SELECT kind AS k, COUNT(*) AS n FROM users WHERE role = 'member' AND date(created_at, '+9 hours') >= ? GROUP BY kind`, from),
+          one(`SELECT COUNT(*) AS n, COUNT(DISTINCT user_id) AS u FROM logins WHERE day >= ?`, from),
+        ]);
+        return json(req, env, { days, from, today, series, prev, pages, sources, queries, devices, browsers, oses, regions, todayRow, signups, logins });
+      }
+
       if (path === "/api/admin/members" && req.method === "GET") {
         const no = adminOnly(); if (no) return no;
         const { results } = await env.DB.prepare(
@@ -602,6 +705,8 @@ export default {
   async scheduled(event, env, ctx) {
     ctx.waitUntil((async () => {
       for (let i = 0; i < 3; i++) { const r = await syncNewsPage(env, 1); if (!r.more) break; }
+      await env.DB.prepare("DELETE FROM hits WHERE day < ?").bind(kstDay(Date.now() - 400 * 864e5)).run();
+      await env.DB.prepare("DELETE FROM logins WHERE day < ?").bind(kstDay(Date.now() - 400 * 864e5)).run();
     })().catch((e) => console.error("news sync", e)));
   },
 };
