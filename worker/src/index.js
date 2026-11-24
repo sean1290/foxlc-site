@@ -28,6 +28,8 @@
 //            POST /api/rx/:kind/:id/like   좋아요 누르기/취소 (승인된 회원 · 관리자)
 //            POST /api/rx/:kind/:id/comments  댓글 쓰기 { body } (승인된 회원 · 관리자)
 //            DELETE /api/rx/comments/:cid  댓글 지우기 (쓴 사람 · 관리자)
+//            POST /api/rx/:kind/:id/view   조회수 +1 (누구나, 브라우저에서 12시간에 한 번)
+//            GET  /api/rx/stats?kind=K     목록용 조회수 · 좋아요 수 (누구나, 숫자만)
 //
 // 로그인 토큰은 HMAC 서명한 짧은 문자열(7일)이며 Authorization: Bearer 로 보낸다.
 // 사이트(github.io)와 API(workers.dev)의 주소가 달라 쿠키 대신 이 방식을 쓴다.
@@ -359,6 +361,27 @@ export default {
         await env.DB.prepare("DELETE FROM comments WHERE id = ?").bind(Number(rxDel[1])).run();
         return json(req, env, { ok: true });
       }
+      // 목록 카드에 붙이는 숫자 (이름 같은 개인정보 없이 숫자만)
+      if (path === "/api/rx/stats" && req.method === "GET") {
+        const kind = url.searchParams.get("kind");
+        if (!["news", "column", "notice"].includes(kind)) return fail(req, env, 400, "kind 가 올바르지 않습니다.");
+        const v = (await env.DB.prepare("SELECT target, n FROM views WHERE kind = ?").bind(kind).all()).results;
+        const l = (await env.DB.prepare("SELECT target, COUNT(*) AS n FROM likes WHERE kind = ? GROUP BY target").bind(kind).all()).results;
+        const out = { views: {}, likes: {} };
+        v.forEach((x) => { out.views[x.target] = x.n; });
+        l.forEach((x) => { out.likes[x.target] = x.n; });
+        const res = json(req, env, out);
+        res.headers.set("Cache-Control", "public, max-age=60");
+        return res;
+      }
+      const rxView = /^\/api\/rx\/(news|column|notice)\/(\d{1,20})\/view$/.exec(path);
+      if (rxView && req.method === "POST") {
+        const kind = rxView[1], id = rxView[2].replace(/^0+(?=\d)/, "");
+        if (kind === "news" && !(await env.DB.prepare("SELECT 1 AS ok FROM news_posts WHERE num = ?").bind(Number(id)).first())) return fail(req, env, 404, "글을 찾을 수 없습니다.");
+        if (kind === "column" && !(await env.DB.prepare("SELECT 1 AS ok FROM columns WHERE id = ? AND status = 'published'").bind(Number(id)).first())) return fail(req, env, 404, "글을 찾을 수 없습니다.");
+        await env.DB.prepare("INSERT INTO views (kind, target, n) VALUES (?, ?, 1) ON CONFLICT(kind, target) DO UPDATE SET n = n + 1").bind(kind, id).run();
+        return json(req, env, { ok: true });
+      }
       const rx = /^\/api\/rx\/(news|column|notice)\/(\d{1,20})(?:\/(like|comments))?$/.exec(path);
       if (rx) {
         const [, kind, rawId, sub] = rx;
@@ -563,6 +586,7 @@ export default {
         await env.DB.prepare("DELETE FROM columns WHERE id = ?").bind(Number(col[1])).run();
         await env.DB.prepare("DELETE FROM likes WHERE kind = 'column' AND target = ?").bind(col[1]).run();
         await env.DB.prepare("DELETE FROM comments WHERE kind = 'column' AND target = ?").bind(col[1]).run();
+        await env.DB.prepare("DELETE FROM views WHERE kind = 'column' AND target = ?").bind(col[1]).run();
         await triggerRebuild(env, ctx);
         return json(req, env, { ok: true });
       }

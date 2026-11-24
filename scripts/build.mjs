@@ -20,7 +20,7 @@ const columns = existsSync(path.join(ROOT, "data/columns.json")) ? await json("d
 const mdSrc = await readFile(path.join(ROOT, "static/js/md.js"), "utf8");
 const { renderMd, mdPlain } = new Function(mdSrc + "; return { renderMd, mdPlain };")();
 const colDate = (d) => (d || "").replace(/-/g, ".");
-const colCard = (r, c, tag = "h2") => `<a class="card col-card" href="${r}column/${c.id}/" data-cat="${esc(c.category)}">
+const colCard = (r, c, tag = "h2") => `<a class="card col-card" href="${r}column/${c.id}/" data-cat="${esc(c.category)}" data-stat="column" data-stat-id="${c.id}">
       <div class="col-thumb">${c.cover ? `<img src="${esc(c.cover)}" alt="" loading="lazy">` : `<span>SEL</span>`}</div>
       <div class="card-body">
         <div class="col-meta">${c.category ? `<span class="col-cat">${esc(c.category)}</span>` : ""}<span>${colDate(c.published)}</span></div>
@@ -871,7 +871,7 @@ page({
 <div class="page-body"><div class="wrap">
   <div class="mb-note" id="mbNote"><span class="mb-lock" aria-hidden="true"></span><p><b>폭스뉴스 본문은 회원만 볼 수 있습니다.</b> 아이들의 활동 사진이 담겨 있어 센터에서 승인한 학부모님과 직원에게만 공개합니다.</p><span class="mb-note-act"><a class="btn navy sm" href="${r}member/?next=news/">로그인</a><a class="btn line sm" href="${r}member/join/">회원가입</a></span></div>
   <div class="grid3" id="newsGrid">
-    ${news.map((p, i) => `<a class="card post-card" href="${r}news/${p.num}/"${i >= 9 ? " hidden" : ""}>
+    ${news.map((p, i) => `<a class="card post-card" href="${r}news/${p.num}/" data-stat="news" data-stat-id="${p.num}"${i >= 9 ? " hidden" : ""}>
       <div class="thumb">${p.photos ? `<img src="${r}news-img/${p.num}/0.jpg" alt="" loading="lazy">` : ""}</div>
       <div class="card-body">
         <div class="date">${esc(p.date)}</div>
@@ -954,7 +954,7 @@ page({
 // 센터 소식: 네이버 스마트플레이스 '소식' (scripts/sync-naver.mjs → data/naver.json)
 const NAVER_FEED = "https://map.naver.com/p/entry/place/1874946138?placePath=%2Ffeed";
 const ymd = (d) => `${d.slice(0, 4)}.${d.slice(4, 6)}.${d.slice(6, 8)}`;
-const noticeCard = (r, n, hidden = false) => `<a class="card notice-card" href="${r}notice/${n.feedId}/"${hidden ? " hidden" : ""}>
+const noticeCard = (r, n, hidden = false) => `<a class="card notice-card" href="${r}notice/${n.feedId}/" data-stat="notice" data-stat-id="${n.feedId}"${hidden ? " hidden" : ""}>
         <div class="poster">${n.photos ? `<img src="${r}naver-img/${n.feedId}/0.jpg" alt="${esc(n.title)} 포스터" loading="lazy">` : ""}</div>
         <div class="card-body">
           <div class="date">${ymd(n.date)}</div>

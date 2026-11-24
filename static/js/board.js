@@ -272,7 +272,7 @@
       if (!add.length) return;
       var empty = colList.querySelector(".rc-empty"); if (empty) empty.remove();
       add.reverse().forEach(function (c) {
-        var a = el("a", { class: "card col-card", href: ROOT + "column/view/?id=" + c.id, "data-cat": c.category || "" }, [
+        var a = el("a", { class: "card col-card", href: ROOT + "column/view/?id=" + c.id, "data-cat": c.category || "", "data-stat": "column", "data-stat-id": String(c.id) }, [
           el("div", { class: "col-thumb" }, [c.cover ? el("img", { src: c.cover, alt: "", loading: "lazy" }) : el("span", { text: "SEL" })]),
           el("div", { class: "card-body" }, [
             el("div", { class: "col-meta" }, [c.status === "draft" ? el("span", { class: "col-draft", text: "임시 저장" }) : null, c.category ? el("span", { class: "col-cat", text: c.category }) : null, el("span", { text: colDate(c.published_at || c.created_at) })]),
@@ -280,6 +280,7 @@
           ])
         ]);
         colList.insertBefore(a, colList.firstChild);
+        if (window.foxlcStats) window.foxlcStats();
       });
       buildFilter();
     }).catch(function () {});

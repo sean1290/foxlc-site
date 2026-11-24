@@ -1276,3 +1276,11 @@ body:has(.inst-modal[open]){overflow:hidden}
 .rx-left{font-size:13px;color:var(--ink3)}
 .rx .rx-guest{margin:18px 0 0;line-height:1.7;padding:14px 16px;border-radius:12px;background:var(--mintbg);font-size:14.5px;color:var(--ink2)}
 .rx-guest a{color:var(--navy);font-weight:800}
+
+/* 목록 카드: 조회수 · 좋아요 수 */
+.card-stats{display:flex;gap:14px;margin-top:10px;font-size:13px;font-weight:600;color:var(--ink3)}
+.card-stats span{display:inline-flex;align-items:center;gap:5px}
+.card-stats span::before{content:"";width:15px;height:15px;background:currentColor;-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
+.card-stats .st-view{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E")}
+.card-stats .st-like{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-7.5-4.6-9.5-9.3C1.1 8.4 3.3 5 6.7 5c2 0 3.6 1.1 5.3 3 1.7-1.9 3.3-3 5.3-3 3.4 0 5.6 3.4 4.2 6.7C19.5 16.4 12 21 12 21z'/%3E%3C/svg%3E")}
+.card-stats .st-like{color:#d0566a}

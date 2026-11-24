@@ -154,6 +154,39 @@
       }, function () {});
   })();
 
+  /* ── 목록 카드: 조회수 · 좋아요 수 ── */
+  (function () {
+    var api = (document.querySelector('meta[name="foxlc-api"]') || {}).content || "";
+    if (!api) return;
+    var cache = {};
+    var get = function (kind) {
+      if (!cache[kind]) cache[kind] = fetch(api + "/api/rx/stats?kind=" + kind).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+      return cache[kind];
+    };
+    var fmt = function (n) { return n >= 10000 ? (Math.round(n / 1000) / 10) + "만" : String(n); };
+    var run = function () {
+      $$("[data-stat]:not([data-stat-done])").forEach(function (card) {
+        var kind = card.getAttribute("data-stat"), id = card.getAttribute("data-stat-id");
+        card.setAttribute("data-stat-done", "1");
+        get(kind).then(function (d) {
+          if (!d) return;
+          var body = card.querySelector(".card-body") || card;
+          var box = document.createElement("div");
+          box.className = "card-stats";
+          box.setAttribute("aria-label", "조회 " + ((d.views[id]) || 0) + "회, 좋아요 " + ((d.likes[id]) || 0) + "개");
+          [["st-view", "조회 ", d.views[id] || 0], ["st-like", "좋아요 ", d.likes[id] || 0]].forEach(function (s) {
+            var sp = document.createElement("span"); sp.className = s[0]; sp.setAttribute("aria-hidden", "true");
+            sp.textContent = fmt(s[2]); sp.title = s[1] + s[2];
+            box.appendChild(sp);
+          });
+          body.appendChild(box);
+        });
+      });
+    };
+    window.foxlcStats = run;
+    run();
+  })();
+
   /* ── 복사 버튼: <button data-copy="글자" data-msg="안내"> ── */
   $$("[data-copy]").forEach(function (b) {
     b.addEventListener("click", function () {

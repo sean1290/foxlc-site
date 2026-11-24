@@ -51,6 +51,14 @@
     box.setAttribute("data-rx-ready", "1");
     var kind = box.getAttribute("data-rx"), id = box.getAttribute("data-rx-id");
     var path = "/api/rx/" + kind + "/" + encodeURIComponent(id);
+    /* 조회수: 같은 브라우저에서는 12시간에 한 번만 센다 */
+    (function () {
+      var k = "foxlc_v_" + kind + "_" + id, last = 0;
+      try { last = Number(localStorage.getItem(k) || 0); } catch (e) {}
+      if (Date.now() - last < 12 * 3600 * 1000) return;
+      try { localStorage.setItem(k, String(Date.now())); } catch (e) {}
+      fetch(API + path + "/view", { method: "POST" }).catch(function () {});
+    })();
     var state = null, busy = false;
 
     var likeBtn = el("button", { class: "rx-like", type: "button", "aria-pressed": "false" });
