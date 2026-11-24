@@ -1241,3 +1241,8 @@ body:has(.inst-modal[open]){overflow:hidden}
 .rc-fold .rc-panel{border:0;border-radius:0;box-shadow:none;padding:16px}
 .adm-layout:not(:has(#mbAdmin:not([hidden]))) .adm-side{position:static;max-width:560px;margin:0 auto}
 @media (max-width:900px){.adm-layout:has(#mbAdmin:not([hidden])){grid-template-columns:1fr}.adm-side{position:static}.adm-layout .mb-admin{padding:18px}}
+
+.nav-login.in{max-width:240px;white-space:nowrap;font-weight:600;background:var(--mintbg);border-color:#cfe8dd}
+.nav-login.in b{font-weight:800;color:var(--navy)}
+@media (max-width:1100px){.nav-login.in{max-width:none}}
+.nav-login.in span{overflow:hidden;text-overflow:ellipsis}

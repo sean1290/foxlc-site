@@ -37,6 +37,16 @@
   var me = function () { return getToken() ? api("GET", "/api/auth/me").then(function (d) { return d.user; }, function () { return null; }) : Promise.resolve(null); };
   var canRead = function (u) { return u && (u.role === "admin" || (u.role === "member" && u.status === "approved")); };
   var phoneFmt = function (p) { p = String(p || ""); return p.length === 11 ? p.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3") : p.length === 10 ? p.replace(/(\d{3})(\d{3,4})(\d{4})/, "$1-$2-$3") : p; };
+  /* 상단 로그인 버튼도 바로 바꾼다 (site.js 와 같은 모양) */
+  var headWho = function (u) {
+    var btn = $(".nav-login"); if (!btn) return;
+    try { u ? sessionStorage.setItem("foxlc_me", JSON.stringify({ t: getToken().slice(-16), u: { name: u.name, username: u.username } })) : sessionStorage.removeItem("foxlc_me"); } catch (e) {}
+    btn.textContent = ""; btn.classList.toggle("in", !!u);
+    if (!u) { btn.textContent = "로그인"; return; }
+    var sp = document.createElement("span"); btn.appendChild(sp); sp.appendChild(document.createTextNode("안녕하세요, "));
+    var b = document.createElement("b"); b.textContent = u.name || u.username; sp.appendChild(b);
+    sp.appendChild(document.createTextNode("님"));
+  };
   var safeNext = function (n) { return /^[a-z0-9\/_-]*$/i.test(n || "") ? n : ""; };
 
   /* ── 폭스뉴스 목록: 로그인한 학부모에게는 안내를 바꾼다 ── */
@@ -98,7 +108,7 @@
         e.preventDefault();
         var m = $(".rc-msg", f); msg(m, "로그인 중입니다…");
         api("POST", "/api/auth/login", { username: f.username.value, password: f.password.value }).then(function (d) {
-          setToken(d.token);
+          setToken(d.token); headWho(d.user);
           if (next && canRead(d.user) && !d.user.must_change) { location.href = ROOT + next; return; }
           show(d.user);
         }, function (err) { msg(m, err.message, true); });
@@ -119,7 +129,7 @@
       var acts = el("div", { class: "rc-form-actions mb-acts" });
       if (canRead(u)) acts.appendChild(el("a", { class: "btn navy", href: ROOT + "news/", text: "폭스뉴스 보기" }));
       var out = el("button", { class: "btn line", type: "button", text: "로그아웃" });
-      out.onclick = function () { setToken(""); loginForm(); };
+      out.onclick = function () { setToken(""); headWho(null); loginForm(); };
       acts.appendChild(out);
       home.appendChild(acts);
 
@@ -149,7 +159,7 @@
         del.onsubmit = function (e) {
           e.preventDefault();
           if (!confirm("정말 탈퇴할까요? 회원 정보가 삭제됩니다.")) return;
-          api("DELETE", "/api/members/me", { password: del.password.value }).then(function () { setToken(""); home.innerHTML = ""; home.appendChild(el("p", { class: "mb-status", text: "탈퇴 처리되었습니다. 그동안 이용해 주셔서 감사합니다." })); },
+          api("DELETE", "/api/members/me", { password: del.password.value }).then(function () { setToken(""); headWho(null); home.innerHTML = ""; home.appendChild(el("p", { class: "mb-status", text: "탈퇴 처리되었습니다. 그동안 이용해 주셔서 감사합니다." })); },
             function (err) { msg($(".rc-msg", del), err.message, true); });
         };
         home.appendChild(el("details", { class: "mb-more" }, [el("summary", { text: "회원 탈퇴" }), del]));

@@ -126,6 +126,34 @@
     });
   }
 
+  /* ── 상단 로그인 버튼: 로그인되어 있으면 "안녕하세요, OOO님" ── */
+  (function () {
+    var btn = $(".nav-login");
+    var api = (document.querySelector('meta[name="foxlc-api"]') || {}).content || "";
+    if (!btn || !api) return;
+    var token = "", cache = null;
+    try { token = localStorage.getItem("foxlc_token") || ""; cache = JSON.parse(sessionStorage.getItem("foxlc_me") || "null"); } catch (e) {}
+    var show = function (u) {
+      if (!u) { btn.textContent = "로그인"; btn.classList.remove("in"); btn.removeAttribute("title"); return; }
+      var who = u.name || u.username;
+      btn.textContent = "";
+      var sp = document.createElement("span"); btn.appendChild(sp); sp.appendChild(document.createTextNode("안녕하세요, "));
+      var b = document.createElement("b"); b.textContent = who; sp.appendChild(b);
+      sp.appendChild(document.createTextNode("님"));
+      btn.title = "내 계정 보기"; btn.classList.add("in");
+    };
+    if (!token) { try { sessionStorage.removeItem("foxlc_me"); } catch (e) {} return; }
+    if (cache && cache.t === token.slice(-16)) show(cache.u);
+    fetch(api + "/api/auth/me", { headers: { Authorization: "Bearer " + token } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        var u = d && d.user ? { name: d.user.name, username: d.user.username } : null;
+        if (!u) { try { localStorage.removeItem("foxlc_token"); sessionStorage.removeItem("foxlc_me"); } catch (e) {} }
+        else { try { sessionStorage.setItem("foxlc_me", JSON.stringify({ t: token.slice(-16), u: u })); } catch (e) {} }
+        show(u);
+      }, function () {});
+  })();
+
   /* ── 복사 버튼: <button data-copy="글자" data-msg="안내"> ── */
   $$("[data-copy]").forEach(function (b) {
     b.addEventListener("click", function () {
