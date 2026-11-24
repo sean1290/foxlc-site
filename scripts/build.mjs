@@ -613,8 +613,8 @@ page({
 const SILHOUETTE = `<svg class="silhouette" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="46" r="22"/><path d="M18 120c2-26 20-42 42-42s40 16 42 42z"/></svg>`;
 page({
   file: "about/researchers/index.html", key: "about/experts", title: "연구원 소개", noindex: true,
-  body: (r) => `<script>location.replace("${r}about/experts/#researchers")</script>
-<div class="page-body"><div class="wrap"><p class="rc-empty">연구원 소개는 <a href="${r}about/experts/#researchers">전문가 소개</a> 페이지로 옮겼습니다.</p></div></div>`,
+  body: (r) => `<script>location.replace("${r}about/experts/")</script>
+<div class="page-body"><div class="wrap"><p class="rc-empty"><a href="${r}about/experts/">전문가 소개</a> 페이지로 이동합니다.</p></div></div>`,
 });
 
 // ── 전문가 소개 (자문 · 공동 연구 교수진) ─────────────────
@@ -657,27 +657,7 @@ page({
     <a href="https://doi.org/10.1016/j.sel.2024.100063" ${ext}>https://doi.org/10.1016/j.sel.2024.100063</a></blockquote>
 </div></section>
 
-<section class="ex-sec" id="researchers" aria-labelledby="researchers-title"><div class="wrap">
-  <div class="sec-intro"><h2 class="sub-head" id="researchers-title">연구원 소개</h2><p>융합교육 전문성을 바탕으로 교육과정을 설계하고, 학생의 성장 데이터를 체계적으로 기록·분석합니다.</p></div>
-  <div class="org">
-    ${[...new Set(researchers.groups.map((g) => g.row || 0))].map((row, ri) => `<div class="org-row${ri === 0 ? " lead" : ""}">
-      ${researchers.groups.filter((g) => (g.row || 0) === row).map((g) => `<section class="ex-card org-team" style="--n:${g.people.length}" aria-label="${esc(g.title)}">
-        <h3 class="org-title">${esc(g.title)}</h3>
-        <ul class="org-people" role="list">
-          ${g.people.map((m) => `<li>
-            <div class="avatar">${m.photo
-              ? `<img src="${r}img/researchers/${esc(m.photo)}" alt="${esc(m.name)} ${esc(m.role)}" loading="lazy">`
-              : SILHOUETTE}</div>
-            <b>${esc(m.name)}</b>
-            <span>${esc(m.role)}</span>
-          </li>`).join("")}
-        </ul>
-      </section>`).join("\n      ")}
-    </div>`).join("\n    ")}
-  </div>
-</div></section>
-
-<section class="ex-sec tint" aria-labelledby="global-title"><div class="wrap">
+<section class="ex-sec" aria-labelledby="global-title"><div class="wrap">
   <div class="sec-intro"><h2 class="sub-head" id="global-title">해외 연구·교류</h2><p>해외 학교·대학과 연구와 학생 교류를 이어가고 있습니다.</p></div>
   <div class="global-grid">
     <article class="ex-card"><img src="${r}img/global/stoneranch-camp.jpg" alt="스톤랜치 초등학교 학생들과 함께한 글로벌캠프 활동" loading="lazy"><div class="ex-body"><h3>스톤랜치 초등학교 · 글로벌캠프</h3><p>학생들이 만나 함께 활동하는 교류</p></div></article>
