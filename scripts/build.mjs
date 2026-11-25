@@ -124,9 +124,9 @@ ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg
         <button class="sub-toggle" type="button" aria-label="센터 소개 하위 메뉴" aria-expanded="false"></button>
         <ul class="sub">
           <li><a href="${r}about/"${cur("about/us")}>About Us</a></li>
+          <li><a href="${r}about/experts/"${cur("about/experts")}>전문가 소개</a></li>
           <li><a href="${r}about/institutes/"${cur("about/institutes")}>연구소 소개</a></li>
           <li><a href="${r}about/facilities/"${cur("about/facilities")}>센터 시설</a></li>
-          <li><a href="${r}about/experts/"${cur("about/experts")}>전문가 소개</a></li>
           <li><a href="${r}about/agreements/"${cur("about/agreements")}>교육 협약</a></li>
           <li><a href="${r}about/directions/"${cur("about/directions")}>오시는 길</a></li>
         </ul>
@@ -1311,7 +1311,7 @@ page({
   body: (r) => {
     const L = (href, text, out) => `<li><a href="${out ? href : r + href}"${out ? ` ${ext} class="ext"` : ""}>${text}</a></li>`;
     const groups = [
-      ["센터 소개", [L("about/", "About Us"), L("about/institutes/", "연구소 소개"), L("about/facilities/", "센터 시설"), L("about/experts/", "전문가 소개"), L("about/agreements/", "교육 협약"), L("about/directions/", "오시는 길")]],
+      ["센터 소개", [L("about/", "About Us"), L("about/experts/", "전문가 소개"), L("about/institutes/", "연구소 소개"), L("about/facilities/", "센터 시설"), L("about/agreements/", "교육 협약"), L("about/directions/", "오시는 길")]],
       ["폭스 소식", [L("news/", "폭스뉴스"), L("videos/", "폭스 소식"), L("column/", "SEL 칼럼"), L("videos/#videos", "폭스 YouTube")]],
       ["감정체크", [L("emotion-check/", "감정체크 체험"), L("growth/", "성장관리 시스템")]],
       ["프로그램", [L(CAMP_URL, "글로벌캠프", true), L(INST_URL, "기관 체험", true)]],
