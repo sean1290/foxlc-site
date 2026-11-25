@@ -1346,7 +1346,8 @@ img{-webkit-user-drag:none;-webkit-touch-callout:none;user-select:none;-webkit-u
 @font-face{font-family:'SUIT';font-weight:400;font-display:swap;src:url(../fonts/suit-regular.woff2) format('woff2')}
 @font-face{font-family:'SUIT';font-weight:700;font-display:swap;src:url(../fonts/suit-bold.woff2) format('woff2')}
 @font-face{font-family:'SUIT';font-weight:800;font-display:swap;src:url(../fonts/suit-extrabold.woff2) format('woff2')}
-.inst-modal.lf{width:min(1120px,calc(100% - 24px));height:calc(100dvh - 24px);max-height:none;display:flex;flex-direction:column;font-family:'SUIT','Noto Sans KR',sans-serif}
+.inst-modal.lf{width:min(1120px,calc(100% - 24px));height:calc(100dvh - 24px);max-height:none;flex-direction:column;font-family:'SUIT','Noto Sans KR',sans-serif}
+.inst-modal.lf[open]{display:flex}
 .lf-sel{--lf:#6c4fae;--lf-2:#8d78c4;--lf-soft:#f2eef9;--lf-band:#e8e1f3;--lf-blue:#7fb2e3;--lf-green:#9bbd55}
 .inst-modal.lf .im-head{flex:none;border-bottom:1px solid #eee}
 .lf-body{flex:1;overflow:auto;overscroll-behavior:contain;padding:0 0 32px;font-size:17px;line-height:1.8;color:#2b2b33}
