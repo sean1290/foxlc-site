@@ -187,7 +187,6 @@ ${body(r)}
       <h3>FAMILY SITE</h3>
       <a href="https://foxconnect.kr/index.do" ${ext}>FOX CONNECT</a>
       <a href="https://www.growxeducation.com/sel" ${ext}>Grow X Education</a>
-      <a href="https://foxlc-staff.seanyang92.workers.dev/fox-growth#/dash" ${ext}>학생 성장 관리 시스템</a>
     </nav>
     <div class="copy"><span>© 2026 폭스러닝센터</span><span class="foot-links"><a class="privacy-link" href="${r}sitemap/">사이트맵</a><a class="privacy-link" href="${r}recruit/">채용공고</a><a class="privacy-link" href="${r}privacy/">개인정보처리방침</a><a class="privacy-link" href="${r}admin/">관리자</a></span></div>
   </div>
