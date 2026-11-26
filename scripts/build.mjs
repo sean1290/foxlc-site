@@ -278,12 +278,12 @@ page({
       <div>
         <div class="eyebrow left">ABOUT</div>
         <h2>폭스러닝센터는</h2>
-        <p>'관찰-발견-반응' 프레임워크를 통해 학생 한 명 한 명의 성장 과정을 체계적으로 지원하는 사회-정서 학습(SEL)기반 교육 기관입니다.</p>
+        <p>'관찰-발견-반응' 프레임워크를 통해 아동 한 명 한 명의 성장 과정을 체계적으로 지원하는 사회-정서 학습(SEL)기반 교육 기관입니다.</p>
       </div>
       <img src="${r}img/about.jpg" width="1000" height="667" alt="연구원과 아이들이 태블릿을 보며 함께 활동하는 모습" loading="lazy">
     </div>
     <ol class="steps3">
-      <li class="step"><div class="circle"><div class="no">STEP 01</div><h3>관찰</h3></div><p>각 분야의 <mark>전문 연구원</mark>이 아이의 감정과 행동, 흥미와 관계를 <b>세심하게 관찰하고 기록</b>합니다.</p></li>
+      <li class="step"><div class="circle"><div class="no">STEP 01</div><h3>관찰</h3></div><p>각 분야의 <mark>전문 연구원</mark>이 아동의 감정과 행동, 흥미와 관계를 <b>세심하게 관찰하고 기록</b>합니다.</p></li>
       <li class="step"><div class="circle"><div class="no">STEP 02</div><h3>발견</h3></div><p>기록된 <mark>데이터 기반</mark>으로 <b>성장목표를 발견</b>하며 <b>성장 리포트</b>를 통해 배움을 설계합니다.</p></li>
       <li class="step"><div class="circle"><div class="no">STEP 03</div><h3>반응</h3></div><p>SEL, 인공지능, 언어, 튼튼, 수리 등 <b>다양한 연구소 활동</b>을 통해 아동의 <mark>성장 방향에 맞는 경험과 배움</mark>을 제공합니다.</p></li>
     </ol>
