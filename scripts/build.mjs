@@ -283,9 +283,9 @@ page({
       <img src="${r}img/about.jpg" width="1000" height="667" alt="연구원과 아이들이 태블릿을 보며 함께 활동하는 모습" loading="lazy">
     </div>
     <ol class="steps3">
-      <li class="step"><div class="circle"><div class="no">STEP 01</div><h3>관찰</h3></div><p>학생의 행동과 감정을 세심하게 살핍니다.</p></li>
-      <li class="step"><div class="circle"><div class="no">STEP 02</div><h3>발견</h3></div><p>강점과 필요를 찾아 성장의 단서를 발견합니다.</p></li>
-      <li class="step"><div class="circle"><div class="no">STEP 03</div><h3>반응</h3></div><p>맞춤형 지원으로 아이의 성장에 응답합니다.</p></li>
+      <li class="step"><div class="circle"><div class="no">STEP 01</div><h3>관찰</h3></div><p>각 분야의 전문 연구원이 아이의 감정과 행동, 흥미와 관계를 세심하게 관찰하고 기록합니다.</p></li>
+      <li class="step"><div class="circle"><div class="no">STEP 02</div><h3>발견</h3></div><p>기록된 데이터 기반으로 성장목표를 발견하며 성장 리포트를 통해 배움을 설계합니다.</p></li>
+      <li class="step"><div class="circle"><div class="no">STEP 03</div><h3>반응</h3></div><p>SEL, 인공지능, 언어, 튼튼, 수리 등 다양한 연구소 활동을 통해 아동의 성장 방향에 맞는 경험과 배움을 제공합니다.</p></li>
     </ol>
     <div class="foxx" aria-label="F.O.X — Future Of X">
       <div class="foxx-glow" aria-hidden="true"></div>
