@@ -30,6 +30,12 @@
 //            DELETE /api/rx/comments/:cid  댓글 지우기 (쓴 사람 · 관리자)
 //            POST /api/rx/:kind/:id/view   조회수 +1 (누구나, 브라우저에서 12시간에 한 번)
 //            GET  /api/rx/stats?kind=K     목록용 조회수 · 좋아요 수 (누구나, 숫자만)
+//  자료실    GET  /api/staff/home            바로가기 링크 (승인된 직원 · 관리자)
+//            GET/POST /api/staff/posts       직원 게시판 목록 · 글쓰기
+//            GET/PUT/DELETE /api/staff/posts/:id   글 보기(댓글 포함) · 수정 · 삭제 (쓴 사람 · 관리자)
+//            POST /api/staff/posts/:id/comments · DELETE /api/staff/comments/:id
+//            GET  /api/staff/events?from=YYYY-MM-DD&to=YYYY-MM-DD   캘린더
+//            POST /api/staff/events · PUT/DELETE /api/staff/events/:id
 //  방문통계  POST /api/stat/hit             페이지 방문 기록 (쿠키 없음, IP 저장 안 함)
 //            GET  /api/admin/stats?days=N  관리자 화면 '방문 통계' (관리자)
 //
@@ -213,6 +219,22 @@ async function syncNewsPage(env, page) {
     `SELECT COUNT(*) AS n FROM news_posts WHERE photos_done = 0 AND num IN (${nums.map(() => "?").join(",")})`
   ).bind(...nums).first()).n : 0;
   return { page, items: items.length, more: left > 0, oldest: items.length ? Math.min(...nums) : null };
+}
+// 연구원 자료실: 승인된 직원 회원 또는 관리자
+const isStaff = (me) => me && (me.role === "admin" || (me.role === "member" && me.status === "approved" && me.kind === "staff"));
+const STAFF_LINKS = [
+  { title: "학생 성장 관리 시스템", desc: "학생별 성장 기록과 리포트", url: "https://foxlc-staff.seanyang92.workers.dev/fox-growth#/dash", icon: "growth" },
+  { title: "감정체크", desc: "학생 감정체크 화면", url: "https://foxlc.seanyang92.workers.dev/emotion_check_3", icon: "emotion" },
+];
+const ymdOk = (v) => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v);
+const COLORS = ["navy", "mint", "orange", "purple", "red", "gray"];
+function eventFields(b) {
+  const title = str(b.title, 80);
+  if (!title) return { error: "일정 제목을 입력해 주세요." };
+  if (!ymdOk(b.start_date)) return { error: "날짜를 선택해 주세요." };
+  const end = ymdOk(b.end_date) && b.end_date >= b.start_date ? b.end_date : b.start_date;
+  const time = typeof b.time === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(b.time) ? b.time : "";
+  return { title, start_date: b.start_date, end_date: end, time, color: COLORS.includes(b.color) ? b.color : "navy", note: str(b.note, 1000) };
 }
 const canReadNews = (me) => me && (me.role === "admin" || (me.role === "member" && me.status === "approved"));
 
@@ -533,6 +555,94 @@ export default {
         if (!safeEqual(cur.hash, u.pw_hash)) return fail(req, env, 400, "비밀번호가 올바르지 않습니다.");
         await env.DB.prepare("DELETE FROM users WHERE id = ?").bind(me.id).run();
         return json(req, env, { ok: true });
+      }
+
+      // ── 연구원 자료실 ──
+      if (path.startsWith("/api/staff/")) {
+        if (!me) return fail(req, env, 401, "로그인이 필요합니다.");
+        if (!isStaff(me)) return fail(req, env, 403, me.status === "pending" ? "가입 승인 후 이용할 수 있습니다." : "연구원 자료실은 직원만 이용할 수 있습니다.");
+        const who = me.name || me.username;
+        const own = (row) => row && (row.author_id === me.id || me.role === "admin");
+        if (path === "/api/staff/home" && req.method === "GET") return json(req, env, { links: STAFF_LINKS, me: { name: who, admin: me.role === "admin" } });
+
+        if (path === "/api/staff/posts" && req.method === "GET") {
+          const { results } = await env.DB.prepare(
+            `SELECT p.id, p.title, p.pinned, p.author_id, p.author_name, p.created_at, p.updated_at, (SELECT COUNT(*) FROM staff_comments c WHERE c.post_id = p.id) AS comments
+             FROM staff_posts p ORDER BY p.pinned DESC, p.id DESC LIMIT 500`).all();
+          return json(req, env, { posts: results.map((x) => ({ ...x, mine: x.author_id === me.id })) });
+        }
+        if (path === "/api/staff/posts" && req.method === "POST") {
+          const b = await body(req) || {};
+          const title = str(b.title, 120), text = typeof b.body === "string" ? b.body.replace(/\r\n/g, "\n").trim().slice(0, 20000) : "";
+          if (!title || !text) return fail(req, env, 400, "제목과 내용을 입력해 주세요.");
+          const r = await env.DB.prepare("INSERT INTO staff_posts (title, body, pinned, author_id, author_name) VALUES (?, ?, ?, ?, ?)")
+            .bind(title, text, me.role === "admin" && b.pinned ? 1 : 0, me.id, who).run();
+          return json(req, env, { id: r.meta.last_row_id }, 201);
+        }
+        const sp = /^\/api\/staff\/posts\/(\d+)$/.exec(path);
+        if (sp) {
+          const id = Number(sp[1]);
+          const post = await env.DB.prepare("SELECT * FROM staff_posts WHERE id = ?").bind(id).first();
+          if (!post) return fail(req, env, 404, "글을 찾을 수 없습니다.");
+          if (req.method === "GET") {
+            const { results } = await env.DB.prepare("SELECT id, body, author_id, author_name, created_at FROM staff_comments WHERE post_id = ? ORDER BY id").bind(id).all();
+            return json(req, env, { post: { ...post, mine: post.author_id === me.id, can_edit: own(post) }, comments: results.map((c) => ({ ...c, can_delete: own(c) })) });
+          }
+          if (!own(post)) return fail(req, env, 403, "직접 쓴 글만 고칠 수 있습니다.");
+          if (req.method === "DELETE") { await env.DB.prepare("DELETE FROM staff_comments WHERE post_id = ?").bind(id).run(); await env.DB.prepare("DELETE FROM staff_posts WHERE id = ?").bind(id).run(); return json(req, env, { ok: true }); }
+          if (req.method === "PUT") {
+            const b = await body(req) || {};
+            const title = str(b.title, 120), text = typeof b.body === "string" ? b.body.replace(/\r\n/g, "\n").trim().slice(0, 20000) : "";
+            if (!title || !text) return fail(req, env, 400, "제목과 내용을 입력해 주세요.");
+            await env.DB.prepare("UPDATE staff_posts SET title = ?, body = ?, pinned = ?, updated_at = datetime('now') WHERE id = ?")
+              .bind(title, text, me.role === "admin" ? (b.pinned ? 1 : 0) : post.pinned, id).run();
+            return json(req, env, { ok: true });
+          }
+        }
+        const spc = /^\/api\/staff\/posts\/(\d+)\/comments$/.exec(path);
+        if (spc && req.method === "POST") {
+          const b = await body(req) || {};
+          const text = typeof b.body === "string" ? b.body.trim().slice(0, 2000) : "";
+          if (!text) return fail(req, env, 400, "댓글 내용을 입력해 주세요.");
+          if (!(await env.DB.prepare("SELECT 1 AS ok FROM staff_posts WHERE id = ?").bind(Number(spc[1])).first())) return fail(req, env, 404, "글을 찾을 수 없습니다.");
+          await env.DB.prepare("INSERT INTO staff_comments (post_id, body, author_id, author_name) VALUES (?, ?, ?, ?)").bind(Number(spc[1]), text, me.id, who).run();
+          return json(req, env, { ok: true }, 201);
+        }
+        const scd = /^\/api\/staff\/comments\/(\d+)$/.exec(path);
+        if (scd && req.method === "DELETE") {
+          const c = await env.DB.prepare("SELECT author_id FROM staff_comments WHERE id = ?").bind(Number(scd[1])).first();
+          if (!c) return fail(req, env, 404, "댓글을 찾을 수 없습니다.");
+          if (!own(c)) return fail(req, env, 403, "직접 쓴 댓글만 지울 수 있습니다.");
+          await env.DB.prepare("DELETE FROM staff_comments WHERE id = ?").bind(Number(scd[1])).run();
+          return json(req, env, { ok: true });
+        }
+
+        if (path === "/api/staff/events" && req.method === "GET") {
+          const from = url.searchParams.get("from"), to = url.searchParams.get("to");
+          if (!ymdOk(from) || !ymdOk(to)) return fail(req, env, 400, "기간이 올바르지 않습니다.");
+          const { results } = await env.DB.prepare("SELECT * FROM staff_events WHERE start_date <= ? AND end_date >= ? ORDER BY start_date, time, id LIMIT 1000").bind(to, from).all();
+          return json(req, env, { events: results.map((e) => ({ ...e, can_edit: own(e) })) });
+        }
+        if (path === "/api/staff/events" && req.method === "POST") {
+          const f = eventFields(await body(req) || {});
+          if (f.error) return fail(req, env, 400, f.error);
+          const r = await env.DB.prepare("INSERT INTO staff_events (title, start_date, end_date, time, color, note, author_id, author_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+            .bind(f.title, f.start_date, f.end_date, f.time, f.color, f.note, me.id, who).run();
+          return json(req, env, { id: r.meta.last_row_id }, 201);
+        }
+        const se = /^\/api\/staff\/events\/(\d+)$/.exec(path);
+        if (se && (req.method === "PUT" || req.method === "DELETE")) {
+          const ev = await env.DB.prepare("SELECT author_id FROM staff_events WHERE id = ?").bind(Number(se[1])).first();
+          if (!ev) return fail(req, env, 404, "일정을 찾을 수 없습니다.");
+          if (!own(ev)) return fail(req, env, 403, "직접 등록한 일정만 고칠 수 있습니다.");
+          if (req.method === "DELETE") { await env.DB.prepare("DELETE FROM staff_events WHERE id = ?").bind(Number(se[1])).run(); return json(req, env, { ok: true }); }
+          const f = eventFields(await body(req) || {});
+          if (f.error) return fail(req, env, 400, f.error);
+          await env.DB.prepare("UPDATE staff_events SET title = ?, start_date = ?, end_date = ?, time = ?, color = ?, note = ? WHERE id = ?")
+            .bind(f.title, f.start_date, f.end_date, f.time, f.color, f.note, Number(se[1])).run();
+          return json(req, env, { ok: true });
+        }
+        return fail(req, env, 404, "Not found");
       }
 
       if (path === "/api/auth/me" && req.method === "GET") {

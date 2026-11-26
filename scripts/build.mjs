@@ -71,7 +71,7 @@ const rxBox = (kind, id) => `<section class="rx" data-rx="${kind}" data-rx-id="$
 // ── 공통 틀 ─────────────────────────────────────────────
 // file: dist 기준 경로 (예: "about/institutes/index.html"), key: 메뉴에서 현재 위치 표시용
 const API_BASE = (process.env.FOXLC_API ?? config.apiBase ?? "").replace(/\/$/, "");
-function layout({ file, key, title, description = DESC, body, image, board, member, rx, stats, noindex, jsonld, ogType }) {
+function layout({ file, key, title, description = DESC, body, image, board, member, rx, stats, staff, noindex, jsonld, ogType }) {
   const depth = file.split("/").length - 1;
   const r = "../".repeat(depth);              // 사이트 루트로 가는 상대 경로
   const cur = (k) => (k === key ? ' aria-current="page"' : "");
@@ -150,6 +150,7 @@ ${file === "index.html" ? `<link rel="preload" as="image" href="${r}img/hero.jpg
       </div>
       <div class="nav-item"><a class="nav-top ext" href="${CAMP_URL}" ${ext}>글로벌캠프</a></div>
       <div class="nav-item"><a class="nav-top ext" href="${INST_URL}" ${ext}>기관 체험</a></div>
+      <div class="nav-item"><a class="nav-top nav-staff" href="${r}staff/"${top("staff")}><span class="nav-lock" aria-hidden="true"></span>연구원 자료실</a></div>
       <a class="btn line sm nav-cta nav-login" href="${r}member/"${key === "member" ? ' aria-current="page"' : ""}>로그인</a>
       <a class="btn navy sm nav-cta" href="${r}#contact">문의하기</a>
     </nav>
@@ -209,7 +210,8 @@ ${file === "index.html" && config.popup && config.popup.enabled ? `
 <script src="${r}js/board.js" defer></script>` : ""}${member ? `
 <script src="${r}js/member.js" defer></script>` : ""}${rx ? `
 <script src="${r}js/react.js" defer></script>` : ""}${stats ? `
-<script src="${r}js/stats.js" defer></script>` : ""}
+<script src="${r}js/stats.js" defer></script>` : ""}${staff ? `
+<script src="${r}js/staff.js" defer></script>` : ""}
 </body>
 </html>
 `;
@@ -908,6 +910,16 @@ news.forEach((p, i) => {
   });
 });
 
+// ── 연구원 자료실 (직원 전용: 바로가기 · 게시판 · 캘린더) — 내용은 로그인 후 API 에서 받는다
+page({
+  file: "staff/index.html", key: "staff", title: "연구원 자료실", member: true, staff: true, noindex: true,
+  body: () => `<div class="page-head"><div class="wrap"><div class="eyebrow">STAFF ONLY</div><h1>연구원 자료실</h1><p>폭스러닝센터 직원 전용 공간입니다 <span class="sr-who" id="srWho"></span></p></div></div>
+<div class="page-body"><div class="wrap" id="staffRoom">
+  <nav class="sr-tabs" id="srTabs" hidden aria-label="자료실 메뉴"><a href="#links">바로가기</a><a href="#board">직원 게시판</a><a href="#calendar">캘린더</a></nav>
+  <div id="srView"><p class="rc-empty">확인 중입니다…</p></div>
+</div></div>`,
+});
+
 // ── 회원 (학부모 · 직원: 로그인 · 가입 신청) ─────────────────────
 page({
   file: "member/index.html", key: "member", title: "로그인", member: true, noindex: true,
@@ -1316,7 +1328,7 @@ page({
       ["폭스 소식", [L("news/", "폭스뉴스"), L("videos/", "폭스 소식"), L("column/", "SEL 칼럼"), L("videos/#videos", "폭스 YouTube")]],
       ["감정체크", [L("emotion-check/", "감정체크 체험"), L("growth/", "성장관리 시스템")]],
       ["프로그램", [L(CAMP_URL, "글로벌캠프", true), L(INST_URL, "기관 체험", true)]],
-      ["문의 · 안내", [L("#contact", "문의하기"), L("recruit/", "채용공고"), L("privacy/", "개인정보처리방침")]],
+      ["문의 · 안내", [L("#contact", "문의하기"), L("staff/", "연구원 자료실 (직원 전용)"), L("recruit/", "채용공고"), L("privacy/", "개인정보처리방침")]],
     ];
     return `
 <div class="page-head"><div class="wrap">
