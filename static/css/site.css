@@ -1603,3 +1603,5 @@ img{-webkit-user-drag:none;-webkit-touch-callout:none;user-select:none;-webkit-u
 .sr-gate h2{font-size:22px;font-weight:800;color:var(--navy)}.sr-gate p{color:var(--ink2)}
 .sr-gate-act{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px}
 @media (max-width:760px){.sr-split{grid-template-columns:1fr}.sr-day{min-height:76px;padding:2px}.sr-ev{font-size:11px;padding:1px 4px}.sr-ev small{display:none}.sr-tabs a{padding:10px 12px}.sr-list small{margin-left:0;width:100%}}
+.step p b{color:var(--navy);font-weight:800}
+.step p mark{background:linear-gradient(transparent 55%,rgba(110,200,165,.45) 55%);color:var(--navy);font-weight:800;padding:0 2px}
